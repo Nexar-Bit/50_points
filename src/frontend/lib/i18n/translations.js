@@ -136,7 +136,7 @@ export const translations = {
       enterTournament: "ENTRAR AL TORNEO",
       live: "EN VIVO",
       upcoming: "PROXIMO",
-      empty: "No hay torneos en vivo ahora. Comprueba que API_BACKEND_URL apunte al backend en Vercel.",
+      empty: "No hay torneos en vivo en este momento. Intenta actualizar la pagina.",
     },
     howItWorksSection: {
       label: "Primeros Pasos",
@@ -587,7 +587,7 @@ export const translations = {
       enterTournament: "ENTER TOURNAMENT",
       live: "LIVE",
       upcoming: "UPCOMING",
-      empty: "No live tournaments right now. Check that API_BACKEND_URL is set to your Render backend on Vercel.",
+      empty: "No live tournaments right now. Try refreshing the page.",
     },
     howItWorksSection: {
       label: "Getting Started",
