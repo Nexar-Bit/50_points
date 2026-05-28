@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Calendar, ChevronRight } from "lucide-react";
 import AnimateInView from "@/frontend/components/ui/AnimateInView";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
-import { fetchJson } from "@/frontend/lib/api/client";
+import { fetchTournamentsList } from "@/frontend/lib/api/tournaments";
 
 function TournamentCardSkeleton() {
   return (
@@ -45,22 +45,13 @@ export default function TournamentsPage() {
 
     async function load() {
       try {
-        const data = await fetchJson("/tournaments");
+        const data = await fetchTournamentsList({ refresh: true });
         if (!cancelled) setTournaments(data.tournaments || []);
       } catch {
         if (!cancelled) setTournaments([]);
       } finally {
         if (!cancelled) setLoading(false);
       }
-
-      // Refresh public racecards in the background (can take 10–30s)
-      fetchJson("/tournaments?refresh=1")
-        .then((data) => {
-          if (!cancelled && data.tournaments?.length) {
-            setTournaments(data.tournaments);
-          }
-        })
-        .catch(() => {});
     }
 
     load();

@@ -12,6 +12,7 @@ import SectionHeader from "@/frontend/components/home/SectionHeader";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { staticFile } from "@/frontend/lib/config/paths";
 import { fetchJson } from "@/frontend/lib/api/client";
+import { fetchTournamentsList } from "@/frontend/lib/api/tournaments";
 import { mapTournamentForHomeCard, mapLegendForHome } from "@/frontend/lib/api/mappers";
 
 const howItWorksMeta = [{ step: 1 }, { step: 2 }, { step: 3 }];
@@ -41,11 +42,7 @@ export default function Home() {
   useEffect(() => {
     let cancelled = false;
     async function loadTournaments() {
-      let res = await fetchJson("/tournaments?refresh=1").catch(() => null);
-      if (!res?.tournaments?.length) {
-        res = await fetchJson("/tournaments").catch(() => null);
-      }
-      return res;
+      return fetchTournamentsList({ refresh: true, forHome: true }).catch(() => null);
     }
     async function load() {
       try {
@@ -55,9 +52,7 @@ export default function Home() {
         ]);
         if (cancelled) return;
         const mapped = (tournamentsRes?.tournaments || [])
-          .filter((t) => t.status === "live" || t.status === "upcoming")
-          .map(mapTournamentForHomeCard)
-          .slice(0, 3);
+          .map(mapTournamentForHomeCard);
         setLiveTournaments(mapped);
         setTopPlayers((leaderboardRes?.legends || []).map(mapLegendForHome));
       } catch {

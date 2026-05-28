@@ -3,6 +3,20 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.watchOptions = {
+        ...config.watchOptions,
+        ignored: [
+          '**/node_modules/**',
+          '**/.git/**',
+          '**/.next/**',
+          '**/System Volume Information/**',
+        ],
+      };
+    }
+    return config;
+  },
   async redirects() {
     return [
       {

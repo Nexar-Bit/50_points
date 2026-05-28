@@ -13,7 +13,8 @@ import PickSelector, { strategies } from '@/frontend/components/tournament/PickS
 import TicketSummary from '@/frontend/components/tournament/TicketSummary';
 import TicketConfirmation from '@/frontend/components/tournament/TicketConfirmation';
 import { useAuth } from '@/frontend/contexts/AuthContext';
-import { fetchJson, fetchAuthJson } from '@/frontend/lib/api/client';
+import { fetchAuthJson } from '@/frontend/lib/api/client';
+import { fetchTournamentDetail } from '@/frontend/lib/api/tournaments';
 
 const STRATEGY_MAP = { full: 'full_point', dual: 'dual_point', smart: 'smart_pick' };
 const STRATEGY_REVERSE = { full_point: 'full', dual_point: 'dual', smart_pick: 'smart' };
@@ -110,7 +111,7 @@ export default function TournamentClient() {
     if (!slug) return;
 
     setLoading(true);
-    fetchJson(`/tournaments/${slug}`)
+    fetchTournamentDetail(slug, { refresh: true })
       .then((data) => {
         setTournamentRaw(data.tournament);
       })

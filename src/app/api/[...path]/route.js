@@ -35,9 +35,18 @@ async function proxy(request, context) {
     init.body = await request.arrayBuffer();
   }
 
-  const res = await fetch(url, init);
+  const isRacingSync = search.includes('refresh=1');
+  const timeoutMs = isRacingSync ? 120000 : 30000;
+
+  const res = await fetch(url, {
+    ...init,
+    signal: AbortSignal.timeout(timeoutMs),
+  });
   const outHeaders = new Headers(res.headers);
   outHeaders.delete('content-encoding');
+  if (isRacingSync) {
+    outHeaders.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+  }
 
   return new Response(res.body, {
     status: res.status,
