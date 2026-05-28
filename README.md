@@ -31,7 +31,9 @@ Open: [http://localhost:3000](http://localhost:3000)
 ## Deploy on Vercel
 
 1. **Root Directory:** `FRONTEND` (required — repo is a monorepo).
-2. **Environment:** `NEXT_PUBLIC_API_URL=https://your-backend.onrender.com`
+2. **Environment (required):** `API_BACKEND_URL=https://your-backend.onrender.com`  
+   The frontend proxies `/api/*` to this URL (see `src/app/api/[...path]/route.js`).  
+   Optional: `NEXT_PUBLIC_API_URL` only if you want the browser to call Render directly (needs CORS on the backend).
 3. Open `https://<your-app>.vercel.app/` (app is served at domain root).
 
 Old `/50points` URLs redirect to `/` automatically.

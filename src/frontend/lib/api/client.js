@@ -1,4 +1,25 @@
-const API_BASE = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api`;
+function resolveApiBase() {
+  const publicUrl = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/$/, '');
+  const isLocalDefault =
+    !publicUrl ||
+    publicUrl === 'http://localhost:8000' ||
+    publicUrl === 'http://127.0.0.1:8000';
+
+  // Browser on Vercel/production: use same-origin proxy (src/app/api/[...path]/route.js)
+  if (typeof window !== 'undefined' && isLocalDefault) {
+    return '/api';
+  }
+
+  if (publicUrl) {
+    return `${publicUrl}/api`;
+  }
+
+  const serverBackend =
+    process.env.API_BACKEND_URL || 'http://localhost:8000';
+  return `${serverBackend.replace(/\/$/, '')}/api`;
+}
+
+const API_BASE = resolveApiBase();
 
 export function getStoredToken() {
   if (typeof window === 'undefined') return null;
