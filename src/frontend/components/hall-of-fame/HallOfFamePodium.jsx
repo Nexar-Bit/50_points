@@ -9,6 +9,8 @@ const PEDESTAL_IMAGES = {
   bronze: staticFile("/Img/hall-of-fame-bronze.png"),
 };
 
+const GOLD_WINNER_FRAME = staticFile("/Img/hall-of-fame-gold circle.png");
+
 function formatPoints(value, locale, pointsWord) {
   const n = Number(value) || 0;
   return `${n.toLocaleString(locale === "en" ? "en-US" : "es-ES")} ${pointsWord}`;
@@ -16,11 +18,37 @@ function formatPoints(value, locale, pointsWord) {
 
 function avatarUrl(name, color) {
   const hex = (color || "#7c3aed").replace("#", "");
-  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${hex}&color=fff&size=160&bold=true`;
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${hex}&color=fff&size=256&bold=true`;
+}
+
+function GoldWinnerFrame({ name, color, pointsLabel }) {
+  return (
+    <div className="hof-winner-frame">
+      <div className="hof-winner-frame__avatar-wrap">
+        <img
+          src={avatarUrl(name, color)}
+          alt=""
+          className="hof-winner-frame__avatar"
+        />
+      </div>
+      <img
+        src={GOLD_WINNER_FRAME}
+        alt=""
+        className="hof-winner-frame__overlay"
+        aria-hidden
+      />
+      <div className="hof-nameplate hof-nameplate--gold-winner">
+        <p className="hof-nameplate__name">{name}</p>
+        <p className="hof-nameplate__points hof-nameplate__points--gold">{pointsLabel}</p>
+      </div>
+    </div>
+  );
 }
 
 function PodiumSlot({ player, variant, pointsWord, locale, delay }) {
   if (!player) return <div className="hof-podium-slot hof-podium-slot--empty" aria-hidden />;
+
+  const isGold = variant === "gold";
 
   return (
     <motion.div
@@ -29,20 +57,30 @@ function PodiumSlot({ player, variant, pointsWord, locale, delay }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="hof-player-stack">
-        <div className={`hof-avatar-ring hof-avatar-ring--${variant}`}>
-          <img
-            src={avatarUrl(player.name, player.color)}
-            alt=""
-            className="hof-avatar-img"
+      <div className={`hof-player-stack${isGold ? " hof-player-stack--gold" : ""}`}>
+        {isGold ? (
+          <GoldWinnerFrame
+            name={player.name}
+            color={player.color}
+            pointsLabel={formatPoints(player.points, locale, pointsWord)}
           />
-        </div>
-        <div className="hof-nameplate">
-          <p className="hof-nameplate__name">{player.name}</p>
-          <p className={`hof-nameplate__points hof-nameplate__points--${variant}`}>
-            {formatPoints(player.points, locale, pointsWord)}
-          </p>
-        </div>
+        ) : (
+          <>
+            <div className={`hof-avatar-ring hof-avatar-ring--${variant}`}>
+              <img
+                src={avatarUrl(player.name, player.color)}
+                alt=""
+                className="hof-avatar-img"
+              />
+            </div>
+            <div className="hof-nameplate">
+              <p className="hof-nameplate__name">{player.name}</p>
+              <p className={`hof-nameplate__points hof-nameplate__points--${variant}`}>
+                {formatPoints(player.points, locale, pointsWord)}
+              </p>
+            </div>
+          </>
+        )}
       </div>
       <img
         src={PEDESTAL_IMAGES[variant]}
