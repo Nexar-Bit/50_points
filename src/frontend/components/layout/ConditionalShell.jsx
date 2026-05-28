@@ -15,6 +15,10 @@ export default function ConditionalShell({ children }) {
     return <main className="min-h-screen">{children}</main>;
   }
 
+  if (isHome) {
+    return <main className="min-h-screen">{children}</main>;
+  }
+
   if (isAuthenticated) {
     return (
       <div className="app-shell">
@@ -24,10 +28,6 @@ export default function ConditionalShell({ children }) {
         </div>
       </div>
     );
-  }
-
-  if (isHome) {
-    return <main className="min-h-screen">{children}</main>;
   }
 
   return (

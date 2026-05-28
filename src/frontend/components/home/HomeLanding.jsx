@@ -172,39 +172,41 @@ function MyFiftyPointsBrand({ tagline }) {
   );
 }
 
-function HeroCtaPanel({ t, entering, onGuestEnter }) {
+function HeroCtaPanel({ t, entering, onGuestEnter, showAuthButtons = true }) {
   return (
     <div className="hero-cta-panel">
-      <div className="hero-cta-panel__buttons">
-        <Link href="/login" className="hero-cta-btn hero-cta-btn--gold group">
-          <span className="hero-cta-btn__main">
-            <LogIn className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
-            <span className="hero-cta-btn__label">{t("hero.loginExisting")}</span>
-          </span>
-          <span className="hero-cta-btn__sub">{t("hero.loginExistingSub")}</span>
-        </Link>
+      {showAuthButtons && (
+        <div className="hero-cta-panel__buttons">
+          <Link href="/login" className="hero-cta-btn hero-cta-btn--gold group">
+            <span className="hero-cta-btn__main">
+              <LogIn className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
+              <span className="hero-cta-btn__label">{t("hero.loginExisting")}</span>
+            </span>
+            <span className="hero-cta-btn__sub">{t("hero.loginExistingSub")}</span>
+          </Link>
 
-        <Link href="/register" className="hero-cta-btn hero-cta-btn--purple group">
-          <span className="hero-cta-btn__main">
-            <UserPlus className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
-            <span className="hero-cta-btn__label">{t("hero.register")}</span>
-          </span>
-          <span className="hero-cta-btn__sub">{t("hero.registerSub")}</span>
-        </Link>
+          <Link href="/register" className="hero-cta-btn hero-cta-btn--purple group">
+            <span className="hero-cta-btn__main">
+              <UserPlus className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
+              <span className="hero-cta-btn__label">{t("hero.register")}</span>
+            </span>
+            <span className="hero-cta-btn__sub">{t("hero.registerSub")}</span>
+          </Link>
 
-        <button
-          type="button"
-          onClick={onGuestEnter}
-          disabled={entering}
-          className="hero-cta-btn hero-cta-btn--cyan group disabled:opacity-60"
-        >
-          <span className="hero-cta-btn__main">
-            <Play className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
-            <span className="hero-cta-btn__label">{entering ? "..." : t("hero.enter")}</span>
-          </span>
-          <span className="hero-cta-btn__sub">{t("hero.enterSub")}</span>
-        </button>
-      </div>
+          <button
+            type="button"
+            onClick={onGuestEnter}
+            disabled={entering}
+            className="hero-cta-btn hero-cta-btn--cyan group disabled:opacity-60"
+          >
+            <span className="hero-cta-btn__main">
+              <Play className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
+              <span className="hero-cta-btn__label">{entering ? "..." : t("hero.enter")}</span>
+            </span>
+            <span className="hero-cta-btn__sub">{t("hero.enterSub")}</span>
+          </button>
+        </div>
+      )}
 
       <p className="hero-cta-panel__slogan">
         <span className="text-purple-light">{t("hero.sloganPoints")}</span>
@@ -418,7 +420,7 @@ function HeroStatsNav() {
 
 export default function HomeLanding() {
   const { t, language, setLanguage } = useLanguage();
-  const { playAsGuest } = useAuth();
+  const { playAsGuest, isAuthenticated } = useAuth();
   const router = useRouter();
   const [entering, setEntering] = useState(false);
 
@@ -501,6 +503,7 @@ export default function HomeLanding() {
               t={t}
               entering={entering}
               onGuestEnter={handleGuestEnter}
+              showAuthButtons={!isAuthenticated}
             />
           </div>
         </AnimateInView>

@@ -10,6 +10,7 @@ import HowItWorksStepCard from "@/frontend/components/home/HowItWorksStepCard";
 import TournamentPlaysSection from "@/frontend/components/home/TournamentPlaysSection";
 import SectionHeader from "@/frontend/components/home/SectionHeader";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
+import { useAuth } from "@/frontend/contexts/AuthContext";
 import { staticFile } from "@/frontend/lib/config/paths";
 import { fetchJson } from "@/frontend/lib/api/client";
 import { mapLegendForHome } from "@/frontend/lib/api/mappers";
@@ -58,6 +59,7 @@ function LiveTournamentCardSkeleton() {
 
 export default function HomePageClient({ initialTournaments = [] }) {
   const { t } = useLanguage();
+  const { isAuthenticated } = useAuth();
   const [liveTournaments, setLiveTournaments] = useState(
     () => initialTournaments || []
   );
@@ -345,6 +347,7 @@ export default function HomePageClient({ initialTournaments = [] }) {
         </div>
       </section>
 
+      {!isAuthenticated && (
       <section className="relative py-16 sm:py-24">
         <div className="absolute inset-0 bg-brand-dark" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
@@ -388,6 +391,7 @@ export default function HomePageClient({ initialTournaments = [] }) {
           </AnimateInView>
         </div>
       </section>
+      )}
     </div>
   );
 }
