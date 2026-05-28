@@ -90,7 +90,7 @@ export default function LegendsPage() {
       {/* Header */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/50points/images/hero-lobby.jpg" alt="" className="w-full h-full object-cover opacity-10" />
+          <img src="/images/hero-lobby.jpg" alt="" className="w-full h-full object-cover opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#050508]/60 via-[#050508]/90 to-[#050508]" />
         </div>
 
@@ -175,7 +175,7 @@ export default function LegendsPage() {
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-bold text-white truncate">{player.name}</p>
-                      {player.rank <= 3 && <img src="/50points/images/icons/icon-fire.png" alt="" className="w-4 h-4 object-contain shrink-0" />}
+                      {player.rank <= 3 && <img src="/images/icons/icon-fire.png" alt="" className="w-4 h-4 object-contain shrink-0" />}
                     </div>
                     <div className="flex items-center gap-1.5">
                       <StratIcon className="w-3 h-3" style={{ color: stratColor }} />

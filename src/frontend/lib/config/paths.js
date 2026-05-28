@@ -1,6 +1,6 @@
-/** App is deployed under /50points (see next.config.mjs). */
+/** Public URL prefix (empty = app served at domain root on Vercel). */
 
-export const BASE_PATH = '/50points';
+export const BASE_PATH = '';
 
 /** Brand logo file: public/Img/logo.png */
 export const LOGO_PATH = '/Img/logo.png';

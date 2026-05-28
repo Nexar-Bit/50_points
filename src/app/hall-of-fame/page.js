@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import HallOfFameLoggedInView from "@/frontend/components/hall-of-fame/HallOfFameLoggedInView";

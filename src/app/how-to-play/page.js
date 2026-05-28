@@ -97,7 +97,7 @@ export default function HowToPlayPage() {
 
       <div className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/50points/images/sidebar-promo.jpg" alt="" className="w-full h-full object-cover opacity-20" />
+          <img src="/images/sidebar-promo.jpg" alt="" className="w-full h-full object-cover opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f]/60 via-[#0a0a0f]/90 to-[#0a0a0f]" />
         </div>
 
@@ -182,7 +182,7 @@ export default function HowToPlayPage() {
           transition={{ duration: 0.6, delay: 0.9 }}
           className="text-center rounded-2xl p-10 bg-gradient-to-br from-purple/15 to-cyan/5 border border-purple/20"
         >
-          <img src="/50points/images/icons/icon-controller.png" alt="" className="w-14 h-14 object-contain mx-auto mb-4" />
+          <img src="/images/icons/icon-controller.png" alt="" className="w-14 h-14 object-contain mx-auto mb-4" />
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">{t("howToPlay.ctaTitle")}</h2>
           <p className="text-zinc-400 mb-6 max-w-md mx-auto">
             {t("howToPlay.ctaDesc")}

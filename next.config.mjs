@@ -1,22 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: '/50points',
   images: {
     unoptimized: true,
   },
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/50points',
+        source: '/50points',
+        destination: '/',
         permanent: false,
-        basePath: false,
       },
       {
-        source: '/:path((?!50points|_next|favicon\\.ico).*)',
-        destination: '/50points/:path',
+        source: '/50points/:path*',
+        destination: '/:path*',
         permanent: false,
-        basePath: false,
       },
     ];
   },

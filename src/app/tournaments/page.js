@@ -74,7 +74,7 @@ export default function TournamentsPage() {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="/50points/images/hero-lobby.jpg"
+            src="/images/hero-lobby.jpg"
             alt=""
             className="w-full h-full object-cover opacity-25"
           />
@@ -113,7 +113,7 @@ export default function TournamentsPage() {
                   >
                     <div className="relative h-36 overflow-hidden">
                       <img
-                        src={tournament.imageUrl || "/50points/images/news-favoritos.jpg"}
+                        src={tournament.imageUrl || "/images/news-favoritos.jpg"}
                         alt=""
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
@@ -139,7 +139,7 @@ export default function TournamentsPage() {
                           {tournament.name}
                         </h2>
                         <div className="flex items-center gap-1.5 mt-1 text-xs text-zinc-500">
-                          <img src="/50points/images/icons/icon-location.png" alt="" className="w-3.5 h-3.5 object-contain" />
+                          <img src="/images/icons/icon-location.png" alt="" className="w-3.5 h-3.5 object-contain" />
                           <span>{tournament.track}, {tournament.location}</span>
                         </div>
                       </div>
@@ -168,7 +168,7 @@ export default function TournamentsPage() {
 
                       <div className="flex items-center gap-4 text-xs text-zinc-500 mb-5">
                         <div className="flex items-center gap-1.5">
-                          <img src="/50points/images/icons/icon-players.png" alt="" className="w-4 h-4 object-contain" />
+                          <img src="/images/icons/icon-players.png" alt="" className="w-4 h-4 object-contain" />
                           <span>{tournament.players.toLocaleString()} {t("tournamentsPage.players")}</span>
                         </div>
                         <div className="flex items-center gap-1.5">

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { Plus, Trash2, Save, Download, Upload, ChevronDown, ChevronRight, Database, Globe, AlertCircle, CheckCircle2, Settings } from 'lucide-react';

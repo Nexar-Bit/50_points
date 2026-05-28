@@ -6,11 +6,7 @@ import Footer from "@/frontend/components/layout/Footer";
 
 export default function ConditionalShell({ children }) {
   const pathname = usePathname() || "";
-  const isHome =
-    pathname === "/" ||
-    pathname === "" ||
-    pathname === "/50points" ||
-    pathname === "/50points/";
+  const isHome = pathname === "/" || pathname === "";
 
   if (isHome) {
     return (

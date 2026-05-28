@@ -88,7 +88,7 @@ export default function RankingClient() {
     <div className="min-h-screen bg-brand-dark">
       <div className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/50points/images/live-feed.jpg" alt="" className="w-full h-full object-cover opacity-20" />
+          <img src="/images/live-feed.jpg" alt="" className="w-full h-full object-cover opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/60 via-brand-dark/90 to-brand-dark" />
         </div>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple/5 rounded-full blur-[100px]" />

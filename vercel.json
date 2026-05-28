@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "redirects": [
+    {
+      "source": "/50points",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/50points/:path*",
+      "destination": "/:path*",
+      "permanent": false
+    }
+  ]
+}

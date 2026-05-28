@@ -235,7 +235,7 @@ export default function LeaderboardPage() {
 
       <div className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/50points/images/ranking-hero.jpg" alt="" className="w-full h-full object-cover opacity-20" />
+          <img src="/images/ranking-hero.jpg" alt="" className="w-full h-full object-cover opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f]/60 via-[#0a0a0f]/90 to-[#0a0a0f]" />
         </div>
 
@@ -532,7 +532,7 @@ export default function LeaderboardPage() {
                 <div className="hidden sm:flex col-span-2 justify-end items-center gap-1">
                   {player.streak > 0 ? (
                     <>
-                      <img src="/50points/images/icons/icon-fire.png" alt="" className="w-5 h-5 object-contain" />
+                      <img src="/images/icons/icon-fire.png" alt="" className="w-5 h-5 object-contain" />
                       <span className="text-sm font-medium text-orange-400">{player.streak}</span>
                     </>
                   ) : (

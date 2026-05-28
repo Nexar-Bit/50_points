@@ -179,7 +179,7 @@ export default function HallOfFamePublicView() {
                 className={`rounded-xl p-5 bg-gradient-to-br ${status.bg} border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300 group relative overflow-hidden`}
               >
                 <div className="absolute -bottom-4 -right-4 opacity-[0.04] pointer-events-none">
-                  <img src="/50points/images/icons/icon-horse.png" alt="" className="w-28 h-28 object-contain" />
+                  <img src="/images/icons/icon-horse.png" alt="" className="w-28 h-28 object-contain" />
                 </div>
 
                 <div className="relative z-10">

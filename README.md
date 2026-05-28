@@ -20,7 +20,7 @@ Start the API first (`BACKEND` on port 8000), then:
 npm run dev
 ```
 
-Open: [http://localhost:3000/50points](http://localhost:3000/50points)
+Open: [http://localhost:3000](http://localhost:3000)
 
 ## Environment
 
@@ -28,4 +28,10 @@ Open: [http://localhost:3000/50points](http://localhost:3000/50points)
 |----------|---------|-------------|
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | FastAPI base URL (no trailing slash) |
 
-Static assets and pages use `basePath: /50points` (see `next.config.mjs`).
+## Deploy on Vercel
+
+1. **Root Directory:** `FRONTEND` (required — repo is a monorepo).
+2. **Environment:** `NEXT_PUBLIC_API_URL=https://your-backend.onrender.com`
+3. Open `https://<your-app>.vercel.app/` (app is served at domain root).
+
+Old `/50points` URLs redirect to `/` automatically.
