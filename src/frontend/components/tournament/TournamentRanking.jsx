@@ -1,13 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Trophy, Crown, Medal, TrendingUp, TrendingDown, Flame, Star, Zap } from 'lucide-react';
-
-const strategyDot = {
-  full: 'bg-purple',
-  dual: 'bg-cyan',
-  smart: 'bg-gold',
-};
+import { Trophy, Crown, Medal, Zap } from 'lucide-react';
+import TournamentRankingRow from '@/frontend/components/tournament/TournamentRankingRow';
+import { useAuth } from '@/frontend/contexts/AuthContext';
 
 const strategyText = {
   full: 'text-purple-light',
@@ -45,10 +41,6 @@ function RecordCard({ player, index }) {
           <p className={`text-sm font-bold ${strategyText[player.strategy]} mt-0.5`}>
             {player.score.toLocaleString()}
           </p>
-          <div className="flex items-center justify-center gap-1 mt-1">
-            <span className={`w-2 h-2 rounded-full ${strategyDot[player.strategy]}`} />
-            <span className="text-white/40 text-[10px]">{player.strategyLabel}</span>
-          </div>
         </div>
       </div>
     </motion.div>
@@ -73,64 +65,11 @@ function RecordSection({ title, icon, records, accentColor = 'text-white' }) {
   );
 }
 
-function PlayerRow({ player, index }) {
-  const isUp = player.posChange > 0;
-  const isDown = player.posChange < 0;
-  const isTop3 = player.position <= 3;
-  const gradient = positionBadge[player.position];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.03 }}
-      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-        isTop3 ? 'bg-white/[0.05] border border-white/10' : 'hover:bg-white/[0.03]'
-      }`}
-    >
-      <div className="w-7 text-center">
-        {gradient ? (
-          <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br ${gradient} text-[11px] font-bold text-black`}>
-            {player.position}
-          </span>
-        ) : (
-          <span className="text-white/40 text-sm font-medium">{player.position}</span>
-        )}
-      </div>
-
-      <div className="text-lg">{player.avatar}</div>
-
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5">
-          <span className="text-white text-sm font-medium truncate">{player.name}</span>
-          {player.isHot && <Flame size={12} className="text-orange-400 animate-pulse flex-shrink-0" />}
-          {player.mode === 'premium' && <Star size={11} className="text-gold flex-shrink-0" />}
-        </div>
-        <div className="flex items-center gap-1.5 mt-0.5">
-          <span className={`w-2 h-2 rounded-full ${strategyDot[player.strategy]}`} />
-          <span className="text-white/30 text-[10px]">{player.strategyLabel}</span>
-          <span className="text-white/20 text-[10px]">·</span>
-          <span className="text-white/30 text-[10px]">Ticket {player.bestTicket}/{player.ticketsUsed}</span>
-        </div>
-      </div>
-
-      <div className="text-right">
-        <span className={`text-sm font-bold ${strategyText[player.strategy]}`}>
-          {player.score.toLocaleString()}
-        </span>
-        {player.posChange !== 0 && (
-          <div className={`flex items-center justify-end gap-0.5 mt-0.5 ${isUp ? 'text-emerald-400' : 'text-red-400'}`}>
-            {isUp ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
-            <span className="text-[10px] font-semibold">{isUp ? '+' : ''}{player.posChange}</span>
-          </div>
-        )}
-      </div>
-    </motion.div>
-  );
-}
-
 export default function TournamentRanking({ data }) {
+  const { user } = useAuth();
   if (!data) return null;
+
+  const currentUserId = user?.id;
 
   return (
     <div className="space-y-4">
@@ -162,17 +101,27 @@ export default function TournamentRanking({ data }) {
         accentColor="text-gold"
       />
 
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-            Clasificación General
-          </h3>
-          <span className="text-white/30 text-xs">{data.totalParticipants} jugadores</span>
+      <div className="ranking-table">
+        <div className="ranking-table__head">
+          <span>#</span>
+          <span />
+          <span>Jugador</span>
+          <span>Puntos</span>
+          <span>Historial</span>
+          <span>Racha</span>
+          <span>Mov.</span>
+          <span>+/-</span>
+          <span>Hora</span>
         </div>
 
-        <div className="space-y-0.5">
+        <div className="ranking-table__body">
           {data.players.map((player, i) => (
-            <PlayerRow key={player.id} player={player} index={i} />
+            <TournamentRankingRow
+              key={player.id}
+              player={player}
+              index={i}
+              isCurrentUser={currentUserId != null && player.userId === currentUserId}
+            />
           ))}
         </div>
       </div>

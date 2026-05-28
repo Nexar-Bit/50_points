@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useId } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Caveat } from "next/font/google";
-import { Globe, UserPlus, Play } from "lucide-react";
+import { Globe, UserPlus, Play, LogIn } from "lucide-react";
 
 const caveat = Caveat({
   subsets: ["latin"],
@@ -129,7 +129,7 @@ function StrategyPointColumn({ variant, label, taglineLines, imageSrc }) {
   );
 }
 
-function MyFiftyPointsBrand({ taglineIsGo, taglineTo }) {
+function MyFiftyPointsBrand({ tagline }) {
   return (
     <div className="my-points-brand">
       <p className="my-points-brand-label">
@@ -161,12 +161,11 @@ function MyFiftyPointsBrand({ taglineIsGo, taglineTo }) {
       <div className="hero-tagline-divider" aria-hidden />
 
       <p className={`my-points-tagline ${caveat.className}`}>
-        <span className="text-white lowercase">{taglineIsGo} </span>
-        <span className="my-points-tagline__to lowercase">{taglineTo}</span>
-        <span className="inline-flex items-center gap-[0.2em] ml-1 align-middle" aria-hidden>
-          <span className="my-points-tagline__dot my-points-tagline__dot--gold" />
-          <span className="my-points-tagline__dot my-points-tagline__dot--cyan" />
+        <span className="my-points-tagline__phrase">{tagline}</span>
+        <span className="inline-flex items-center gap-[0.22em] ml-1.5 align-middle" aria-hidden>
           <span className="my-points-tagline__dot my-points-tagline__dot--purple" />
+          <span className="my-points-tagline__dot my-points-tagline__dot--cyan" />
+          <span className="my-points-tagline__dot my-points-tagline__dot--gold" />
         </span>
       </p>
     </div>
@@ -177,37 +176,43 @@ function HeroCtaPanel({ t, entering, onGuestEnter }) {
   return (
     <div className="hero-cta-panel">
       <div className="hero-cta-panel__buttons">
-        <Link
-          href="/register"
-          className="group flex-1 flex flex-col items-center justify-center px-6 py-4 rounded-xl border-2 border-purple/70 bg-[#030305]/60 backdrop-blur-sm hover:bg-purple/20 hover:border-purple transition-all shadow-[0_0_24px_rgba(124,58,237,0.25)]"
-        >
-          <span className="flex items-center gap-2 text-base sm:text-lg font-black text-white uppercase tracking-wide">
-            <UserPlus className="w-5 h-5 text-purple-light" />
-            {t("hero.register")}
+        <Link href="/login" className="hero-cta-btn hero-cta-btn--gold group">
+          <span className="hero-cta-btn__main">
+            <LogIn className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
+            <span className="hero-cta-btn__label">{t("hero.loginExisting")}</span>
           </span>
-          <span className="text-[10px] sm:text-xs text-purple-light/80 mt-1 uppercase tracking-wider">
-            {t("hero.registerSub")}
-          </span>
+          <span className="hero-cta-btn__sub">{t("hero.loginExistingSub")}</span>
         </Link>
+
+        <Link href="/register" className="hero-cta-btn hero-cta-btn--purple group">
+          <span className="hero-cta-btn__main">
+            <UserPlus className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
+            <span className="hero-cta-btn__label">{t("hero.register")}</span>
+          </span>
+          <span className="hero-cta-btn__sub">{t("hero.registerSub")}</span>
+        </Link>
+
         <button
           type="button"
           onClick={onGuestEnter}
           disabled={entering}
-          className="group flex-1 flex flex-col items-center justify-center px-6 py-4 rounded-xl border-2 border-cyan/70 bg-[#030305]/60 backdrop-blur-sm hover:bg-cyan/20 hover:border-cyan transition-all shadow-[0_0_24px_rgba(6,182,212,0.25)] disabled:opacity-60"
+          className="hero-cta-btn hero-cta-btn--cyan group disabled:opacity-60"
         >
-          <span className="flex items-center gap-2 text-base sm:text-lg font-black text-white uppercase tracking-wide">
-            <Play className="w-5 h-5 text-cyan-light fill-cyan-light/30" />
-            {entering ? "..." : t("hero.enter")}
+          <span className="hero-cta-btn__main">
+            <Play className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
+            <span className="hero-cta-btn__label">{entering ? "..." : t("hero.enter")}</span>
           </span>
-          <span className="text-[10px] sm:text-xs text-cyan-light/80 mt-1 uppercase tracking-wider">
-            {t("hero.enterSub")}
-          </span>
+          <span className="hero-cta-btn__sub">{t("hero.enterSub")}</span>
         </button>
       </div>
+
       <p className="hero-cta-panel__slogan">
-        <span className="text-purple-light">{t("hero.sloganPoints")}</span>{" "}
-        <span className="text-cyan-light">{t("hero.sloganGame")}</span>{" "}
+        <span className="text-purple-light">{t("hero.sloganPoints")}</span>
+        <span className="hero-slogan-dot hero-slogan-dot--purple" aria-hidden />
+        <span className="text-cyan-light">{t("hero.sloganGame")}</span>
+        <span className="hero-slogan-dot hero-slogan-dot--cyan" aria-hidden />
         <span className="text-gold-light">{t("hero.sloganStrategy")}</span>
+        <span className="hero-slogan-dot hero-slogan-dot--gold" aria-hidden />
       </p>
     </div>
   );
@@ -434,13 +439,9 @@ export default function HomeLanding() {
   return (
     <section className="relative min-h-screen bg-[#030305] overflow-hidden">
       {/* Main background */}
-      <div className="absolute inset-0">
-        <img
-          src={mainBg}
-          alt=""
-          className="w-full h-full object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/45 to-transparent" />
+      <div className="absolute inset-0 hero-main-bg">
+        <img src={mainBg} alt="" className="hero-main-bg__image" />
+        <div className="absolute inset-0 hero-main-bg__shade" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40" />
       </div>
 
@@ -489,10 +490,7 @@ export default function HomeLanding() {
         {/* MY 50 POINTS branding */}
         <AnimateInView delay={0.15}>
           <div className="max-w-2xl text-left bg-transparent">
-            <MyFiftyPointsBrand
-              taglineIsGo={t("hero.taglineIsGo")}
-              taglineTo={t("hero.taglineTo")}
-            />
+            <MyFiftyPointsBrand tagline={t("hero.tagline")} />
           </div>
         </AnimateInView>
 

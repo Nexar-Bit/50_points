@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Flame, Target, Zap
 const strategyConfig = {
   full: { color: 'text-purple-light', bg: 'bg-purple/20', border: 'border-purple/40', label: 'Full Point', icon: '🎯' },
   dual: { color: 'text-cyan', bg: 'bg-cyan/20', border: 'border-cyan/40', label: 'Dual Point', icon: '⚡' },
-  smart: { color: 'text-gold', bg: 'bg-gold/20', border: 'border-gold/40', label: 'Smart Pick', icon: '🧠' },
+  smart: { color: 'text-gold', bg: 'bg-gold/20', border: 'border-gold/40', label: 'Smart Point', icon: '🧠' },
 };
 
 export default function FloatingTicketBar({ tickets, autoRotate = true, rotateInterval = 4000 }) {

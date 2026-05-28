@@ -1,9 +1,9 @@
-﻿import { staticFile } from '@/frontend/lib/config/paths';
+import { staticFile } from '@/frontend/lib/config/paths';
 
 const STRATEGY_LABELS = {
   full_point: 'Full Point',
   dual_point: 'Dual Point',
-  smart_pick: 'Smart Pick',
+  smart_pick: 'Smart Point',
 };
 
 const STRATEGY_SHORT = {
@@ -63,6 +63,9 @@ export function mapLegendForHome(player) {
 }
 
 function dominantStrategy(entry) {
+  if (entry.activeModeKey) {
+    return STRATEGY_SHORT[entry.activeModeKey] || 'full';
+  }
   const scores = [
     { key: 'full', pts: entry.fullPoints || 0 },
     { key: 'dual', pts: entry.dualPoints || 0 },
@@ -72,32 +75,71 @@ function dominantStrategy(entry) {
   return scores[0].key;
 }
 
-/** Map tournament leaderboard API → TournamentRanking mock shape */
-export function mapTournamentLeaderboard(leaderboard, currentUserId) {
-  const players = leaderboard.map((e) => {
-    const strategy = dominantStrategy(e);
-    return {
-      id: String(e.userId),
-      position: e.rank,
-      name: e.username,
-      avatar: e.username?.charAt(0).toUpperCase() || '?',
-      score: e.totalPoints,
-      strategy,
-      strategyLabel: { full: 'Full Point', dual: 'Dual Point', smart: 'Smart Pick' }[strategy] || strategy,
-      posChange: 0,
-      isHot: e.rank <= 3 || (e.winStreak || 0) >= 3,
-      ticketsUsed: e.ticketNumber,
-      bestTicket: e.ticketNumber,
-      racesConfirmed: e.racesPlayed,
-      mode: e.gameMode === 2 ? 'premium' : 'free',
-    };
+function mapRecentPlays(recentPlays) {
+  const list = recentPlays || [];
+  return list.map((p) => {
+    if (!p || !p.won || !p.strategy) {
+      return { type: 'miss' };
+    }
+    const short = STRATEGY_SHORT[p.strategy] || 'full';
+    return { type: short, won: true };
   });
+}
+
+function formatUpdatedAt(iso) {
+  if (!iso) return null;
+  try {
+    return new Date(iso).toLocaleTimeString([], {
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+  } catch {
+    return null;
+  }
+}
+
+function mapLeaderboardPlayer(e) {
+  const strategy = dominantStrategy(e);
+  const modeLabel =
+    e.activeMode ||
+    { full: 'FULL POINT', dual: 'DUAL POINT', smart: 'SMART POINT' }[strategy] ||
+    'FULL POINT';
+
+  return {
+    id: String(e.userId),
+    userId: e.userId,
+    position: e.rank,
+    name: (e.username || 'Unknown').toUpperCase(),
+    initials: (e.username || '??').slice(0, 2).toUpperCase(),
+    avatarColor: e.avatarColor || '#7c3aed',
+    avatar: e.username?.charAt(0).toUpperCase() || '?',
+    score: e.totalPoints,
+    strategy,
+    strategyLabel: modeLabel,
+    posChange: e.rankChange ?? 0,
+    pointsChange: e.lastPointsChange ?? 0,
+    winStreak: e.winStreak ?? 0,
+    recentPlays: mapRecentPlays(e.recentPlays),
+    updatedAtLabel: formatUpdatedAt(e.updatedAt),
+    isHot: e.rank <= 3 || (e.winStreak || 0) >= 3,
+    ticketsUsed: e.ticketNumber,
+    bestTicket: e.ticketNumber,
+    racesConfirmed: e.racesPlayed,
+    mode: e.gameMode === 2 ? 'premium' : 'free',
+  };
+}
+
+/** Map tournament leaderboard API → TournamentRanking mock shape */
+export function mapTournamentLeaderboard(leaderboard, currentUserId, ticketEntries = null) {
+  const players = leaderboard.map((e) => mapLeaderboardPlayer(e));
+  const entries = ticketEntries || leaderboard;
 
   const byStrategy = (s) =>
     players.filter((p) => p.strategy === s).slice(0, 3).map((p, i) => ({ ...p, recordPosition: i + 1 }));
 
   const userTickets = [1, 2, 3].map((ticketNum) => {
-    const entry = leaderboard.find(
+    const entry = entries.find(
       (e) => e.userId === currentUserId && e.ticketNumber === ticketNum
     );
     if (!entry) {
@@ -120,7 +162,7 @@ export function mapTournamentLeaderboard(leaderboard, currentUserId) {
       position: entry.rank,
       score: entry.totalPoints,
       strategy,
-      strategyLabel: { full: 'Full Point', dual: 'Dual Point', smart: 'Smart Pick' }[strategy] || strategy,
+      strategyLabel: { full: 'Full Point', dual: 'Dual Point', smart: 'Smart Point' }[strategy] || strategy,
       posChange: 0,
       racesConfirmed: entry.racesPlayed,
       totalRaces: entry.racesPlayed,
@@ -153,7 +195,7 @@ export function mapTicketForProfile(ticket, tournament) {
     track: tournament?.track || tournament?.name || '—',
     strategy: STRATEGY_LABELS[ticket.strategy] || ticket.strategy,
     horses: horseNames.length ? horseNames : picks.map(String),
-    pointsEarned: ticket.pointsEarned,
+    pointsEarned: Math.max(0, ticket.pointsEarned ?? 0),
     date: ticket.createdAt
       ? new Date(ticket.createdAt).toLocaleDateString()
       : '—',
@@ -165,7 +207,7 @@ export function mapTicketForProfile(ticket, tournament) {
 export function buildStrategyBreakdown(tickets) {
   const keys = ['full', 'dual', 'smart'];
   const apiKeys = ['full_point', 'dual_point', 'smart_pick'];
-  const labels = { full: 'Full Point', dual: 'Dual Point', smart: 'Smart Pick' };
+  const labels = { full: 'Full Point', dual: 'Dual Point', smart: 'Smart Point' };
   const colors = { full: '#7c3aed', dual: '#06b6d4', smart: '#f59e0b' };
   const out = {};
 

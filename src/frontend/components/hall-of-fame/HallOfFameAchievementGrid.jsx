@@ -1,6 +1,7 @@
 "use client";
 
 import { Lock } from "lucide-react";
+import { avatarForPlayer } from "@/frontend/lib/data/hallOfFameData";
 
 const UNLOCKED_STYLES = [
   { border: "#fbbf24", glow: "rgba(251, 191, 36, 0.35)" },
@@ -10,17 +11,27 @@ const UNLOCKED_STYLES = [
   { border: "#a855f7", glow: "rgba(168, 85, 247, 0.35)" },
 ];
 
-export default function HallOfFameAchievementGrid({ achievements, isEn, lockedLabel }) {
+export default function HallOfFameAchievementGrid({
+  achievements,
+  isEn,
+  lockedLabel,
+  title,
+}) {
   const unlocked = achievements.filter((a) => a.unlocked);
   const locked = achievements.filter((a) => !a.unlocked);
   const lockedSlots = Math.max(24, locked.length);
 
   return (
     <section className="hof-achievements">
+      {title ? <h2 className="hof-achievements__section-title">{title}</h2> : null}
+
       <div className="hof-achievements__unlocked">
         {unlocked.map((item, index) => {
           const style = UNLOCKED_STYLES[index % UNLOCKED_STYLES.length];
           const Icon = item.icon;
+          const featLabel = (isEn ? item.nameEn : item.name) || "";
+          const displayFeat = featLabel.toUpperCase();
+
           return (
             <article
               key={item.id}
@@ -33,10 +44,23 @@ export default function HallOfFameAchievementGrid({ achievements, isEn, lockedLa
               <div className="hof-achievements__icon-wrap" style={{ color: style.border }}>
                 <Icon className="w-7 h-7" strokeWidth={1.75} />
               </div>
-              <h3 className="hof-achievements__card-title">{isEn ? item.nameEn : item.name}</h3>
-              <p className="hof-achievements__card-desc">{isEn ? item.descEn : item.desc}</p>
-              {item.holder && (
-                <p className="hof-achievements__card-meta">{item.holder}</p>
+              <h3 className="hof-achievements__card-title">{displayFeat}</h3>
+              {item.holder ? (
+                <div className="hof-achievements__holder">
+                  <img
+                    src={avatarForPlayer(item.holder, item.holderColor || style.border)}
+                    alt=""
+                    className="hof-achievements__holder-avatar"
+                  />
+                  <div>
+                    <p className="hof-achievements__holder-name">{item.holder}</p>
+                    {item.date ? (
+                      <p className="hof-achievements__holder-date">{item.date}</p>
+                    ) : null}
+                  </div>
+                </div>
+              ) : (
+                <p className="hof-achievements__card-desc">{isEn ? item.descEn : item.desc}</p>
               )}
             </article>
           );
@@ -47,7 +71,10 @@ export default function HallOfFameAchievementGrid({ achievements, isEn, lockedLa
         {Array.from({ length: lockedSlots }).map((_, i) => {
           const item = locked[i];
           return (
-            <div key={item?.id ?? `locked-${i}`} className="hof-achievements__card hof-achievements__card--locked">
+            <div
+              key={item?.id ?? `locked-${i}`}
+              className="hof-achievements__card hof-achievements__card--locked"
+            >
               <Lock className="w-5 h-5 text-zinc-600" aria-hidden />
               <span className="sr-only">{lockedLabel}</span>
             </div>

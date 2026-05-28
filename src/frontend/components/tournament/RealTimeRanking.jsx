@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Flame, TrendingUp, TrendingDown, Zap, Target, Eye, Activity } from 'lucide-react';
+import TournamentRankingRow from '@/frontend/components/tournament/TournamentRankingRow';
+import { useAuth } from '@/frontend/contexts/AuthContext';
 
 const strategyDot = { full: 'bg-purple', dual: 'bg-cyan', smart: 'bg-gold' };
 const strategyText = { full: 'text-purple-light', dual: 'text-cyan', smart: 'text-gold' };
@@ -109,73 +111,8 @@ function UserPositionCard({ ticket }) {
   );
 }
 
-function LivePlayerRow({ player, index, isCurrentUser = false }) {
-  const isUp = player.posChange > 0;
-  const isDown = player.posChange < 0;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.02 }}
-      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-        isCurrentUser
-          ? `${strategyBg[player.strategy]} border ${strategyBorder[player.strategy]}`
-          : 'hover:bg-white/[0.03]'
-      }`}
-    >
-      <div className="w-7 text-center">
-        {player.position <= 3 ? (
-          <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br ${
-            player.position === 1 ? 'from-yellow-400 to-amber-600' :
-            player.position === 2 ? 'from-gray-300 to-gray-500' :
-            'from-amber-600 to-orange-800'
-          } text-[11px] font-bold text-black`}>
-            {player.position}
-          </span>
-        ) : (
-          <span className="text-white/40 text-sm font-medium">{player.position}</span>
-        )}
-      </div>
-
-      <div className="relative">
-        <div className="text-lg">{player.avatar}</div>
-        {player.isHot && (
-          <Flame size={10} className="absolute -top-0.5 -right-1 text-orange-400 animate-pulse" />
-        )}
-      </div>
-
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5">
-          <span className={`text-sm font-medium truncate ${isCurrentUser ? 'text-white font-bold' : 'text-white'}`}>
-            {player.name}
-          </span>
-          {isCurrentUser && (
-            <span className="text-[9px] bg-white/10 text-white/60 px-1.5 py-0.5 rounded-full font-medium">TÚ</span>
-          )}
-        </div>
-        <div className="flex items-center gap-1.5 mt-0.5">
-          <span className={`w-1.5 h-1.5 rounded-full ${strategyDot[player.strategy]}`} />
-          <span className="text-white/30 text-[10px]">{player.strategyLabel}</span>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3">
-        {player.posChange !== 0 && (
-          <div className={`flex items-center gap-0.5 ${isUp ? 'text-emerald-400' : 'text-red-400'}`}>
-            {isUp ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
-            <span className="text-[10px] font-semibold">{isUp ? '+' : ''}{player.posChange}</span>
-          </div>
-        )}
-        <span className={`text-sm font-bold ${strategyText[player.strategy]}`}>
-          {player.score.toLocaleString()}
-        </span>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function RealTimeRanking({ data, activeTicket }) {
+  const { user } = useAuth();
   const [pulse, setPulse] = useState(false);
 
   useEffect(() => {
@@ -209,15 +146,33 @@ export default function RealTimeRanking({ data, activeTicket }) {
           <span className="text-white/30 text-xs">{data.totalParticipants} jugadores</span>
         </div>
 
-        <div className="space-y-0.5">
-          {data.players.map((player, i) => (
-            <LivePlayerRow
-              key={player.id}
-              player={player}
-              index={i}
-              isCurrentUser={player.position === userPosition}
-            />
-          ))}
+        <div className="ranking-table ranking-table--live">
+          <div className="ranking-table__head ranking-table__head--live">
+            <span>#</span>
+            <span />
+            <span>Jugador</span>
+            <span>Pts</span>
+            <span />
+            <span />
+            <span />
+            <span />
+            <span />
+          </div>
+          <div className="ranking-table__body">
+            {data.players.map((player, i) => (
+              <TournamentRankingRow
+                key={player.id}
+                player={player}
+                index={i}
+                compact
+                isCurrentUser={
+                  user?.id != null
+                    ? player.userId === user.id
+                    : player.position === userPosition
+                }
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

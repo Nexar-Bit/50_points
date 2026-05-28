@@ -16,7 +16,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
+import { useAuth } from "@/frontend/contexts/AuthContext";
+import { useRankingUpdates } from "@/frontend/contexts/RankingUpdatesContext";
 import { fetchJson } from "@/frontend/lib/api/client";
+
+const LEADERBOARD_POLL_MS = 12000;
 
 const ROWS_PER_PAGE = 10;
 
@@ -101,6 +105,8 @@ function SkeletonPodiumCard({ isFirst }) {
 
 export default function LeaderboardPage() {
   const { t } = useLanguage();
+  const { user, isAuthenticated } = useAuth();
+  const { checkGlobalRank } = useRankingUpdates();
 
   const timeFilters = [
     { key: "daily", label: t("leaderboard.daily") },
@@ -198,6 +204,18 @@ export default function LeaderboardPage() {
       }
 
       setPlayers(mapped);
+
+      if (isAuthenticated && user?.id && tournamentFilter === "all") {
+        const me = mapped.find((p) => p.userId === user.id);
+        if (me?.rank) {
+          const racesWithGain = mapped.filter(
+            (p) => p.userId === user.id && p.change > 0
+          ).length;
+          checkGlobalRank(me.rank, {
+            racesWithGain: racesWithGain || (me.change > 0 ? 1 : 2),
+          });
+        }
+      }
     } catch (err) {
       console.error("Failed to fetch leaderboard:", err);
       setPlayers([]);
@@ -205,12 +223,19 @@ export default function LeaderboardPage() {
     } finally {
       setLoading(false);
     }
-  }, [tournamentFilter, selectedModes]);
+  }, [tournamentFilter, selectedModes, isAuthenticated, user?.id, checkGlobalRank]);
 
   useEffect(() => {
     setCurrentPage(1);
     fetchLeaderboard();
   }, [fetchLeaderboard]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (tournamentFilter === "all") fetchLeaderboard();
+    }, LEADERBOARD_POLL_MS);
+    return () => clearInterval(id);
+  }, [fetchLeaderboard, tournamentFilter]);
 
   const top3 = players.slice(0, 3);
   const totalPages = Math.max(1, Math.ceil(players.length / ROWS_PER_PAGE));
@@ -490,11 +515,9 @@ export default function LeaderboardPage() {
             </div>
           ) : (
             paginatedPlayers.map((player, index) => (
-              <motion.div
+              <Link
                 key={player.userId || player.rank}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: 0.05 * index }}
+                href={player.userId ? `/profile/${player.userId}` : "#"}
                 className={`grid grid-cols-2 sm:grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-4 items-center border-b border-white/[0.03] transition-all duration-300 hover:bg-purple/[0.04] hover:shadow-[inset_0_0_30px_rgba(124,58,237,0.05)] cursor-pointer group ${
                   index % 2 === 0 ? "bg-white/[0.01]" : "bg-transparent"
                 }`}
@@ -553,7 +576,7 @@ export default function LeaderboardPage() {
                     </div>
                   )}
                 </div>
-              </motion.div>
+              </Link>
             ))
           )}
 

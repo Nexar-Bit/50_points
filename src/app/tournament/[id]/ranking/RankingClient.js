@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -11,6 +11,8 @@ import Link from 'next/link';
 import { fetchJson } from '@/frontend/lib/api/client';
 import { mapTournamentLeaderboard } from '@/frontend/lib/api/mappers';
 import { useAuth } from '@/frontend/contexts/AuthContext';
+import { useAchievementCards } from '@/frontend/contexts/AchievementCardsContext';
+import { useRankingUpdates } from '@/frontend/contexts/RankingUpdatesContext';
 import FloatingTicketBar from '@/frontend/components/tournament/FloatingTicketBar';
 import TournamentRanking from '@/frontend/components/tournament/TournamentRanking';
 import RealTimeRanking from '@/frontend/components/tournament/RealTimeRanking';
@@ -25,33 +27,58 @@ const tabs = [
 export default function RankingClient() {
   const params = useParams();
   const { user } = useAuth();
+  const { tryAwardTournament } = useAchievementCards();
+  const { checkGlobalRank } = useRankingUpdates();
   const [tournament, setTournament] = useState(null);
   const [rankingData, setRankingData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('ranking');
   const [activeTicketIndex, setActiveTicketIndex] = useState(0);
 
-  useEffect(() => {
+  const loadRanking = useCallback(async () => {
     const slug = params.id;
     if (!slug) return;
 
+    try {
+      const [tournamentRes, lbRes] = await Promise.all([
+        fetchJson(`/tournaments/${slug}`),
+        fetchJson(`/tournaments/${slug}/leaderboard`),
+      ]);
+      setTournament(tournamentRes.tournament);
+      const mapped = mapTournamentLeaderboard(
+        lbRes.leaderboard || [],
+        user?.id,
+        lbRes.ticketEntries || lbRes.leaderboard
+      );
+      setRankingData(mapped);
+
+      if (user?.id) {
+        const me = (lbRes.leaderboard || []).find((e) => e.userId === user.id);
+        if (me?.rank) {
+          checkGlobalRank(me.rank, { racesWithGain: 2 });
+        }
+      }
+    } catch {
+      setTournament(null);
+      setRankingData(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [params.id, user?.id, checkGlobalRank]);
+
+  useEffect(() => {
     setLoading(true);
-    Promise.all([
-      fetchJson(`/tournaments/${slug}`),
-      fetchJson(`/tournaments/${slug}/leaderboard`),
-    ])
-      .then(([tournamentRes, lbRes]) => {
-        setTournament(tournamentRes.tournament);
-        setRankingData(
-          mapTournamentLeaderboard(lbRes.leaderboard || [], user?.id)
-        );
-      })
-      .catch(() => {
-        setTournament(null);
-        setRankingData(null);
-      })
-      .finally(() => setLoading(false));
-  }, [params.id, user?.id]);
+    loadRanking();
+    const id = setInterval(loadRanking, 12000);
+    return () => clearInterval(id);
+  }, [loadRanking]);
+
+  useEffect(() => {
+    if (!tournament || !rankingData || !user?.id) return;
+    const done = tournament.status === 'completed' || tournament.status === 'live';
+    if (!done) return;
+    tryAwardTournament(tournament, rankingData);
+  }, [tournament, rankingData, user?.id, tryAwardTournament]);
 
   const statusConfig = {
     live: { label: 'EN VIVO', color: 'bg-red-500', glow: 'shadow-[0_0_20px_rgba(239,68,68,0.5)]' },
