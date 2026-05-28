@@ -1,19 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import {
-  Trophy,
-  BarChart3,
-  HelpCircle,
-  User,
-  Crown,
-} from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
-import { useAuth } from "@/frontend/contexts/AuthContext";
 import { fetchJson, fetchAuthJson } from "@/frontend/lib/api/client";
-import { logoAsset, staticFile } from "@/frontend/lib/config/paths";
+import { staticFile } from "@/frontend/lib/config/paths";
 import HallOfFamePodium from "@/frontend/components/hall-of-fame/HallOfFamePodium";
 import HallOfFameAchievementGrid from "@/frontend/components/hall-of-fame/HallOfFameAchievementGrid";
 import HallOfFameNewsTicker from "@/frontend/components/hall-of-fame/HallOfFameNewsTicker";
@@ -46,7 +36,6 @@ function mapPodiumPlayer(entry) {
 export default function HallOfFameLoggedInView() {
   const { t, language } = useLanguage();
   const isEn = language === "en";
-  const { user } = useAuth();
   const [podiumPlayers, setPodiumPlayers] = useState(FALLBACK_PODIUM);
   const [profile, setProfile] = useState(null);
 
@@ -73,59 +62,13 @@ export default function HallOfFameLoggedInView() {
       .catch(() => {});
   }, []);
 
-  const username = user?.username || "Player";
   const totalPoints = profile?.user?.stats?.totalPoints ?? 2580;
   const globalRank = profile?.user?.globalRank ?? 12;
   const wins = profile?.user?.stats?.titles ?? profile?.user?.stats?.totalRaces ?? 0;
   const entryFeat = HOF_FEATS.find((a) => a.unlocked && a.holder) || HOF_FEATS[0];
 
-  const navLinks = [
-    { href: "/tournaments", label: t("nav.tournaments"), icon: Trophy },
-    { href: "/leaderboard", label: t("nav.ranking"), icon: BarChart3 },
-    { href: "/hall-of-fame", label: t("nav.hallOfFame"), icon: Crown, active: true },
-    { href: "/how-to-play", label: t("nav.howToPlay"), icon: HelpCircle },
-    { href: "/profile", label: t("nav.profile"), icon: User },
-  ];
-
   return (
-    <div className="hof-app">
-      <aside className="hof-app__sidebar">
-        <Link href="/" className="hof-app__logo">
-          <Image src={logoAsset()} alt="50points" width={200} height={44} className="h-9 w-auto object-contain" />
-        </Link>
-
-        <nav className="hof-app__nav">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`hof-app__nav-link${link.active ? " hof-app__nav-link--active" : ""}`}
-            >
-              <link.icon className="w-4 h-4 shrink-0" />
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="hof-app__profile-card">
-          <div
-            className="hof-app__profile-avatar"
-            style={{ backgroundColor: user?.avatarColor || "#7c3aed" }}
-          >
-            {username.charAt(0).toUpperCase()}
-          </div>
-          <div className="hof-app__profile-meta">
-            <p className="hof-app__profile-name">{username}</p>
-            <p className="hof-app__profile-level">
-              {t("hallOfFame.level")} 50 · {t("hallOfFame.legend")}
-            </p>
-            <p className="hof-app__profile-points">
-              {totalPoints.toLocaleString(isEn ? "en-US" : "es-ES")} PTS
-            </p>
-          </div>
-        </div>
-      </aside>
-
+    <div className="hof-app hof-app--embedded-nav">
       <main className="hof-app__main">
         <header className="hof-app__page-header">
           <h1 className="hof-app__page-title">{t("hallOfFame.pageTitle")}</h1>
