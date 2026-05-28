@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Calendar, ChevronRight } from "lucide-react";
 import AnimateInView from "@/frontend/components/ui/AnimateInView";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
-import { fetchTournamentsList } from "@/frontend/lib/api/tournaments";
+import { useLiveTournamentsPoll } from "@/frontend/lib/hooks/useLiveTournamentsPoll";
 
 function TournamentCardSkeleton() {
   return (
@@ -40,33 +40,12 @@ export default function TournamentsPage() {
   const [tournaments, setTournaments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      try {
-        const cached = await fetchTournamentsList({ refresh: false }).catch(() => null);
-        if (!cancelled && cached?.tournaments?.length) {
-          setTournaments(cached.tournaments);
-        }
-        if (!cancelled) setLoading(false);
-
-        const fresh = await fetchTournamentsList({ refresh: true }).catch(() => null);
-        if (!cancelled && fresh?.tournaments?.length) {
-          setTournaments(fresh.tournaments);
-        }
-      } catch {
-        if (!cancelled) setTournaments([]);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  useLiveTournamentsPoll({
+    forHome: false,
+    mapFn: (t) => t,
+    onData: (list) => setTournaments(list),
+    onLoadingChange: setLoading,
+  });
 
   return (
     <div className="min-h-screen bg-brand-dark">

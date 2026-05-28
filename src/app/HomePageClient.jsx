@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronRight, ArrowRight } from "lucide-react";
 import AnimateInView from "@/frontend/components/ui/AnimateInView";
@@ -12,17 +12,21 @@ import SectionHeader from "@/frontend/components/home/SectionHeader";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { staticFile } from "@/frontend/lib/config/paths";
 import { fetchJson } from "@/frontend/lib/api/client";
-import { fetchTournamentsList } from "@/frontend/lib/api/tournaments";
-import { mapTournamentForHomeCard, mapLegendForHome } from "@/frontend/lib/api/mappers";
+import { mapLegendForHome } from "@/frontend/lib/api/mappers";
+import { useLiveTournamentsPoll } from "@/frontend/lib/hooks/useLiveTournamentsPoll";
 
 const howItWorksMeta = [{ step: 1 }, { step: 2 }, { step: 3 }];
 
 function getRankStyle(rank) {
   switch (rank) {
-    case 1: return "bg-gradient-to-br from-yellow-400 to-amber-600 text-black shadow-lg shadow-amber-500/20";
-    case 2: return "bg-gradient-to-br from-zinc-300 to-zinc-500 text-black";
-    case 3: return "bg-gradient-to-br from-amber-600 to-amber-800 text-white";
-    default: return "bg-white/5 text-zinc-400";
+    case 1:
+      return "bg-gradient-to-br from-yellow-400 to-amber-600 text-black shadow-lg shadow-amber-500/20";
+    case 2:
+      return "bg-gradient-to-br from-zinc-300 to-zinc-500 text-black";
+    case 3:
+      return "bg-gradient-to-br from-amber-600 to-amber-800 text-white";
+    default:
+      return "bg-white/5 text-zinc-400";
   }
 }
 
@@ -31,6 +35,25 @@ function getStepBullets(step, t) {
     lead: t(`howItWorksSection.step${step}Bullet${n}Lead`),
     text: t(`howItWorksSection.step${step}Bullet${n}Text`),
   }));
+}
+
+function LiveTournamentCardSkeleton() {
+  return (
+    <div
+      className="live-tournament-card live-tournament-card--upcoming animate-pulse pointer-events-none"
+      aria-hidden
+    >
+      <div className="live-tournament-card__shell">
+        <div className="h-32 bg-white/5" />
+        <div className="p-5 space-y-3">
+          <div className="h-5 w-2/3 bg-white/5 rounded" />
+          <div className="h-3 w-1/2 bg-white/5 rounded" />
+          <div className="h-2 w-full bg-white/5 rounded-full" />
+          <div className="h-10 w-full bg-white/5 rounded-xl mt-4" />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function HomePageClient({ initialTournaments = [] }) {
@@ -42,63 +65,26 @@ export default function HomePageClient({ initialTournaments = [] }) {
   const [homeLoading, setHomeLoading] = useState(
     !(initialTournaments && initialTournaments.length > 0)
   );
+  const [playersLoading, setPlayersLoading] = useState(true);
+
+  useLiveTournamentsPoll({
+    forHome: true,
+    onData: (mapped) => setLiveTournaments(mapped),
+    onLoadingChange: (loading) => setHomeLoading(loading),
+  });
 
   useEffect(() => {
     let cancelled = false;
-
-    function applyTournaments(res) {
-      if (cancelled || !res?.tournaments?.length) return false;
-      setLiveTournaments(res.tournaments.map(mapTournamentForHomeCard));
-      setHomeLoading(false);
-      return true;
-    }
-
-    async function load() {
-      try {
-        const leaderboardRes = await fetchJson("/leaderboard?limit=5", {
-          cache: "no-store",
-          timeoutMs: 20000,
-        }).catch(() => ({ legends: [] }));
+    fetchJson("/leaderboard?limit=5", { cache: "no-store", timeoutMs: 15000 })
+      .then((res) => {
         if (!cancelled) {
-          setTopPlayers((leaderboardRes?.legends || []).map(mapLegendForHome));
+          setTopPlayers((res?.legends || []).map(mapLegendForHome));
         }
-
-        const cached = await fetchTournamentsList({
-          refresh: false,
-          forHome: true,
-          timeoutMs: 30000,
-        }).catch(() => null);
-
-        const gotCards = applyTournaments(cached);
-        if (!cancelled) setHomeLoading(false);
-
-        if (!gotCards) {
-          const retry = await fetchTournamentsList({
-            refresh: false,
-            forHome: true,
-            timeoutMs: 45000,
-          }).catch(() => null);
-          applyTournaments(retry);
-        }
-
-        fetchTournamentsList({
-          refresh: true,
-          forHome: true,
-          timeoutMs: 120000,
-        })
-          .then((fresh) => applyTournaments(fresh))
-          .catch(() => {});
-      } catch {
-        if (!cancelled) {
-          setLiveTournaments([]);
-          setTopPlayers([]);
-        }
-      } finally {
-        if (!cancelled) setHomeLoading(false);
-      }
-    }
-
-    load();
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setPlayersLoading(false);
+      });
     return () => {
       cancelled = true;
     };
@@ -158,10 +144,13 @@ export default function HomePageClient({ initialTournaments = [] }) {
     <div className="relative overflow-x-hidden">
       <HomeLanding />
 
-      {/* ─── LIVE TOURNAMENTS ─── */}
       <section className="relative py-16 sm:py-24">
         <div className="absolute inset-0">
-          <img src={staticFile("/images/hero-lobby.jpg")} alt="" className="w-full h-full object-cover opacity-20" />
+          <img
+            src={staticFile("/images/hero-lobby.jpg")}
+            alt=""
+            className="w-full h-full object-cover opacity-20"
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-brand-dark via-brand-dark/85 to-brand-dark" />
         </div>
 
@@ -177,12 +166,16 @@ export default function HomePageClient({ initialTournaments = [] }) {
 
           <div className="live-tournaments-section__grid">
             {homeLoading ? (
-              [...Array(3)].map((_, i) => (
-                <div key={i} className="h-80 rounded-2xl bg-white/5 animate-pulse" />
+              Array.from({ length: 3 }).map((_, i) => (
+                <LiveTournamentCardSkeleton key={i} />
               ))
-            ) : liveTournaments.length > 0 ? (
+            ) : liveTournaments.length === 0 ? (
+              <p className="text-zinc-500 text-sm col-span-full py-8">
+                {t("tournamentsSection.empty")}
+              </p>
+            ) : (
               liveTournaments.map((tournament, i) => (
-                <AnimateInView key={tournament.slug} delay={i * 0.15}>
+                <AnimateInView key={tournament.id || tournament.slug} delay={i * 0.15}>
                   <LiveTournamentCard
                     tournament={tournament}
                     t={t}
@@ -191,16 +184,11 @@ export default function HomePageClient({ initialTournaments = [] }) {
                   />
                 </AnimateInView>
               ))
-            ) : (
-              <p className="text-zinc-500 text-sm col-span-full">
-                {t("tournamentsSection.empty")}
-              </p>
             )}
           </div>
         </div>
       </section>
 
-      {/* ─── HOW IT WORKS ─── */}
       <section className="relative py-16 sm:py-24">
         <div className="absolute inset-0 bg-brand-dark" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
@@ -242,7 +230,6 @@ export default function HomePageClient({ initialTournaments = [] }) {
         </div>
       </section>
 
-      {/* ─── TOP PLAYERS ─── */}
       <section className="relative py-16 sm:py-24">
         <div className="absolute inset-0 bg-gradient-to-b from-brand-dark via-brand-card/20 to-brand-dark" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
@@ -269,58 +256,86 @@ export default function HomePageClient({ initialTournaments = [] }) {
                 </div>
               </div>
 
-              {homeLoading ? (
-                [...Array(5)].map((_, i) => (
-                  <div key={i} className="h-14 bg-white/[0.03] animate-pulse" />
+              {playersLoading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="px-4 sm:px-6 py-3.5 flex items-center gap-4 animate-pulse border-b border-white/[0.03] last:border-0"
+                  >
+                    <div className="w-10 h-7 bg-white/5 rounded-lg" />
+                    <div className="flex-1 h-4 bg-white/5 rounded max-w-[8rem]" />
+                    <div className="w-24 h-4 bg-white/5 rounded ml-auto" />
+                  </div>
                 ))
               ) : topPlayers.length === 0 ? (
-                <p className="px-6 py-8 text-center text-zinc-500 text-sm">No ranked players yet.</p>
-              ) : null}
-              {!homeLoading && topPlayers.map((player, i) => (
-                <AnimateInView key={player.rank} delay={0.1 + i * 0.08}>
-                  <div className={`px-4 sm:px-6 py-3.5 flex items-center gap-4 transition-all duration-200 hover:bg-white/[0.02] ${
-                    i < topPlayers.length - 1 ? "border-b border-white/[0.03]" : ""
-                  } ${player.rank === 1 ? "bg-gradient-to-r from-amber-500/[0.04] to-transparent" : ""}`}>
-                    <div className="w-10 flex justify-center">
-                      <span className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs font-bold ${getRankStyle(player.rank)}`}>
-                        {player.rank}
-                      </span>
-                    </div>
-                    <div className="flex-1 flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold text-white shrink-0"
-                        style={{ backgroundColor: player.avatarColor + "33", color: player.avatarColor }}>
-                        {player.avatar}
+                <p className="px-6 py-8 text-center text-sm text-zinc-500">
+                  {t("leaderboard.empty") || "—"}
+                </p>
+              ) : (
+                topPlayers.map((player, i) => (
+                  <AnimateInView key={player.rank} delay={0.1 + i * 0.08}>
+                    <div
+                      className={`px-4 sm:px-6 py-3.5 flex items-center gap-4 transition-all duration-200 hover:bg-white/[0.02] ${
+                        i < topPlayers.length - 1 ? "border-b border-white/[0.03]" : ""
+                      } ${player.rank === 1 ? "bg-gradient-to-r from-amber-500/[0.04] to-transparent" : ""}`}
+                    >
+                      <div className="w-10 flex justify-center">
+                        <span
+                          className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs font-bold ${getRankStyle(player.rank)}`}
+                        >
+                          {player.rank}
+                        </span>
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-white truncate">{player.username}</p>
-                        <p className="text-[11px] text-zinc-600 sm:hidden">{player.winRate} WR</p>
+                      <div className="flex-1 flex items-center gap-3 min-w-0">
+                        <div
+                          className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold text-white shrink-0"
+                          style={{
+                            backgroundColor: `${player.avatarColor}33`,
+                            color: player.avatarColor,
+                          }}
+                        >
+                          {player.avatar}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-white truncate">{player.username}</p>
+                          <p className="text-[11px] text-zinc-600 sm:hidden">{player.winRate} WR</p>
+                        </div>
+                      </div>
+                      <div className="w-20 text-right hidden sm:block">
+                        <span className="text-sm text-zinc-400">{player.winRate}</span>
+                      </div>
+                      <div className="w-20 text-right hidden sm:flex items-center justify-end gap-1">
+                        {player.streakType === "win" ? (
+                          <>
+                            <img
+                              src={staticFile("/images/icons/icon-fire.png")}
+                              alt=""
+                              className="w-4 h-4 object-contain"
+                            />
+                            <span className="text-sm font-medium text-orange-400">{player.streak}W</span>
+                          </>
+                        ) : (
+                          <span className="text-sm text-zinc-600">{player.streak}L</span>
+                        )}
+                      </div>
+                      <div className="w-24 text-right">
+                        <span
+                          className={`text-sm sm:text-base font-bold ${player.rank === 1 ? "text-gradient-gold" : "text-white"}`}
+                        >
+                          {player.totalPoints.toLocaleString()}
+                        </span>
+                        <span className="text-[11px] text-zinc-600 ml-1">{t("common.pts")}</span>
                       </div>
                     </div>
-                    <div className="w-20 text-right hidden sm:block">
-                      <span className="text-sm text-zinc-400">{player.winRate}</span>
-                    </div>
-                    <div className="w-20 text-right hidden sm:flex items-center justify-end gap-1">
-                      {player.streakType === "win" ? (
-                        <>
-                          <img src={staticFile("/images/icons/icon-fire.png")} alt="" className="w-4 h-4 object-contain" />
-                          <span className="text-sm font-medium text-orange-400">{player.streak}W</span>
-                        </>
-                      ) : (
-                        <span className="text-sm text-zinc-600">{player.streak}L</span>
-                      )}
-                    </div>
-                    <div className="w-24 text-right">
-                      <span className={`text-sm sm:text-base font-bold ${player.rank === 1 ? "text-gradient-gold" : "text-white"}`}>
-                        {(player.totalPoints ?? 0).toLocaleString()}
-                      </span>
-                      <span className="text-[11px] text-zinc-600 ml-1">{t("common.pts")}</span>
-                    </div>
-                  </div>
-                </AnimateInView>
-              ))}
+                  </AnimateInView>
+                ))
+              )}
 
               <div className="px-6 py-4 border-t border-white/5 text-center">
-                <Link href="/leaderboard" className="inline-flex items-center gap-2 text-sm font-semibold text-purple-light hover:text-white transition-colors group">
+                <Link
+                  href="/leaderboard"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-purple-light hover:text-white transition-colors group"
+                >
                   {t("topPlayers.viewAll")}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
@@ -330,7 +345,6 @@ export default function HomePageClient({ initialTournaments = [] }) {
         </div>
       </section>
 
-      {/* ─── CTA SECTION ─── */}
       <section className="relative py-16 sm:py-24">
         <div className="absolute inset-0 bg-brand-dark" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
@@ -339,21 +353,32 @@ export default function HomePageClient({ initialTournaments = [] }) {
           <AnimateInView>
             <div className="relative glass-card rounded-3xl p-8 sm:p-14 text-center overflow-hidden">
               <div className="absolute inset-0">
-                <img src={staticFile("/images/sidebar-promo.jpg")} alt="" className="w-full h-full object-cover opacity-15" />
+                <img
+                  src={staticFile("/images/sidebar-promo.jpg")}
+                  alt=""
+                  className="w-full h-full object-cover opacity-15"
+                />
                 <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/60 via-brand-dark/90 to-brand-dark" />
               </div>
               <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-purple via-purple-light to-cyan" />
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[200px] bg-purple/10 rounded-full blur-[80px] pointer-events-none" />
 
               <div className="relative">
-                <img src={staticFile("/images/icons/icon-controller.png")} alt="" className="w-12 h-12 sm:w-14 sm:h-14 object-contain mx-auto mb-5 sm:mb-6" />
+                <img
+                  src={staticFile("/images/icons/icon-controller.png")}
+                  alt=""
+                  className="w-12 h-12 sm:w-14 sm:h-14 object-contain mx-auto mb-5 sm:mb-6"
+                />
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4">
                   {t("cta.title")}
                 </h2>
                 <p className="text-sm sm:text-lg text-zinc-400 max-w-lg mx-auto mb-8 leading-relaxed">
                   {t("cta.description")}
                 </p>
-                <Link href="/register" className="inline-flex items-center px-10 py-4 text-base font-semibold text-white bg-gradient-to-r from-purple to-purple-light rounded-xl btn-glow animate-glow-pulse">
+                <Link
+                  href="/register"
+                  className="inline-flex items-center px-10 py-4 text-base font-semibold text-white bg-gradient-to-r from-purple to-purple-light rounded-xl btn-glow animate-glow-pulse"
+                >
                   {t("cta.createAccount")}
                   <ChevronRight className="inline-block w-5 h-5 ml-1" />
                 </Link>
