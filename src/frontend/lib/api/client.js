@@ -33,10 +33,16 @@ export function authHeaders(token) {
 
 export async function fetchJson(path, options = {}) {
   const url = path.startsWith('http') ? path : `${API_BASE}${path.startsWith('/') ? path : `/${path}`}`;
-  const { cache, ...rest } = options;
+  const { cache, timeoutMs, ...rest } = options;
+  const signal =
+    timeoutMs != null
+      ? AbortSignal.timeout(timeoutMs)
+      : rest.signal;
+
   const res = await fetch(url, {
     cache: cache ?? 'default',
     ...rest,
+    signal,
     headers: {
       'Content-Type': 'application/json',
       ...(cache === 'no-store' ? { 'Cache-Control': 'no-cache' } : {}),

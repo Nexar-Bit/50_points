@@ -41,20 +41,38 @@ export default function Home() {
 
   useEffect(() => {
     let cancelled = false;
-    async function loadTournaments() {
-      return fetchTournamentsList({ refresh: true, forHome: true }).catch(() => null);
+
+    function applyTournaments(res) {
+      if (cancelled || !res?.tournaments?.length) return;
+      setLiveTournaments(res.tournaments.map(mapTournamentForHomeCard));
     }
+
     async function load() {
       try {
-        const [tournamentsRes, leaderboardRes] = await Promise.all([
-          loadTournaments(),
-          fetchJson("/leaderboard?limit=5").catch(() => ({ legends: [] })),
-        ]);
-        if (cancelled) return;
-        const mapped = (tournamentsRes?.tournaments || [])
-          .map(mapTournamentForHomeCard);
-        setLiveTournaments(mapped);
-        setTopPlayers((leaderboardRes?.legends || []).map(mapLegendForHome));
+        const leaderboardRes = await fetchJson("/leaderboard?limit=5", {
+          cache: "no-store",
+          timeoutMs: 15000,
+        }).catch(() => ({ legends: [] }));
+        if (!cancelled) {
+          setTopPlayers((leaderboardRes?.legends || []).map(mapLegendForHome));
+        }
+
+        // Fast path: DB data only (avoids Vercel serverless timeout on scrape)
+        const cached = await fetchTournamentsList({
+          refresh: false,
+          forHome: true,
+          timeoutMs: 20000,
+        }).catch(() => null);
+        applyTournaments(cached);
+        if (!cancelled) setHomeLoading(false);
+
+        // Background: re-scrape public racecards and refresh cards
+        const fresh = await fetchTournamentsList({
+          refresh: true,
+          forHome: true,
+          timeoutMs: 120000,
+        }).catch(() => null);
+        applyTournaments(fresh);
       } catch {
         if (!cancelled) {
           setLiveTournaments([]);
@@ -64,6 +82,7 @@ export default function Home() {
         if (!cancelled) setHomeLoading(false);
       }
     }
+
     load();
     return () => {
       cancelled = true;
@@ -159,7 +178,7 @@ export default function Home() {
               ))
             ) : (
               <p className="text-zinc-500 text-sm col-span-full">
-                No live tournaments right now. Ensure the backend is running — public racecards sync automatically on load.
+                {t("tournamentsSection.empty")}
               </p>
             )}
           </div>

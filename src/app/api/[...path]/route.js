@@ -3,6 +3,9 @@
  * Set API_BACKEND_URL on Vercel to your Render URL (no trailing slash).
  */
 
+/** Allow slow racing sync on Vercel (requires Pro for >10s on some plans). */
+export const maxDuration = 60;
+
 const BACKEND =
   process.env.API_BACKEND_URL ||
   process.env.NEXT_PUBLIC_API_URL ||

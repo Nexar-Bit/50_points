@@ -45,8 +45,16 @@ export default function TournamentsPage() {
 
     async function load() {
       try {
-        const data = await fetchTournamentsList({ refresh: true });
-        if (!cancelled) setTournaments(data.tournaments || []);
+        const cached = await fetchTournamentsList({ refresh: false }).catch(() => null);
+        if (!cancelled && cached?.tournaments?.length) {
+          setTournaments(cached.tournaments);
+        }
+        if (!cancelled) setLoading(false);
+
+        const fresh = await fetchTournamentsList({ refresh: true }).catch(() => null);
+        if (!cancelled && fresh?.tournaments?.length) {
+          setTournaments(fresh.tournaments);
+        }
       } catch {
         if (!cancelled) setTournaments([]);
       } finally {
