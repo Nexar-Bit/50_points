@@ -3,10 +3,10 @@ import { fetchJson } from '@/frontend/lib/api/client';
 /**
  * Load tournaments from the API. When refresh is true, backend re-scrapes public racecards.
  */
-export function fetchTournamentsList({
+export async function fetchTournamentsList({
   refresh = true,
   forHome = false,
-  timeoutMs = refresh ? 120000 : 20000,
+  timeoutMs = refresh ? 120000 : 30000,
 } = {}) {
   const params = new URLSearchParams();
   if (refresh) params.set('refresh', '1');

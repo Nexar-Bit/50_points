@@ -1,3 +1,10 @@
+import {
+  PRODUCTION_API_URL,
+  PUBLIC_API_URL,
+  isLocalApiUrl,
+  resolvePublicApiUrl,
+} from '@/frontend/lib/config/api';
+
 function createTimeoutSignal(timeoutMs) {
   if (timeoutMs == null) return undefined;
   if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
@@ -11,22 +18,30 @@ function createTimeoutSignal(timeoutMs) {
   return controller.signal;
 }
 
-/** Resolve API base at call time (not module load) so the browser always uses the Vercel proxy. */
+/** API bases to try (browser), most reliable first. */
+export function getApiBases() {
+  if (typeof window === 'undefined') {
+    return [`${resolvePublicApiUrl()}/api`];
+  }
+
+  const bases = [];
+  const host = window.location.hostname;
+
+  if (host.includes('vercel.app') || host.endsWith('50-points.vercel.app')) {
+    bases.push(`${PRODUCTION_API_URL}/api`);
+  }
+
+  if (PUBLIC_API_URL && !isLocalApiUrl(PUBLIC_API_URL)) {
+    bases.push(`${PUBLIC_API_URL}/api`);
+  }
+
+  bases.push('/api');
+
+  return [...new Set(bases)];
+}
+
 export function getApiBase() {
-  if (typeof window !== 'undefined') {
-    return '/api';
-  }
-
-  const publicUrl = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/$/, '');
-  if (publicUrl && publicUrl !== 'http://localhost:8000' && publicUrl !== 'http://127.0.0.1:8000') {
-    return `${publicUrl}/api`;
-  }
-
-  const serverBackend =
-    process.env.API_BACKEND_URL ||
-    process.env.NEXT_PUBLIC_API_URL ||
-    'http://localhost:8000';
-  return `${serverBackend.replace(/\/$/, '')}/api`;
+  return getApiBases()[0];
 }
 
 export function getStoredToken() {
@@ -40,29 +55,46 @@ export function authHeaders(token) {
 }
 
 export async function fetchJson(path, options = {}) {
-  const apiBase = getApiBase();
-  const url = path.startsWith('http') ? path : `${apiBase}${path.startsWith('/') ? path : `/${path}`}`;
-  const { cache, timeoutMs, signal: userSignal, ...rest } = options;
-  const timeoutSignal = createTimeoutSignal(timeoutMs);
+  const { cache, timeoutMs, signal: userSignal, bases: customBases, ...rest } = options;
+  const pathPart = path.startsWith('http')
+    ? path
+    : path.startsWith('/')
+      ? path
+      : `/${path}`;
 
-  const res = await fetch(url, {
-    cache: cache ?? 'default',
-    ...rest,
-    signal: userSignal ?? timeoutSignal,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(cache === 'no-store' ? { 'Cache-Control': 'no-cache' } : {}),
-      ...rest.headers,
-    },
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const err = new Error(data.detail || data.error || res.statusText || 'Request failed');
-    err.status = res.status;
-    err.data = data;
-    throw err;
+  const bases = customBases ?? getApiBases();
+  const urls = path.startsWith('http')
+    ? [path]
+    : bases.map((base) => `${base.replace(/\/$/, '')}${pathPart}`);
+
+  let lastError;
+  for (const url of urls) {
+    try {
+      const timeoutSignal = createTimeoutSignal(timeoutMs);
+      const res = await fetch(url, {
+        cache: cache ?? 'default',
+        ...rest,
+        signal: userSignal ?? timeoutSignal,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(cache === 'no-store' ? { 'Cache-Control': 'no-cache' } : {}),
+          ...rest.headers,
+        },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const err = new Error(data.detail || data.error || res.statusText || 'Request failed');
+        err.status = res.status;
+        err.data = data;
+        throw err;
+      }
+      return data;
+    } catch (err) {
+      lastError = err;
+    }
   }
-  return data;
+
+  throw lastError ?? new Error('Request failed');
 }
 
 export async function fetchAuthJson(path, options = {}) {
@@ -75,5 +107,4 @@ export async function fetchAuthJson(path, options = {}) {
   });
 }
 
-/** @deprecated use getApiBase() — kept for imports that read API_BASE at runtime */
-export const API_BASE = typeof window !== 'undefined' ? '/api' : getApiBase();
+export const API_BASE = getApiBase();
