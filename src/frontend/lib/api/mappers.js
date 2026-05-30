@@ -42,7 +42,11 @@ export function mapTournamentForHomeCard(t) {
     players: t.players ?? 0,
     nextRace: openRace?.scheduledTime || formatRaceTime(null, t.date),
     startTime: formatRaceTime(openRace?.scheduledTime, t.date),
-    imageUrl: t.imageUrl ? staticFile(t.imageUrl.startsWith('/') ? t.imageUrl : `/${t.imageUrl}`) : undefined,
+    imageUrl: getTournamentImageUrl({
+      track: t.track,
+      slug: t.slug,
+      imageUrl: t.imageUrl,
+    }),
   };
 }
 
