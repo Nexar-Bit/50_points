@@ -1,4 +1,5 @@
 import { staticFile } from '@/frontend/lib/config/paths';
+import { getTournamentImageUrl } from '@/frontend/lib/tournamentImages';
 
 const STRATEGY_LABELS = {
   full_point: 'Full Point',
