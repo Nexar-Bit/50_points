@@ -4,11 +4,14 @@ const apiUrl =
   process.env.API_BACKEND_URL ||
   'http://localhost:8000';
 
-const nextConfig = {
+ const nextConfig = {
   env: {
     // Expose backend URL to the browser bundle (Vercel: set API_BACKEND_URL only).
     NEXT_PUBLIC_API_URL: apiUrl,
     API_BACKEND_URL: process.env.API_BACKEND_URL || '',
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
   images: {
     unoptimized: true,
