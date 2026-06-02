@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
@@ -10,23 +10,30 @@ import { FLOATING_MENU_ICONS } from "@/frontend/components/layout/FloatingMenuIc
 import FloatingMenuTabElectrons from "@/frontend/components/layout/FloatingMenuTabElectrons";
 
 const MENU_ITEMS = [
-  { id: "tickets", href: "/profile", labelKey: "floatingMenu.tickets", match: (p) => p === "/profile" || p.startsWith("/profile/") },
-  { id: "tournaments", href: "/tournaments", labelKey: "floatingMenu.tournaments", match: (p) => p.startsWith("/tournament") || p === "/tournaments" },
-  { id: "ranking", href: "/leaderboard", labelKey: "floatingMenu.ranking", match: (p) => p === "/leaderboard" },
-  { id: "racecourses", href: "/tournaments", labelKey: "floatingMenu.racecourses", match: () => false },
-  { id: "statistics", href: "/statistics", labelKey: "floatingMenu.statistics", match: (p) => p === "/statistics" },
-  { id: "top10", href: "/legends", labelKey: "floatingMenu.top10", match: (p) => p === "/legends" },
-  { id: "groups", href: "/groups", labelKey: "floatingMenu.groups", match: (p) => p.startsWith("/groups") },
-  { id: "achievements", href: "/profile", labelKey: "floatingMenu.achievements", match: () => false },
-  { id: "hallOfFame", href: "/hall-of-fame", labelKey: "floatingMenu.hallOfFame", match: (p) => p === "/hall-of-fame" },
-  { id: "profile", href: "/profile", labelKey: "floatingMenu.profile", match: () => false },
-  { id: "help", href: "/how-to-play", labelKey: "floatingMenu.help", match: (p) => p === "/how-to-play" },
+  { id: "tickets", href: "/statistics", labelKey: "floatingMenu.tickets" },
+  { id: "tournaments", href: "/tournaments", labelKey: "floatingMenu.tournaments" },
+  { id: "ranking", href: "/leaderboard", labelKey: "floatingMenu.ranking" },
+  { id: "racecourses", href: "/statistics/explorer?level=racetrack", labelKey: "floatingMenu.racecourses" },
+  { id: "statistics", href: "/statistics/explorer", labelKey: "floatingMenu.statistics" },
+  { id: "top10", href: "/legends", labelKey: "floatingMenu.top10" },
+  { id: "groups", href: "/groups", labelKey: "floatingMenu.groups" },
+  { id: "achievements", href: "/profile?section=achievements", labelKey: "floatingMenu.achievements" },
+  { id: "hallOfFame", href: "/hall-of-fame", labelKey: "floatingMenu.hallOfFame" },
+  { id: "profile", href: "/profile", labelKey: "floatingMenu.profile" },
+  { id: "help", href: "/how-to-play", labelKey: "floatingMenu.help" },
 ];
 
 const PANEL_ANIM_MS = 320;
 
+function isProfilePath(pathname) {
+  return pathname === "/profile" || pathname.startsWith("/profile/");
+}
+
 export default function FloatingMenuBar() {
   const pathname = usePathname() || "";
+  const searchParams = useSearchParams();
+  const section = searchParams.get("section");
+  const statsLevel = searchParams.get("level");
   const router = useRouter();
   const { t } = useLanguage();
   const { logout } = useAuth();
@@ -78,7 +85,34 @@ export default function FloatingMenuBar() {
     router.push("/");
   }, [logout, handleClose, router]);
 
-  const isActive = (item) => item.match(pathname);
+  const isActive = (item) => {
+    switch (item.id) {
+      case "tickets":
+        return pathname === "/statistics";
+      case "statistics":
+        return pathname.startsWith("/statistics/explorer") && statsLevel !== "racetrack";
+      case "racecourses":
+        return pathname.startsWith("/statistics/explorer") && statsLevel === "racetrack";
+      case "tournaments":
+        return pathname === "/tournaments" || pathname.startsWith("/tournament/");
+      case "ranking":
+        return pathname === "/leaderboard";
+      case "top10":
+        return pathname === "/legends";
+      case "groups":
+        return pathname.startsWith("/groups");
+      case "achievements":
+        return isProfilePath(pathname) && section === "achievements";
+      case "profile":
+        return isProfilePath(pathname) && section !== "achievements";
+      case "hallOfFame":
+        return pathname === "/hall-of-fame";
+      case "help":
+        return pathname === "/how-to-play";
+      default:
+        return false;
+    }
+  };
   const panelVisible = showPanel || panelPhase === "leaving";
   const panelAnimClass =
     panelPhase === "entering"
@@ -91,7 +125,7 @@ export default function FloatingMenuBar() {
 
   const renderNavItem = (item, index, isButton = false, onButtonClick) => {
     const Icon = FLOATING_MENU_ICONS[item.id];
-    const active = item.match ? isActive(item) : false;
+    const active = isActive(item);
     const className = `floating-menu__link${active ? " floating-menu__link--active" : ""}`;
     const style = { "--fm-item-index": index };
     const iconEl = Icon ? <Icon className="floating-menu__icon" /> : null;

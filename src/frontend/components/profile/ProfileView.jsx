@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Trophy,
@@ -72,6 +73,9 @@ export default function ProfileView({ userId: viewUserId }) {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTournamentId, setActiveTournamentId] = useState(null);
+  const searchParams = useSearchParams();
+  const profileSection = searchParams.get("section");
+  const achievementsRef = useRef(null);
 
   const resolvedId = viewUserId ? Number(viewUserId) : authUser?.id;
   const isOwnProfile = Boolean(authUser?.id && resolvedId === authUser.id);
@@ -99,6 +103,14 @@ export default function ProfileView({ userId: viewUserId }) {
       .catch(() => setProfile(null))
       .finally(() => setLoading(false));
   }, [resolvedId, isOwnProfile, authLoading, tryAwardRecordTies]);
+
+  useEffect(() => {
+    if (profileSection !== "achievements" || loading) return;
+    const timer = window.setTimeout(() => {
+      achievementsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 150);
+    return () => window.clearTimeout(timer);
+  }, [profileSection, loading]);
 
   const userProfile = useMemo(() => {
     if (!profile?.user) return null;
@@ -365,11 +377,13 @@ export default function ProfileView({ userId: viewUserId }) {
           </>
         ) : null}
 
-        <AchievementGallery
-          userId={resolvedId}
-          cardsFromApi={profile?.achievementCards}
-          canOpenCards={isOwnProfile}
-        />
+        <div ref={achievementsRef} id="achievements" className="scroll-mt-24">
+          <AchievementGallery
+            userId={resolvedId}
+            cardsFromApi={profile?.achievementCards}
+            canOpenCards={isOwnProfile}
+          />
+        </div>
 
         {isOwnProfile ? (
           <>

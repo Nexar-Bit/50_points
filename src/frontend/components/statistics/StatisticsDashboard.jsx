@@ -7,6 +7,8 @@ import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import { fetchAuthJson, fetchJson } from "@/frontend/lib/api/client";
 
+const VALID_LEVELS = new Set(["race", "tournament", "racetrack", "global", "personal"]);
+
 const LEVELS = [
   { id: "race", icon: Flag, accent: "text-emerald-400 border-emerald-500/40 bg-emerald-500/10" },
   { id: "tournament", icon: Trophy, accent: "text-orange-400 border-orange-500/40 bg-orange-500/10" },
@@ -59,10 +61,10 @@ function MetricCard({ label, value, sub }) {
   );
 }
 
-export default function StatisticsDashboard() {
+export default function StatisticsDashboard({ initialLevel = "tournament" }) {
   const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
-  const [activeLevel, setActiveLevel] = useState("tournament");
+  const [activeLevel, setActiveLevel] = useState(initialLevel);
   const [tournaments, setTournaments] = useState([]);
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [races, setRaces] = useState([]);
@@ -77,6 +79,10 @@ export default function StatisticsDashboard() {
   const [error, setError] = useState(null);
 
   const levelLabel = useCallback((id) => t(`statsLevels.${id}`), [t]);
+
+  useEffect(() => {
+    if (VALID_LEVELS.has(initialLevel)) setActiveLevel(initialLevel);
+  }, [initialLevel]);
 
   const tracks = useMemo(() => {
     const set = new Set(tournaments.map((x) => x.track).filter(Boolean));

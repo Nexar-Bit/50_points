@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { usePathname } from "next/navigation";
 import Header from "@/frontend/components/layout/Header";
 import Footer from "@/frontend/components/layout/Footer";
@@ -27,7 +28,11 @@ export default function ConditionalShell({ children }) {
   if (isAuthenticated) {
     return (
       <>
-        {!hideChrome ? <FloatingMenuBar /> : null}
+        {!hideChrome ? (
+          <Suspense fallback={null}>
+            <FloatingMenuBar />
+          </Suspense>
+        ) : null}
         <main className={hideChrome ? "min-h-screen" : "app-main app-main--with-menu min-h-screen"}>
           {children}
         </main>
