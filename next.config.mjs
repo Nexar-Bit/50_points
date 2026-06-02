@@ -29,6 +29,11 @@ const apiUrl =
     ];
   },
   webpack: (config, { dev }) => {
+    // Windows can lock .next/webpack pack files (EBUSY), corrupting the cache and
+    // causing prerender errors like "e[o] is not a function" on the next build.
+    if (process.platform === 'win32') {
+      config.cache = false;
+    }
     if (dev) {
       config.watchOptions = {
         ...config.watchOptions,

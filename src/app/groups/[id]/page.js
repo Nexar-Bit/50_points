@@ -87,7 +87,7 @@ export default function GroupDetailPage() {
 
   return (
     <div className="min-h-screen bg-brand-dark text-white">
-      <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="app-page py-8">
         <Link href="/groups" className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light mb-4">
           <ArrowLeft className="w-4 h-4" />
           Grupos

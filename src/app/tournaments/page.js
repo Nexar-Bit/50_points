@@ -59,7 +59,7 @@ export default function TournamentsPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/60 via-brand-dark/90 to-brand-dark" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-6">
+        <div className="relative app-page pt-10 pb-6">
           <AnimateInView>
             <div className="flex items-center gap-3 mb-2">
               <span className="w-2.5 h-2.5 rounded-full bg-cyan animate-pulse-live" />
@@ -77,7 +77,7 @@ export default function TournamentsPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-32 lg:pb-16">
+      <div className="app-page pb-32 lg:pb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {loading
             ? Array.from({ length: 3 }).map((_, i) => (

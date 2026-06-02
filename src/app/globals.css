@@ -5,6 +5,7 @@
 :root {
   --background: #0a0a0f;
   --foreground: #e4e4e7;
+  --app-menu-offset: 4.75rem;
 }
 
 * {
@@ -3048,8 +3049,9 @@ body {
 }
 
 .hof-app--embedded-nav {
-  max-width: 90rem;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
 }
 
 .hof-app--embedded-nav.hof-app {
@@ -3066,9 +3068,10 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
-  max-width: 90rem;
-  margin: 0 auto;
-  padding: 1rem 1rem 2.5rem;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 1rem clamp(0.75rem, 2.5vw, 2rem) 2.5rem;
   color: #fff;
   background: #050508;
   min-height: calc(100vh - 4rem);
@@ -6115,5 +6118,703 @@ body {
 
   .floating-menu--expanded .floating-menu__panel {
     width: min(32rem, calc(100vw - 3.5rem));
+  }
+}
+
+/* Full-width app pages (all routes except homepage) */
+.app-main {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.app-main--with-menu {
+  padding-left: var(--app-menu-offset);
+}
+
+@media (max-width: 480px) {
+  .app-main--with-menu {
+    padding-left: 3.25rem;
+  }
+}
+
+.app-page {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: clamp(0.75rem, 2.5vw, 2rem);
+  padding-right: clamp(0.75rem, 2.5vw, 2rem);
+  box-sizing: border-box;
+}
+
+/* MIS TICKETS — statistics (design mockup, no sidebar) */
+.mis-stats-page {
+  min-height: 100vh;
+  background: #0b0e1b;
+  color: #fff;
+  padding-bottom: 3rem;
+}
+
+.mis-stats-container {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(1rem, 2vw, 1.75rem) clamp(0.75rem, 2.5vw, 2rem) 3rem;
+  box-sizing: border-box;
+}
+
+.mis-stats-live-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mis-stats-live-bar__left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.mis-stats-live-bar__title {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.mis-stats-live-bar__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+.mis-stats-live-bar__count {
+  font-size: 0.65rem;
+  color: #71717a;
+}
+
+.mis-stats-live-bar__right {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.mis-stats-live-bar__filter,
+.mis-stats-live-bar__menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: #a1a1aa;
+  font-size: 0.65rem;
+}
+
+.mis-stats-tickets-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-align: left;
+}
+
+.mis-stats-tickets-btn__label {
+  flex: 1;
+}
+
+.mis-stats-tickets-btn__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: #7c3aed;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.mis-stats-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .mis-stats-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.mis-stats-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.mis-stats-header__logo {
+  width: 2.75rem;
+  height: 2.75rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.mis-stats-header__title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.mis-stats-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.mis-stats-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.75rem;
+  color: #e4e4e7;
+}
+
+.mis-stats-filter select {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: inherit;
+  outline: none;
+  max-width: 10rem;
+}
+
+.mis-stats-tabs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+  margin-bottom: 1.75rem;
+}
+
+.mis-stats-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 3.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  color: #71717a;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mis-stats-tab--personal:not(.mis-stats-tab--active) {
+  border-color: rgba(168, 85, 247, 0.35);
+  color: #a78bfa;
+}
+
+.mis-stats-tab--race:not(.mis-stats-tab--active) {
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.mis-stats-tab--tournament:not(.mis-stats-tab--active) {
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+}
+
+.mis-stats-tab--active.mis-stats-tab--personal {
+  background: rgba(124, 58, 237, 0.15);
+  border-color: #a855f7;
+  color: #e9d5ff;
+  box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.35);
+}
+
+.mis-stats-tab--active.mis-stats-tab--race {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: #22c55e;
+  color: #86efac;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
+}
+
+.mis-stats-tab--active.mis-stats-tab--tournament {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: #f59e0b;
+  color: #fcd34d;
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.35);
+}
+
+.mis-stats-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 1.5rem;
+}
+
+.mis-stats-metrics--race-summary {
+  display: none;
+}
+
+.mis-stats-metric {
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #161b30;
+  padding: 0.85rem 0.75rem;
+  min-height: 7.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.mis-stats-metric--purple {
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+.mis-stats-metric--green {
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.mis-stats-metric--orange {
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.mis-stats-metric__label {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #71717a;
+  margin-bottom: 0.35rem;
+  line-height: 1.3;
+}
+
+.mis-stats-metric__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.35rem;
+}
+
+.mis-stats-metric__value {
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.mis-stats-metric__value-sm {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.mis-stats-metric__delta {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #71717a;
+}
+
+.mis-stats-metric__delta--up {
+  color: #22c55e;
+}
+
+.mis-stats-metric__sub {
+  font-size: 0.6rem;
+  color: #71717a;
+  margin-top: 0.15rem;
+}
+
+.mis-stats-metric__footer {
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.mis-stats-metric__trophy-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.mis-stats-chart-line {
+  width: 100%;
+  height: 2.25rem;
+  display: block;
+}
+
+.mis-stats-deep {
+  margin-top: 0.5rem;
+}
+
+.mis-stats-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mis-stats-section__title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #a1a1aa;
+  margin: 0 0 1.1rem;
+}
+
+.mis-stats-section__num {
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #a855f7;
+  flex-shrink: 0;
+}
+
+.mis-stats-section--last {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.mis-stats-race-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.mis-stats-race-pill {
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: #a1a1aa;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.mis-stats-race-pill--active {
+  background: #7c3aed;
+  border-color: #a855f7;
+  color: #fff;
+}
+
+.mis-stats-donut-grid,
+.mis-stats-result-grid,
+.mis-stats-perf-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.mis-stats-panel {
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #161b30;
+  padding: 1.35rem 1.25rem;
+}
+
+.mis-stats-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .mis-stats-panel__body {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mis-stats-legend {
+    flex: 1;
+    margin-bottom: 0 !important;
+  }
+
+  .mis-stats-donut-wrap {
+    flex-shrink: 0;
+  }
+}
+
+.mis-stats-panel__title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #d4d4d8;
+  margin: 0 0 1.15rem;
+  line-height: 1.45;
+}
+
+.mis-stats-panel__subtitle {
+  font-size: 0.68rem;
+  font-weight: 800;
+  margin: 0 0 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mis-stats-panel__subtitle--purple {
+  color: #a855f7;
+}
+
+.mis-stats-panel__subtitle--cyan {
+  color: #06b6d4;
+}
+
+.mis-stats-legend {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  font-size: 0.7rem;
+}
+
+.mis-stats-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+  color: #d4d4d8;
+}
+
+.mis-stats-legend__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.mis-stats-legend__name {
+  flex: 1;
+  min-width: 0;
+}
+
+.mis-stats-legend__pts {
+  margin-left: auto;
+  color: #71717a;
+  font-weight: 600;
+}
+
+.mis-stats-donut-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.mis-stats-footnote {
+  font-size: 0.6rem;
+  color: #52525b;
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+.mis-stats-result__eyebrow {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #a1a1aa;
+  margin-bottom: 0.5rem;
+}
+
+.mis-stats-result__icon {
+  margin-right: 0.35rem;
+}
+
+.mis-stats-result__big {
+  font-size: clamp(1.35rem, 2.5vw, 1.65rem);
+  font-weight: 900;
+  color: #22c55e;
+  margin-bottom: 0.5rem;
+}
+
+.mis-stats-result__meta {
+  font-size: 0.65rem;
+  color: #71717a;
+  margin-bottom: 0.25rem;
+}
+
+.mis-stats-table {
+  width: 100%;
+  margin-top: 1rem;
+  font-size: 0.65rem;
+  border-collapse: collapse;
+}
+
+.mis-stats-table th {
+  text-align: left;
+  color: #52525b;
+  font-weight: 700;
+  padding: 0.35rem 0.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mis-stats-table td {
+  padding: 0.45rem 0.25rem;
+  color: #e4e4e7;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.mis-stats-table__row--highlight {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.mis-stats-table__row--highlight td {
+  color: #86efac;
+}
+
+.mis-stats-table__horse {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mis-stats-table__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.mis-stats-mini-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.mis-stats-mini-metrics div {
+  padding: 0.5rem;
+  border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mis-stats-mini-metrics span {
+  display: block;
+  font-size: 0.55rem;
+  color: #71717a;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.mis-stats-mini-metrics strong {
+  font-size: 1rem;
+  color: #fff;
+}
+
+.mis-stats-chart-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #71717a;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.mis-stats-evolution {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.mis-stats-bottom-widgets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mis-stats-widget-title {
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #71717a;
+  margin-bottom: 0.65rem;
+}
+
+.mis-stats-widget-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.68rem;
+}
+
+.mis-stats-widget-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  color: #d4d4d8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.mis-stats-widget-col--chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mis-stats-mini-donut {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .mis-stats-tabs {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .mis-stats-metrics {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .mis-stats-tab {
+    font-size: 0.68rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .mis-stats-donut-grid,
+  .mis-stats-result-grid,
+  .mis-stats-perf-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 899px) {
+  .mis-stats-metrics--race-summary {
+    display: grid;
   }
 }

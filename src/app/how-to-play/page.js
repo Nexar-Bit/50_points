@@ -101,7 +101,7 @@ export default function HowToPlayPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f]/60 via-[#0a0a0f]/90 to-[#0a0a0f]" />
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-8">
+        <div className="relative z-10 app-page pt-8 sm:pt-12 pb-8">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light transition-colors mb-8"
@@ -128,7 +128,7 @@ export default function HowToPlayPage() {
         </div>
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pb-8 sm:pb-12">
+      <div className="relative z-10 app-page pb-8 sm:pb-12">
         <motion.div
           variants={stagger}
           initial="hidden"

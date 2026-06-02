@@ -49,7 +49,7 @@ export default function GroupsPage() {
 
   return (
     <div className="min-h-screen bg-brand-dark text-white">
-      <div className="max-w-2xl mx-auto px-4 py-10">
+      <div className="app-page py-10">
         <Link href="/" className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light mb-6">
           <ArrowLeft className="w-4 h-4" />
           {t("leaderboard.backToHome")}

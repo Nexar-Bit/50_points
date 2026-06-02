@@ -190,7 +190,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-brand-dark">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <div className="app-page py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
             <div className="flex items-center gap-2 mb-1">

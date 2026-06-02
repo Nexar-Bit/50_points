@@ -94,7 +94,7 @@ export default function LegendsPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#050508]/60 via-[#050508]/90 to-[#050508]" />
         </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-8">
+        <div className="relative z-10 app-page pt-8 pb-8">
           <Link href="/" className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light transition-colors mb-8">
             <ArrowLeft className="w-4 h-4" />
             {t("legends.backToHome")}
@@ -129,7 +129,7 @@ export default function LegendsPage() {
       </div>
 
       {/* Legends Table */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pb-16">
+      <div className="relative z-10 app-page pb-16">
         <div className="rounded-2xl overflow-hidden border border-white/[0.06]" style={{ background: "rgba(12,12,18,0.8)", backdropFilter: "blur(12px)" }}>
           {/* Table header */}
           <div className="px-4 sm:px-6 py-3 border-b border-white/[0.06] flex items-center gap-3 text-[11px] font-semibold text-zinc-600 uppercase tracking-wider">

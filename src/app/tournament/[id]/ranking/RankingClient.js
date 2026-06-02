@@ -125,7 +125,7 @@ export default function RankingClient() {
         </div>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple/5 rounded-full blur-[100px]" />
 
-        <div className="relative max-w-lg mx-auto px-4 pt-4 pb-4">
+        <div className="relative app-page pt-4 pb-4">
           <div className="flex items-center justify-between mb-3">
             <Link
               href={`/tournament/${tournament.slug}`}
@@ -151,7 +151,7 @@ export default function RankingClient() {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 pb-28">
+      <div className="app-page pb-28">
         <div className="flex gap-1 p-1 bg-white/[0.03] border border-white/10 rounded-xl mb-4">
           {tabs.map((tab) => (
             <button

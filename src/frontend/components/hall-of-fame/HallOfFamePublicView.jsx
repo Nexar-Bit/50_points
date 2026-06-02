@@ -61,7 +61,7 @@ export default function HallOfFamePublicView() {
         locale={language}
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pb-16 -mt-2 sm:-mt-4">
+      <div className="relative z-10 app-page pb-16 -mt-2 sm:-mt-4">
         <HallOfFameNewsTicker className="mb-6" />
 
         <section className="hof-feat-reveal hof-feat-reveal--public" aria-label={t("hallOfFame.featReveal")}>

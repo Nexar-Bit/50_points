@@ -61,7 +61,7 @@ function TournamentSkeleton() {
   return (
     <div className="min-h-screen bg-brand-dark animate-pulse">
       <div className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-8">
+        <div className="app-page pt-6 pb-8">
           <div className="h-4 w-32 bg-white/5 rounded mb-6" />
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div className="flex-1">
@@ -83,7 +83,7 @@ function TournamentSkeleton() {
           </div>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
+      <div className="app-page pb-12">
         <div className="space-y-3 mt-6">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="h-20 bg-white/[0.03] border border-white/10 rounded-xl" />
@@ -299,7 +299,7 @@ export default function TournamentClient() {
         </div>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-purple/5 rounded-full blur-[120px]" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-8">
+        <div className="relative app-page pt-6 pb-8">
           <Link href="/tournaments" className="inline-flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm mb-6 transition-colors">
             <ChevronLeft size={16} />
             <span>Volver a Torneos</span>
@@ -399,7 +399,7 @@ export default function TournamentClient() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-32 lg:pb-12">
+      <div className="app-page pb-32 lg:pb-12">
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1 min-w-0">
             <div className="grid grid-cols-3 gap-3 mb-6">

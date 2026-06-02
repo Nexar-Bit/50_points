@@ -63,7 +63,7 @@ export default function Header() {
   return (
     <>
       <header className={`fixed top-0 left-0 right-0 z-50 ${isHallOfFame ? "bg-transparent border-transparent" : "glass-strong"}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="app-page">
           <div className="relative flex items-center justify-between h-16 sm:h-18">
             <Link href="/" className="flex items-center group md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2">
               <Image

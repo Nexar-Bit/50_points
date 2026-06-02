@@ -103,7 +103,7 @@ export default function RaceClient() {
     <div className="min-h-screen bg-brand-dark">
       {/* Top navigation bar */}
       <div className="sticky top-0 z-40 bg-brand-dark/90 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div className="app-page py-3 flex items-center justify-between">
           <Link
             href={`/tournament/${tournament.id}`}
             className="flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm transition-colors"
@@ -145,7 +145,7 @@ export default function RaceClient() {
       {/* Race Hero */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-purple/5 via-transparent to-transparent" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-4">
+        <div className="relative app-page pt-6 pb-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -191,7 +191,7 @@ export default function RaceClient() {
       </div>
 
       {/* Main content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-32 lg:pb-12">
+      <div className="app-page pb-32 lg:pb-12">
         <div className="flex flex-col lg:flex-row gap-6">
 
           {/* Left: Race card with picks */}

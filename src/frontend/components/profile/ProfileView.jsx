@@ -215,7 +215,7 @@ export default function ProfileView({ userId: viewUserId }) {
         <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-cyan/8 rounded-full blur-[100px]" />
       </div>
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <div className="relative z-10 app-page py-8 sm:py-12">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light transition-colors mb-8"
