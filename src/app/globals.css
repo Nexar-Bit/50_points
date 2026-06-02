@@ -5230,6 +5230,98 @@ body {
   background: rgba(124, 58, 237, 0.5);
 }
 
+.ranking-reveal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(6px);
+}
+
+.ranking-reveal__banner {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a855f7;
+  margin-bottom: 1rem;
+}
+
+.ranking-reveal__countdown {
+  font-size: clamp(4rem, 18vw, 7rem);
+  font-weight: 900;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
+}
+
+.ranking-reveal__shatter {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ranking-reveal__shard {
+  position: absolute;
+  width: 12%;
+  height: 18%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(124, 58, 237, 0.25));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  animation: ranking-shard-fall 1.1s ease-in forwards;
+}
+
+@keyframes ranking-shard-fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(120vh) rotate(25deg);
+  }
+}
+
+.ranking-reveal__panel {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2rem;
+  max-width: 22rem;
+}
+
+.hologram-banner {
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(168, 85, 247, 0.45);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.35), rgba(6, 182, 212, 0.15));
+}
+
+.hologram-banner--aqua {
+  border-color: rgba(6, 182, 212, 0.5);
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(124, 58, 237, 0.1));
+}
+
+.hologram-banner--yellow {
+  border-color: rgba(245, 158, 11, 0.5);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(124, 58, 237, 0.1));
+}
+
+.hologram-banner--multicolor {
+  border-color: rgba(168, 85, 247, 0.5);
+  background: linear-gradient(
+    90deg,
+    rgba(124, 58, 237, 0.35),
+    rgba(6, 182, 212, 0.25),
+    rgba(245, 158, 11, 0.25)
+  );
+}
+
 /* Tournament ranking row (full spec) */
 .ranking-table {
   border-radius: 0.85rem;

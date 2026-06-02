@@ -40,13 +40,20 @@ function normalizeRace(race) {
   };
 }
 
+const RACES_PER_TOURNAMENT = 7;
+
 function normalizeTournament(t) {
+  const races = (t.races || [])
+    .slice()
+    .sort((a, b) => (a.raceNumber || 0) - (b.raceNumber || 0))
+    .slice(0, RACES_PER_TOURNAMENT);
   return {
     ...t,
+    totalRaces: RACES_PER_TOURNAMENT,
     playersJoined: t._count?.tickets || 0,
     totalPlayers: Math.max(2000, (t._count?.tickets || 0) + 500),
-    racesCompleted: t.currentRace || 0,
-    races: (t.races || []).map(normalizeRace),
+    racesCompleted: Math.min(t.currentRace || 0, RACES_PER_TOURNAMENT),
+    races: races.map(normalizeRace),
   };
 }
 

@@ -9,6 +9,7 @@ import {
   BarChart3,
   HelpCircle,
   User,
+  Users,
   Crown,
   Home,
   LogOut,
@@ -40,6 +41,8 @@ export default function AppSidebar() {
   const navLinks = [
     { href: "/tournaments", label: t("nav.tournaments"), icon: Trophy },
     { href: "/leaderboard", label: t("nav.ranking"), icon: BarChart3 },
+    { href: "/statistics", label: t("nav.statistics"), icon: BarChart3 },
+    { href: "/groups", label: t("nav.groups"), icon: Users },
     { href: "/hall-of-fame", label: t("nav.hallOfFame"), icon: Crown },
     { href: "/how-to-play", label: t("nav.howToPlay"), icon: HelpCircle },
     { href: "/profile", label: t("nav.profile"), icon: User },

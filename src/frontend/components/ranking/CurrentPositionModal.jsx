@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronsUp } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 
-export default function CurrentPositionModal({ open, rank, weeklyChange, onClose }) {
+export default function CurrentPositionModal({ open, rank, weeklyChange, onClose, onViewVideo }) {
   const { t } = useLanguage();
 
   return (
@@ -37,6 +37,11 @@ export default function CurrentPositionModal({ open, rank, weeklyChange, onClose
                   <p className="rank-update-position__period">{t("rankingUpdates.thisWeek")}</p>
                 </div>
               </div>
+            ) : null}
+            {onViewVideo ? (
+              <button type="button" className="rank-update-dismiss mb-2" onClick={onViewVideo}>
+                {t("rankingUpdates.viewVideo")}
+              </button>
             ) : null}
             <button type="button" className="rank-update-dismiss" onClick={onClose}>
               {t("rankingUpdates.continue")}

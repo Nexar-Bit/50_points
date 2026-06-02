@@ -28,7 +28,7 @@ export default function RankingClient() {
   const params = useParams();
   const { user } = useAuth();
   const { tryAwardTournament } = useAchievementCards();
-  const { checkGlobalRank } = useRankingUpdates();
+  const { checkGlobalRank, checkTournamentRank } = useRankingUpdates();
   const [tournament, setTournament] = useState(null);
   const [rankingData, setRankingData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -54,7 +54,12 @@ export default function RankingClient() {
 
       if (user?.id) {
         const me = (lbRes.leaderboard || []).find((e) => e.userId === user.id);
-        if (me?.rank) {
+        if (me?.rankChange > 0) {
+          checkTournamentRank(me, {
+            racesWithGain: 2,
+            tournamentName: lbRes.tournamentName || tournamentRes.tournament?.name,
+          });
+        } else if (me?.rank) {
           checkGlobalRank(me.rank, { racesWithGain: 2 });
         }
       }
@@ -64,7 +69,7 @@ export default function RankingClient() {
     } finally {
       setLoading(false);
     }
-  }, [params.id, user?.id, checkGlobalRank]);
+  }, [params.id, user?.id, checkGlobalRank, checkTournamentRank]);
 
   useEffect(() => {
     setLoading(true);

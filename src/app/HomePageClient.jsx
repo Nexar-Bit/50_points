@@ -15,6 +15,7 @@ import { staticFile } from "@/frontend/lib/config/paths";
 import { fetchJson } from "@/frontend/lib/api/client";
 import { mapLegendForHome } from "@/frontend/lib/api/mappers";
 import { useLiveTournamentsPoll } from "@/frontend/lib/hooks/useLiveTournamentsPoll";
+import VideoFeedPreview from "@/frontend/components/home/VideoFeedPreview";
 
 const howItWorksMeta = [{ step: 1 }, { step: 2 }, { step: 3 }];
 
@@ -344,6 +345,8 @@ export default function HomePageClient({ initialTournaments = [] }) {
               </div>
             </div>
           </AnimateInView>
+
+          <VideoFeedPreview />
         </div>
       </section>
 

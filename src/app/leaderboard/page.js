@@ -13,7 +13,10 @@ import {
   Medal,
   Crown,
   ArrowLeft,
+  MessageCircle,
+  Activity,
 } from "lucide-react";
+import GlobalLeaderboardChat from "@/frontend/components/leaderboard/GlobalLeaderboardChat";
 import Link from "next/link";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
@@ -116,6 +119,12 @@ export default function LeaderboardPage() {
   ];
 
   const [activeFilter, setActiveFilter] = useState("allTime");
+  const [activeViewTab, setActiveViewTab] = useState("ranking");
+  const viewTabs = [
+    { key: "ranking", label: "Ranking", icon: Trophy },
+    { key: "live", label: t("leaderboard.live") || "En Vivo", icon: Activity },
+    { key: "chat", label: "Chat", icon: MessageCircle },
+  ];
   const [tournamentFilter, setTournamentFilter] = useState("all");
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -183,11 +192,15 @@ export default function LeaderboardPage() {
         setTournamentName("");
       } else {
         // Tournament-specific leaderboard
-        const entries = data.leaderboard || [];
+        const entries = data.leaderboard || data.ticketEntries || [];
         mapped = entries.map((entry) => ({
           rank: entry.rank,
           userId: entry.userId,
           username: entry.username || "Unknown",
+          ticketNumber: entry.ticketNumber,
+          displayName: entry.ticketNumber
+            ? `${entry.username || "Unknown"} · T${entry.ticketNumber}`
+            : entry.username || "Unknown",
           initials: (entry.username || "??").slice(0, 2).toUpperCase(),
           color: entry.avatarColor || "#7c3aed",
           gameMode: entry.gameMode || 2,
@@ -196,8 +209,8 @@ export default function LeaderboardPage() {
           streak: entry.bestStreak || 0,
           racesPlayed: entry.racesPlayed || 0,
           winStreak: entry.winStreak || 0,
-          trend: "up",
-          change: 0,
+          trend: entry.rankChange > 0 ? "up" : entry.rankChange < 0 ? "down" : "up",
+          change: entry.rankChange || 0,
         }));
         setTotalPlayers(mapped.length);
         setTournamentName(data.tournamentName || "");
@@ -426,6 +439,53 @@ export default function LeaderboardPage() {
           })}
         </motion.div>
 
+        <div className="flex gap-1 p-1 rounded-xl bg-white/5 border border-white/5 mb-8 max-w-md">
+          {viewTabs.map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setActiveViewTab(tab.key)}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all ${
+                activeViewTab === tab.key ? "bg-purple text-white" : "text-zinc-400 hover:text-zinc-200"
+              }`}
+            >
+              <tab.icon className="w-3.5 h-3.5" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {activeViewTab === "chat" ? (
+          <div className="max-w-lg mx-auto mb-12">
+            <GlobalLeaderboardChat />
+          </div>
+        ) : null}
+
+        {activeViewTab === "live" ? (
+          <div className="glass-card rounded-2xl overflow-hidden mb-12">
+            {loading ? (
+              <p className="p-8 text-center text-zinc-500 text-sm">Cargando...</p>
+            ) : (
+              players
+                .filter((p) => p.change !== 0 || p.streak > 2)
+                .slice(0, 20)
+                .map((player) => (
+                  <div
+                    key={`${player.userId}-${player.ticketNumber || 0}-${player.rank}`}
+                    className="px-4 py-3 flex items-center justify-between border-b border-white/5 last:border-0"
+                  >
+                    <span className="font-semibold text-sm">{player.displayName || player.username}</span>
+                    <span className={`text-xs font-bold ${player.change > 0 ? "text-green-400" : "text-red-400"}`}>
+                      {player.change > 0 ? `+${player.change}` : player.change}
+                    </span>
+                  </div>
+                ))
+            )}
+          </div>
+        ) : null}
+
+        {activeViewTab === "ranking" ? (
+        <>
         {/* TOP 3 Podium */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
           {loading ? (
@@ -535,7 +595,7 @@ export default function LeaderboardPage() {
                   </div>
                   <div className="flex flex-col min-w-0">
                     <span className="font-medium text-sm text-zinc-200 group-hover:text-white transition-colors truncate">
-                      {player.username}
+                      {player.displayName || player.username}
                     </span>
                     <ModeBadge gameMode={player.gameMode} />
                   </div>
@@ -625,6 +685,8 @@ export default function LeaderboardPage() {
             </div>
           </div>
         </motion.div>
+        </>
+        ) : null}
       </div>
     </div>
   );
@@ -665,7 +727,7 @@ function PodiumCard({ player, position, t }) {
         </div>
       </div>
 
-      <h3 className="font-bold text-lg text-white mb-1">{player.username}</h3>
+      <h3 className="font-bold text-lg text-white mb-1">{player.displayName || player.username}</h3>
       <div className="flex justify-center mb-2">
         <ModeBadge gameMode={player.gameMode} />
       </div>
