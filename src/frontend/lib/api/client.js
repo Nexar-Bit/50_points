@@ -67,10 +67,11 @@ export async function fetchJson(path, options = {}) {
     ? [path]
     : bases.map((base) => `${base.replace(/\/$/, '')}${pathPart}`);
 
+  const effectiveTimeoutMs = timeoutMs ?? 10000;
   let lastError;
   for (const url of urls) {
     try {
-      const timeoutSignal = createTimeoutSignal(timeoutMs);
+      const timeoutSignal = createTimeoutSignal(effectiveTimeoutMs);
       const res = await fetch(url, {
         cache: cache ?? 'default',
         ...rest,

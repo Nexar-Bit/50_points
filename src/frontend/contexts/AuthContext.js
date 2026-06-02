@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { fetchJson, fetchAuthJson } from '@/frontend/lib/api/client';
@@ -32,17 +32,20 @@ export function AuthProvider({ children }) {
       const stored = localStorage.getItem('50points_token');
       if (stored) {
         setToken(stored);
-        await fetchUser(stored);
+        // Unblock route rendering immediately; refresh user in background.
         if (!cancelled) setLoading(false);
+        fetchUser(stored);
         return;
       }
 
       const guestStored = localStorage.getItem('50points_guest_token');
       if (guestStored) {
+        if (!cancelled) setLoading(false);
         try {
           const data = await fetchJson('/auth/guest/resume', {
             method: 'POST',
             body: JSON.stringify({ guestToken: guestStored }),
+            timeoutMs: 10000,
           });
           if (cancelled) return;
           localStorage.setItem('50points_token', data.token);
@@ -112,7 +115,8 @@ export function AuthProvider({ children }) {
         user,
         token,
         loading,
-        isAuthenticated: !!user,
+        // Token presence enables protected navigation while profile refresh is in-flight.
+        isAuthenticated: !!token,
         login,
         register,
         playAsGuest,
