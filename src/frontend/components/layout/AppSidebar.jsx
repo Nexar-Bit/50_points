@@ -102,7 +102,9 @@ export default function AppSidebar() {
           <div className="hof-app__profile-meta min-w-0">
             <p className="hof-app__profile-name truncate">{username}</p>
             {user?.isGuest ? (
-              <p className="hof-app__profile-level">{t("auth.guest")}</p>
+              <p className="hof-app__profile-level" title={t("auth.guestProfileNote")}>
+                {t("auth.guest")}
+              </p>
             ) : (
               <p className="hof-app__profile-points">
                 {totalPoints.toLocaleString(isEn ? "en-US" : "es-ES")} PTS

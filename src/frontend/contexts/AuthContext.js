@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { fetchJson, fetchAuthJson } from '@/frontend/lib/api/client';
@@ -26,13 +26,39 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    const stored = localStorage.getItem('50points_token');
-    if (stored) {
-      setToken(stored);
-      fetchUser(stored).finally(() => setLoading(false));
-    } else {
-      setLoading(false);
+    let cancelled = false;
+
+    async function bootstrap() {
+      const stored = localStorage.getItem('50points_token');
+      if (stored) {
+        setToken(stored);
+        await fetchUser(stored);
+        if (!cancelled) setLoading(false);
+        return;
+      }
+
+      const guestStored = localStorage.getItem('50points_guest_token');
+      if (guestStored) {
+        try {
+          const data = await fetchJson('/auth/guest/resume', {
+            method: 'POST',
+            body: JSON.stringify({ guestToken: guestStored }),
+          });
+          if (cancelled) return;
+          localStorage.setItem('50points_token', data.token);
+          setToken(data.token);
+          setUser(data.user);
+        } catch {
+          localStorage.removeItem('50points_guest_token');
+        }
+      }
+      if (!cancelled) setLoading(false);
     }
+
+    bootstrap();
+    return () => {
+      cancelled = true;
+    };
   }, [fetchUser]);
 
   const login = async (identifier, password) => {

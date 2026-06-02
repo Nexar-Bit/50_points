@@ -154,6 +154,9 @@ export default function LoginPage() {
             >
               {t("auth.playAsGuest")}
             </button>
+            <p className="text-xs text-zinc-500 mt-3 leading-relaxed text-center">
+              {t("auth.guestProfileNote")}
+            </p>
 
             <p className="text-center text-sm text-zinc-500 mt-6">
               {t("login.noAccount")}{" "}
