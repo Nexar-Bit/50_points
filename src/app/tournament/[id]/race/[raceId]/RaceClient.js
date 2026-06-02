@@ -12,6 +12,7 @@ import RaceCard from '@/frontend/components/tournament/RaceCard';
 import PickSelector, { strategies } from '@/frontend/components/tournament/PickSelector';
 import TicketSummary from '@/frontend/components/tournament/TicketSummary';
 import TicketConfirmation from '@/frontend/components/tournament/TicketConfirmation';
+import AppPageHeader from '@/frontend/components/layout/AppPageHeader';
 
 export default function RaceClient() {
   const params = useParams();
@@ -69,7 +70,7 @@ export default function RaceClient() {
 
   if (!tournament || !race) {
     return (
-      <div className="min-h-screen bg-brand-dark flex items-center justify-center">
+      <div className="min-h-screen bg-[#161b30] flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">🏇</div>
           <p className="text-white/40 mb-2">Carrera no encontrada</p>
@@ -100,9 +101,9 @@ export default function RaceClient() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-dark">
+    <div className="min-h-screen">
       {/* Top navigation bar */}
-      <div className="sticky top-0 z-40 bg-brand-dark/90 backdrop-blur-xl border-b border-white/5">
+      <div className="sticky top-0 z-40 bg-[#161b30]/90 backdrop-blur-xl border-b border-white/5">
         <div className="app-page py-3 flex items-center justify-between">
           <Link
             href={`/tournament/${tournament.id}`}
@@ -162,9 +163,10 @@ export default function RaceClient() {
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
-              {race.name !== `Race ${race.number}` ? race.name : `CARRERA ${race.number}`}
-            </h1>
+            <AppPageHeader
+              title={race.name !== `Race ${race.number}` ? race.name : `CARRERA ${race.number}`}
+              className="mb-2"
+            />
 
             <div className="flex flex-wrap items-center gap-4 text-sm text-white/40">
               <div className="flex items-center gap-1.5">

@@ -52,7 +52,7 @@ export default function HallOfFamePublicView() {
   }, []);
 
   return (
-    <div className="relative -mt-16 min-h-screen bg-[#050508] text-white">
+    <div className="relative text-white">
       <HallOfFamePodium
         players={podiumPlayers}
         title={t("hallOfFame.congratulationsTitle")}

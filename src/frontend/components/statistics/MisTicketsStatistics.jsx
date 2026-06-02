@@ -1,9 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import { ChevronDown, User, Trophy, Calendar, MapPin } from "lucide-react";
-import { logoAsset } from "@/frontend/lib/config/paths";
+import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 import { HorseHeadIcon } from "@/frontend/components/statistics/MisTicketsStatsIcons";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
@@ -263,50 +262,41 @@ export default function MisTicketsStatistics() {
   const evolutionValues = Array.from({ length: totalRaces }, (_, i) => 20 + i * 8 + (i === 1 ? 12 : 0));
 
   return (
-    <div className="mis-stats-page">
-      <div className="mis-stats-container">
-        <header className="mis-stats-header">
-          <div className="mis-stats-header__brand">
-            <Image
-              src={logoAsset()}
-              alt="50 POINTS"
-              width={44}
-              height={44}
-              className="mis-stats-header__logo"
-              priority
-            />
-            <h1 className="mis-stats-header__title">{t("misTicketsStats.pageTitle")}</h1>
-          </div>
-          <div className="mis-stats-filters">
-            <div className="mis-stats-filter">
-              <Trophy className="w-4 h-4 opacity-50" />
-              <select
-                value={selectedTournament?.id ?? ""}
-                onChange={(e) => {
-                  const tourn = tournaments.find((x) => String(x.id) === e.target.value);
-                  setSelectedTournament(tourn || null);
-                }}
-              >
-                {tournaments.map((tourn) => (
-                  <option key={tourn.id} value={tourn.id}>
-                    {tourn.name}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="w-4 h-4 opacity-50" />
-            </div>
-            <div className="mis-stats-filter">
-              <Calendar className="w-4 h-4 opacity-50" />
-              <span>18/05/2024</span>
-              <ChevronDown className="w-4 h-4 opacity-50" />
-            </div>
-            <div className="mis-stats-filter">
-              <MapPin className="w-4 h-4 opacity-50" />
-              <span>{selectedTournament?.track || "Gulfstream Park"}</span>
-              <ChevronDown className="w-4 h-4 opacity-50" />
-            </div>
-          </div>
-        </header>
+    <>
+        <AppPageHeader
+          title={t("misTicketsStats.pageTitle")}
+          filters={
+            <>
+              <div className="mis-stats-filter">
+                <Trophy className="w-4 h-4 opacity-50" />
+                <select
+                  value={selectedTournament?.id ?? ""}
+                  onChange={(e) => {
+                    const tourn = tournaments.find((x) => String(x.id) === e.target.value);
+                    setSelectedTournament(tourn || null);
+                  }}
+                >
+                  {tournaments.map((tourn) => (
+                    <option key={tourn.id} value={tourn.id}>
+                      {tourn.name}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="w-4 h-4 opacity-50" />
+              </div>
+              <div className="mis-stats-filter">
+                <Calendar className="w-4 h-4 opacity-50" />
+                <span>18/05/2024</span>
+                <ChevronDown className="w-4 h-4 opacity-50" />
+              </div>
+              <div className="mis-stats-filter">
+                <MapPin className="w-4 h-4 opacity-50" />
+                <span>{selectedTournament?.track || "Gulfstream Park"}</span>
+                <ChevronDown className="w-4 h-4 opacity-50" />
+              </div>
+            </>
+          }
+        />
 
         <div className="mis-stats-tabs">
           {TABS.map(({ id, icon: Icon }) => (
@@ -524,7 +514,6 @@ export default function MisTicketsStatistics() {
             </div>
           </>
         )}
-      </div>
-    </div>
+    </>
   );
 }

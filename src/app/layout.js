@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es" className="dark">
       <body
-        className={`${inter.variable} font-sans antialiased bg-brand-dark text-zinc-100 min-h-screen`}
+        className={`${inter.variable} font-sans antialiased bg-[#0b0e1b] text-zinc-100 min-h-screen`}
       >
         <Providers>
           <ConditionalShell>{children}</ConditionalShell>

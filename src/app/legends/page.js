@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Crown, Trophy, Star, Flame, ArrowLeft, Award, Target, Shield, Zap, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { fetchJson } from "@/frontend/lib/api/client";
 
@@ -80,57 +81,22 @@ export default function LegendsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#050508] text-white">
-      {/* Purple/gold glow */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] opacity-12"
-          style={{ background: "radial-gradient(ellipse, rgba(124,58,237,0.4) 0%, rgba(251,191,36,0.15) 50%, transparent 80%)" }} />
-      </div>
+    <>
+        <AppPageHeader title={t("legends.title")} subtitle={t("legends.subtitle")} />
 
-      {/* Header */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          <img src="/images/hero-lobby.jpg" alt="" className="w-full h-full object-cover opacity-10" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#050508]/60 via-[#050508]/90 to-[#050508]" />
-        </div>
-
-        <div className="relative z-10 app-page pt-8 pb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light transition-colors mb-8">
-            <ArrowLeft className="w-4 h-4" />
-            {t("legends.backToHome")}
-          </Link>
-
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple/20 to-gold/10 border border-purple/20 flex items-center justify-center"
-                style={{ boxShadow: "0 0 30px rgba(124,58,237,0.2)" }}>
-                <Crown className="w-8 h-8 text-yellow-400" />
-              </div>
-            </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-3">
-              <span className="text-gradient-gold">{t("legends.title")}</span>
-            </h1>
-            <p className="text-zinc-500 max-w-xl mx-auto text-sm">{t("legends.subtitle")}</p>
-          </motion.div>
-
-          {/* Time filters */}
-          <div className="flex justify-center gap-2 mb-8">
+          <div className="flex flex-wrap gap-2 mb-8">
             {[t("legends.allTime"), t("legends.season"), t("legends.monthly")].map((label, i) => (
-              <button key={label} className={`px-5 py-2 rounded-lg text-xs font-bold transition-all ${
-                i === 0
-                  ? "bg-gradient-to-r from-purple to-purple-light text-white shadow-lg shadow-purple/20"
-                  : "border border-white/10 text-zinc-400 hover:text-white hover:border-purple/30"
-              }`}>
+              <button
+                key={label}
+                type="button"
+                className={`mis-stats-race-pill${i === 0 ? " mis-stats-race-pill--active" : ""}`}
+              >
                 {label}
               </button>
             ))}
           </div>
-        </div>
-      </div>
 
-      {/* Legends Table */}
-      <div className="relative z-10 app-page pb-16">
-        <div className="rounded-2xl overflow-hidden border border-white/[0.06]" style={{ background: "rgba(12,12,18,0.8)", backdropFilter: "blur(12px)" }}>
+        <div className="mis-stats-panel overflow-hidden p-0">
           {/* Table header */}
           <div className="px-4 sm:px-6 py-3 border-b border-white/[0.06] flex items-center gap-3 text-[11px] font-semibold text-zinc-600 uppercase tracking-wider">
             <span className="w-12 text-center">{t("legends.rank")}</span>
@@ -221,7 +187,6 @@ export default function LegendsPage() {
             );
           })}
         </div>
-      </div>
-    </div>
+    </>
   );
 }

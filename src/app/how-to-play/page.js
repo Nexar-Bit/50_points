@@ -16,6 +16,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import Link from "next/link";
+import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 
 const stepIcons = [Users, Target, Crosshair, Zap, TrendingUp];
@@ -89,46 +90,8 @@ export default function HowToPlayPage() {
   const faqs = t("howToPlay.faqs");
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-20 left-1/3 w-96 h-96 bg-purple/10 rounded-full blur-[128px]" />
-        <div className="absolute bottom-1/3 right-1/4 w-64 h-64 bg-cyan/8 rounded-full blur-[100px]" />
-      </div>
-
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          <img src="/images/sidebar-promo.jpg" alt="" className="w-full h-full object-cover opacity-20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f]/60 via-[#0a0a0f]/90 to-[#0a0a0f]" />
-        </div>
-
-        <div className="relative z-10 app-page pt-8 sm:pt-12 pb-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light transition-colors mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {t("howToPlay.backToHome")}
-          </Link>
-
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple/10 border border-purple/20 text-purple-light text-sm font-medium mb-6">
-              <HelpCircle className="w-4 h-4" />
-              {t("howToPlay.badge")}
-            </div>
-            <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-4">{t("howToPlay.title")}</h1>
-            <p className="text-zinc-500 max-w-xl mx-auto">
-              {t("howToPlay.pageDesc")}
-            </p>
-          </motion.div>
-        </div>
-      </div>
-
-      <div className="relative z-10 app-page pb-8 sm:pb-12">
+    <>
+        <AppPageHeader title={t("howToPlay.title")} subtitle={t("howToPlay.pageDesc")} />
         <motion.div
           variants={stagger}
           initial="hidden"
@@ -195,8 +158,7 @@ export default function HowToPlayPage() {
             <ChevronRight className="w-4 h-4" />
           </Link>
         </motion.div>
-      </div>
-    </div>
+    </>
   );
 }
 
@@ -204,7 +166,7 @@ function StepCard({ step, t }) {
   const Icon = step.icon;
 
   return (
-    <div className="glass-card rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+    <div className="mis-stats-panel p-6 sm:p-8 relative overflow-hidden">
       <div className="absolute -top-4 -right-4 text-[120px] font-black text-white/[0.02] select-none leading-none pointer-events-none">
         {step.number}
       </div>

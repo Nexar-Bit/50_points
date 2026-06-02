@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { fetchJson, fetchAuthJson } from "@/frontend/lib/api/client";
 import { staticFile } from "@/frontend/lib/config/paths";
+import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 import HallOfFamePodium from "@/frontend/components/hall-of-fame/HallOfFamePodium";
 import HallOfFameAchievementGrid from "@/frontend/components/hall-of-fame/HallOfFameAchievementGrid";
 import HallOfFameNewsTicker from "@/frontend/components/hall-of-fame/HallOfFameNewsTicker";
@@ -70,15 +71,17 @@ export default function HallOfFameLoggedInView() {
   return (
     <div className="hof-app hof-app--embedded-nav">
       <main className="hof-app__main">
-        <header className="hof-app__page-header">
-          <h1 className="hof-app__page-title">{t("hallOfFame.pageTitle")}</h1>
-          <img
-            src={staticFile("/images/icons/icon-horse.png")}
-            alt=""
-            className="hof-app__page-art"
-            aria-hidden
-          />
-        </header>
+        <AppPageHeader
+          title={t("hallOfFame.pageTitle")}
+          actions={
+            <img
+              src={staticFile("/images/icons/icon-horse.png")}
+              alt=""
+              className="hof-app__page-art"
+              aria-hidden
+            />
+          }
+        />
 
         <HallOfFameNewsTicker className="hof-app__news" />
 

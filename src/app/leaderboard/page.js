@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import GlobalLeaderboardChat from "@/frontend/components/leaderboard/GlobalLeaderboardChat";
 import Link from "next/link";
+import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import { useRankingUpdates } from "@/frontend/contexts/RankingUpdatesContext";
@@ -265,45 +266,8 @@ export default function LeaderboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple/10 rounded-full blur-[128px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-cyan/10 rounded-full blur-[100px]" />
-      </div>
-
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          <img src="/images/ranking-hero.jpg" alt="" className="w-full h-full object-cover opacity-20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f]/60 via-[#0a0a0f]/90 to-[#0a0a0f]" />
-        </div>
-
-        <div className="relative z-10 app-page pt-8 sm:pt-12 pb-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light transition-colors mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {t("leaderboard.backToHome")}
-          </Link>
-
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex items-center gap-3 mb-8"
-          >
-            <div className="p-3 rounded-xl bg-gradient-to-br from-yellow-500/20 to-yellow-600/5 border border-yellow-500/20">
-              <Trophy className="w-7 h-7 text-yellow-400" />
-            </div>
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">{t("leaderboard.title")}</h1>
-              <p className="text-sm text-zinc-500 mt-1">{t("leaderboard.subtitle")}</p>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      <div className="relative z-10 app-page pb-8 sm:pb-12">
+    <>
+        <AppPageHeader title={t("leaderboard.title")} subtitle={t("leaderboard.subtitle")} />
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -687,8 +651,7 @@ export default function LeaderboardPage() {
         </motion.div>
         </>
         ) : null}
-      </div>
-    </div>
+    </>
   );
 }
 

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Lock, Send } from "lucide-react";
+import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 import { fetchAuthJson } from "@/frontend/lib/api/client";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 
@@ -67,18 +68,18 @@ export default function GroupDetailPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-brand-dark text-white p-8 text-center text-zinc-500">
+      <p className="text-zinc-500 p-8 text-center">
         Inicia sesion para ver este grupo.
-      </div>
+      </p>
     );
   }
 
   if (loading) {
-    return <div className="min-h-screen bg-brand-dark text-zinc-500 p-8">Cargando...</div>;
+    return <p className="text-zinc-500 p-8">Cargando...</p>;
   }
 
   if (!group) {
-    return <div className="min-h-screen bg-brand-dark text-red-400 p-8">{error || "Grupo no encontrado"}</div>;
+    return <p className="text-red-400 p-8">{error || "Grupo no encontrado"}</p>;
   }
 
   const holoClass = HOLO_CLASSES[group.activeHologram?.colorVersion] || HOLO_CLASSES.purple;
@@ -86,15 +87,15 @@ export default function GroupDetailPage() {
   const status = group.hologramStatus || {};
 
   return (
-    <div className="min-h-screen bg-brand-dark text-white">
-      <div className="app-page py-8">
-        <Link href="/groups" className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light mb-4">
+    <>
+        <AppPageHeader
+          title={group.name}
+          subtitle={`${group.memberCount} miembros`}
+        />
+        <Link href="/groups" className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light mb-6">
           <ArrowLeft className="w-4 h-4" />
           Grupos
         </Link>
-
-        <h1 className="text-2xl font-bold mb-1">{group.name}</h1>
-        <p className="text-xs text-zinc-500 mb-6">{group.memberCount} miembros</p>
 
         {group.activeHologram ? (
           <div className={`${holoClass} mb-6`}>
@@ -204,7 +205,6 @@ export default function GroupDetailPage() {
             </>
           )}
         </section>
-      </div>
-    </div>
+    </>
   );
 }

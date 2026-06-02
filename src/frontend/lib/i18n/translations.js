@@ -32,6 +32,19 @@ export const translations = {
       help: "Ayuda",
       logout: "Cerrar Sesion",
     },
+    appBrand: {
+      homeLink: "Inicio",
+    },
+    freePlay: {
+      titleFree: "Modo gratuito activo",
+      bodyFree:
+        "Puedes jugar con hasta 3 tickets por carrera sin saldo. Los modos de pago (PRO/ELITE) requieren fondos cuando esten disponibles.",
+      titleRegistered: "Juego gratuito disponible",
+      bodyRegistered:
+        "Sin fondos para modos de pago, sigue compitiendo con hasta 3 tickets gratis por carrera. Los modos premium requieren saldo cuando se activen.",
+      ctaPlay: "Ir a torneos",
+      dismiss: "Cerrar aviso",
+    },
     statsLevels: {
       subtitle:
         "Una misma apuesta alimenta Carrera, Torneo, Hipodromo, Global y Personal.",
@@ -704,6 +717,19 @@ export const translations = {
       profile: "My Profile",
       help: "Help",
       logout: "Log Out",
+    },
+    appBrand: {
+      homeLink: "Home",
+    },
+    freePlay: {
+      titleFree: "Free mode active",
+      bodyFree:
+        "Play with up to 3 tickets per race at no cost. Paid modes (PRO/ELITE) require a balance when they launch.",
+      titleRegistered: "Free play available",
+      bodyRegistered:
+        "No funds for paid modes yet? You can still compete with up to 3 free tickets per race. Premium modes need a balance when enabled.",
+      ctaPlay: "Go to tournaments",
+      dismiss: "Dismiss notice",
     },
     statsLevels: {
       subtitle:

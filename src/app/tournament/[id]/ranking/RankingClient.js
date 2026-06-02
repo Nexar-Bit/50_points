@@ -14,6 +14,7 @@ import { useAuth } from '@/frontend/contexts/AuthContext';
 import { useAchievementCards } from '@/frontend/contexts/AchievementCardsContext';
 import { useRankingUpdates } from '@/frontend/contexts/RankingUpdatesContext';
 import FloatingTicketBar from '@/frontend/components/tournament/FloatingTicketBar';
+import AppPageHeader from '@/frontend/components/layout/AppPageHeader';
 import TournamentRanking from '@/frontend/components/tournament/TournamentRanking';
 import RealTimeRanking from '@/frontend/components/tournament/RealTimeRanking';
 import TournamentChat from '@/frontend/components/tournament/TournamentChat';
@@ -94,7 +95,7 @@ export default function RankingClient() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-brand-dark flex items-center justify-center">
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
         <div className="text-white/40 animate-pulse">Loading ranking...</div>
       </div>
     );
@@ -102,7 +103,7 @@ export default function RankingClient() {
 
   if (!tournament || !rankingData) {
     return (
-      <div className="min-h-screen bg-brand-dark flex items-center justify-center">
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">🏇</div>
           <p className="text-white/40">Torneo no encontrado</p>
@@ -117,7 +118,7 @@ export default function RankingClient() {
   const status = statusConfig[tournament.status] || statusConfig.upcoming;
 
   return (
-    <div className="min-h-screen bg-brand-dark">
+    <div className="min-h-screen">
       <div className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img src="/images/live-feed.jpg" alt="" className="w-full h-full object-cover opacity-20" />
@@ -142,7 +143,7 @@ export default function RankingClient() {
             </span>
           </div>
 
-          <h1 className="text-xl font-bold text-white mb-0.5">{tournament.name}</h1>
+          <AppPageHeader title={tournament.name} className="mb-2" />
           <div className="flex items-center gap-3 text-xs text-white/40">
             <span className="flex items-center gap-1"><MapPin size={10} />{tournament.location}</span>
             <span className="flex items-center gap-1"><Calendar size={10} />{tournament.track}</span>

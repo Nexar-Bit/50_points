@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, BarChart3, Globe2, MapPin, Trophy, User, Flag } from "lucide-react";
+import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import { fetchAuthJson, fetchJson } from "@/frontend/lib/api/client";
@@ -174,25 +175,12 @@ export default function StatisticsDashboard({ initialLevel = "tournament" }) {
   const activeAccent = LEVELS.find((l) => l.id === activeLevel)?.accent || "";
 
   return (
-    <div className="min-h-screen bg-brand-dark text-white">
-      <div className="app-page py-10">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light mb-8"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          {t("leaderboard.backToHome")}
-        </Link>
-
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 rounded-xl bg-purple/20 border border-purple/30">
-            <BarChart3 className="w-7 h-7 text-purple-light" />
-          </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">{t("nav.statistics")}</h1>
-            <p className="text-sm text-zinc-500 mt-1 max-w-2xl">{t("statsLevels.subtitle")}</p>
-          </div>
-        </div>
+    <>
+        <AppPageHeader
+          className="mb-6"
+          title={t("nav.statistics")}
+          subtitle={t("statsLevels.subtitle")}
+        />
 
         <div className="flex flex-wrap gap-2 mb-6">
           {LEVELS.map(({ id, icon: Icon }) => {
@@ -217,9 +205,10 @@ export default function StatisticsDashboard({ initialLevel = "tournament" }) {
           })}
         </div>
 
-        <div className="flex flex-wrap gap-3 mb-6 text-sm">
+        <div className="mis-stats-filters mb-6">
+          <div className="mis-stats-filter">
           <select
-            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2"
+            className="bg-transparent border-none outline-none text-inherit"
             value={selectedTournament?.id ?? ""}
             onChange={(e) => {
               const tourn = tournaments.find((x) => String(x.id) === e.target.value);
@@ -233,8 +222,10 @@ export default function StatisticsDashboard({ initialLevel = "tournament" }) {
               </option>
             ))}
           </select>
+          </div>
+          <div className="mis-stats-filter">
           <select
-            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2"
+            className="bg-transparent border-none outline-none text-inherit"
             value={selectedTrack ?? ""}
             onChange={(e) => setSelectedTrack(e.target.value || null)}
           >
@@ -244,19 +235,18 @@ export default function StatisticsDashboard({ initialLevel = "tournament" }) {
               </option>
             ))}
           </select>
+          </div>
         </div>
 
         {activeLevel === "race" && races.length > 0 ? (
-          <div className="flex flex-wrap gap-2 mb-6">
+          <div className="mis-stats-race-pills mb-6">
             {races.map((race) => (
               <button
                 key={race.id}
                 type="button"
                 onClick={() => setSelectedRaceId(race.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${
-                  selectedRaceId === race.id
-                    ? "bg-purple/30 border-purple/50 text-white"
-                    : "border-white/10 text-zinc-400"
+                className={`mis-stats-race-pill${
+                  selectedRaceId === race.id ? " mis-stats-race-pill--active" : ""
                 }`}
               >
                 {t("tournaments.race")} {race.raceNumber}
@@ -446,7 +436,6 @@ export default function StatisticsDashboard({ initialLevel = "tournament" }) {
         ) : null}
 
         <p className="text-xs text-zinc-600 mt-8 max-w-3xl leading-relaxed">{t("statsLevels.cascadeNote")}</p>
-      </div>
-    </div>
+    </>
   );
 }

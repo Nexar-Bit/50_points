@@ -9,6 +9,7 @@ import {
   importTournamentData, exportDataAsJson,
 } from '@/frontend/lib/admin/adminDataManager';
 import { fetchRacesFromApi, getAvailableTracks, validateDataSource, DATA_SOURCES } from '@/frontend/lib/admin/racingApi';
+import AppPageHeader from '@/frontend/components/layout/AppPageHeader';
 
 function Field({ label, value, onChange, type = 'text', className = '' }) {
   return (
@@ -189,25 +190,22 @@ export default function AdminPage() {
   const tracks = getAvailableTracks();
 
   return (
-    <div className="min-h-screen bg-brand-dark">
-      <div className="app-page py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Settings size={20} className="text-purple-light" />
-              <h1 className="text-2xl font-bold text-white">Admin Panel</h1>
+    <>
+        <AppPageHeader
+          className="mb-8"
+          title="Admin Panel"
+          subtitle="Manage tournaments, races, and data sources"
+          actions={
+            <div className="flex gap-2">
+              <button onClick={handleImport} className="mis-stats-filter" type="button">
+                <Upload size={14} /> Import JSON
+              </button>
+              <button onClick={handleExport} className="mis-stats-filter" type="button">
+                <Download size={14} /> Export JSON
+              </button>
             </div>
-            <p className="text-sm text-white/40">Manage tournaments, races, and data sources</p>
-          </div>
-          <div className="flex gap-2">
-            <button onClick={handleImport} className="flex items-center gap-1.5 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-xs text-white/60 hover:bg-white/10 transition-colors">
-              <Upload size={14} /> Import JSON
-            </button>
-            <button onClick={handleExport} className="flex items-center gap-1.5 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-xs text-white/60 hover:bg-white/10 transition-colors">
-              <Download size={14} /> Export JSON
-            </button>
-          </div>
-        </div>
+          }
+        />
 
         <div className="flex gap-2 mb-6">
           {[
@@ -369,7 +367,6 @@ export default function AdminPage() {
             </div>
           </div>
         )}
-      </div>
-    </div>
+    </>
   );
 }

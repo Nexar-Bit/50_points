@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Users, Plus, ArrowLeft, Lock } from "lucide-react";
+import { Users, Plus, Lock } from "lucide-react";
+import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import { fetchAuthJson } from "@/frontend/lib/api/client";
@@ -48,17 +49,8 @@ export default function GroupsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-dark text-white">
-      <div className="app-page py-10">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light mb-6">
-          <ArrowLeft className="w-4 h-4" />
-          {t("leaderboard.backToHome")}
-        </Link>
-
-        <div className="flex items-center gap-3 mb-6">
-          <Users className="w-8 h-8 text-purple-light" />
-          <h1 className="text-2xl font-bold">{t("nav.groups")}</h1>
-        </div>
+    <>
+        <AppPageHeader title={t("nav.groups")} />
 
         {!isAuthenticated ? (
           <p className="text-zinc-500 text-sm">{t("profile.loginToView")}</p>
@@ -108,7 +100,6 @@ export default function GroupsPage() {
             )}
           </>
         )}
-      </div>
-    </div>
+    </>
   );
 }

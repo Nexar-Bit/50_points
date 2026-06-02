@@ -27,6 +27,7 @@ import { useAchievementCards } from "@/frontend/contexts/AchievementCardsContext
 import AchievementGallery from "@/frontend/components/profile/AchievementGallery";
 import TournamentRankingTabs from "@/frontend/components/profile/TournamentRankingTabs";
 import PlayerTicketsPanel from "@/frontend/components/profile/PlayerTicketsPanel";
+import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 
 const performanceData = [
   { day: "Mon", points: 320 },
@@ -192,7 +193,7 @@ export default function ProfileView({ userId: viewUserId }) {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center text-zinc-500">
+      <div className="min-h-[50vh] flex items-center justify-center text-zinc-500">
         {t("profile.loading")}
       </div>
     );
@@ -200,7 +201,7 @@ export default function ProfileView({ userId: viewUserId }) {
 
   if (!viewUserId && !isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex flex-col items-center justify-center gap-4 text-center px-4">
+      <div className="min-h-[50vh] flex flex-col items-center justify-center gap-4 text-center px-4">
         <p className="text-zinc-400">{t("profile.loginToView")}</p>
         <Link href="/login" className="text-purple-light hover:underline">
           {t("nav.login")}
@@ -211,7 +212,7 @@ export default function ProfileView({ userId: viewUserId }) {
 
   if (!resolvedId || !userProfile) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex flex-col items-center justify-center gap-4 text-center px-4">
+      <div className="min-h-[50vh] flex flex-col items-center justify-center gap-4 text-center px-4">
         <p className="text-zinc-400">{t("profile.notFound")}</p>
         <Link href="/" className="text-purple-light hover:underline">
           {t("profile.backToHome")}
@@ -221,20 +222,17 @@ export default function ProfileView({ userId: viewUserId }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
+    <div className="text-white">
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple/10 rounded-full blur-[128px]" />
         <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-cyan/8 rounded-full blur-[100px]" />
       </div>
 
-      <div className="relative z-10 app-page py-8 sm:py-12">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-purple-light transition-colors mb-8"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          {t("profile.backToHome")}
-        </Link>
+      <div className="relative z-10 py-4 sm:py-6">
+        <AppPageHeader
+          className="mb-8"
+          title={isOwnProfile ? t("floatingMenu.profile") : userProfile.username}
+        />
 
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -258,7 +256,9 @@ export default function ProfileView({ userId: viewUserId }) {
 
           <div className="flex-1 text-center sm:text-left">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 mb-2">
-              <h1 className="text-3xl font-bold">{userProfile.username}</h1>
+              {isOwnProfile ? (
+                <h2 className="text-3xl font-bold">{userProfile.username}</h2>
+              ) : null}
               <span className="px-3 py-1 rounded-full bg-purple/15 border border-purple/20 text-purple-light text-xs font-semibold">
                 #{userProfile.globalRank} {t("profile.global")}
               </span>

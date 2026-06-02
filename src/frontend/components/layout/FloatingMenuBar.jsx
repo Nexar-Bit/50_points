@@ -40,11 +40,31 @@ export default function FloatingMenuBar() {
   const [expanded, setExpanded] = useState(false);
   const [peek, setPeek] = useState(false);
   const [panelPhase, setPanelPhase] = useState("closed");
+  const [canHoverPeek, setCanHoverPeek] = useState(false);
+  const [isOverlayLayout, setIsOverlayLayout] = useState(false);
   const wasOpenRef = useRef(false);
 
-  const showPanel = expanded || peek;
+  const showPanel = expanded || (peek && canHoverPeek);
   const panelActive =
     showPanel || panelPhase === "entering" || panelPhase === "open" || panelPhase === "leaving";
+
+  useEffect(() => {
+    const mqHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const mqOverlay = window.matchMedia("(max-width: 900px)");
+
+    const sync = () => {
+      setCanHoverPeek(mqHover.matches);
+      setIsOverlayLayout(mqOverlay.matches);
+    };
+
+    sync();
+    mqHover.addEventListener("change", sync);
+    mqOverlay.addEventListener("change", sync);
+    return () => {
+      mqHover.removeEventListener("change", sync);
+      mqOverlay.removeEventListener("change", sync);
+    };
+  }, []);
 
   useEffect(() => {
     setExpanded(false);
@@ -69,13 +89,31 @@ export default function FloatingMenuBar() {
     return () => window.clearTimeout(leaveDone);
   }, [showPanel]);
 
-  const handleTabClick = useCallback(() => {
-    setExpanded((v) => !v);
-    setPeek(false);
-  }, []);
+  useEffect(() => {
+    if (!expanded || !isOverlayLayout) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [expanded, isOverlayLayout]);
 
   const handleClose = useCallback(() => {
     setExpanded(false);
+    setPeek(false);
+  }, []);
+
+  useEffect(() => {
+    if (!expanded) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") handleClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [expanded, handleClose]);
+
+  const handleTabClick = useCallback(() => {
+    setExpanded((value) => !value);
     setPeek(false);
   }, []);
 
@@ -113,6 +151,7 @@ export default function FloatingMenuBar() {
         return false;
     }
   };
+
   const panelVisible = showPanel || panelPhase === "leaving";
   const panelAnimClass =
     panelPhase === "entering"
@@ -129,6 +168,7 @@ export default function FloatingMenuBar() {
     const className = `floating-menu__link${active ? " floating-menu__link--active" : ""}`;
     const style = { "--fm-item-index": index };
     const iconEl = Icon ? <Icon className="floating-menu__icon" /> : null;
+    const showTooltip = !expanded && !peek;
 
     const inner = (
       <>
@@ -138,17 +178,13 @@ export default function FloatingMenuBar() {
     );
 
     return (
-      <li
-        key={item.id}
-        className="floating-menu__item"
-        style={style}
-      >
+      <li key={item.id} className="floating-menu__item" style={style}>
         {isButton ? (
           <button
             type="button"
             className={`${className} floating-menu__link--logout`}
             onClick={onButtonClick}
-            title={expanded ? undefined : t(item.labelKey)}
+            title={showTooltip ? t(item.labelKey) : undefined}
           >
             {inner}
           </button>
@@ -156,7 +192,7 @@ export default function FloatingMenuBar() {
           <Link
             href={item.href}
             className={className}
-            title={expanded ? undefined : t(item.labelKey)}
+            title={showTooltip ? t(item.labelKey) : undefined}
             onClick={handleClose}
           >
             {inner}
@@ -167,68 +203,81 @@ export default function FloatingMenuBar() {
   };
 
   return (
-    <div
-      className={`floating-menu${panelActive ? " floating-menu--open" : ""}${expanded ? " floating-menu--expanded" : ""}${peek && !expanded && panelActive ? " floating-menu--peek" : ""}${panelPhase === "entering" ? " floating-menu--anim-in" : ""}${panelPhase === "leaving" ? " floating-menu--anim-out" : ""}`}
-      onMouseEnter={() => {
-        if (!expanded) setPeek(true);
-      }}
-      onMouseLeave={() => {
-        if (!expanded) setPeek(false);
-      }}
-    >
-      <div className="floating-menu__rail">
-        <FloatingMenuTabElectrons>
-          <button
-            type="button"
-            className="floating-menu__tab"
-            onClick={handleTabClick}
-            aria-expanded={expanded}
-            aria-label={t("floatingMenu.open")}
-          >
-            <span className="floating-menu__letters">
-              {t("floatingMenu.tab")
-                .split("")
-                .map((char, index) => (
-                  <span key={`${char}-${index}`} className="floating-menu__letter">
-                    {char}
-                  </span>
-                ))}
-            </span>
-          </button>
-        </FloatingMenuTabElectrons>
-      </div>
+    <>
+      {expanded && isOverlayLayout ? (
+        <button
+          type="button"
+          className="floating-menu__backdrop"
+          aria-label={t("floatingMenu.close")}
+          onClick={handleClose}
+        />
+      ) : null}
 
       <div
-        className={`floating-menu__panel${panelVisible ? " floating-menu__panel--mounted" : ""}${panelAnimClass}`}
-        role="navigation"
-        aria-label={t("floatingMenu.aria")}
-        aria-hidden={!panelVisible}
+        className={`floating-menu${panelActive ? " floating-menu--open" : ""}${expanded ? " floating-menu--expanded" : ""}${peek && !expanded && panelActive ? " floating-menu--peek" : ""}${isOverlayLayout ? " floating-menu--overlay" : ""}${panelPhase === "entering" ? " floating-menu--anim-in" : ""}${panelPhase === "leaving" ? " floating-menu--anim-out" : ""}`}
+        onMouseEnter={() => {
+          if (canHoverPeek && !expanded) setPeek(true);
+        }}
+        onMouseLeave={() => {
+          if (canHoverPeek && !expanded) setPeek(false);
+        }}
       >
-        <div className="floating-menu__panel-head">
-          {expanded ? (
+        <div className="floating-menu__rail">
+          <FloatingMenuTabElectrons>
             <button
               type="button"
-              className="floating-menu__close"
-              onClick={handleClose}
-              aria-label={t("floatingMenu.close")}
+              className="floating-menu__tab"
+              onClick={handleTabClick}
+              aria-expanded={expanded}
+              aria-controls="floating-menu-panel"
+              aria-label={expanded ? t("floatingMenu.close") : t("floatingMenu.open")}
             >
-              <X className="w-4 h-4" />
+              <span className="floating-menu__letters">
+                {t("floatingMenu.tab")
+                  .split("")
+                  .map((char, index) => (
+                    <span key={`${char}-${index}`} className="floating-menu__letter">
+                      {char}
+                    </span>
+                  ))}
+              </span>
             </button>
-          ) : (
-            <span className="floating-menu__peek-spacer" aria-hidden />
-          )}
+          </FloatingMenuTabElectrons>
         </div>
 
-        <ul className={`floating-menu__list${panelVisible ? " floating-menu__list--visible" : ""}`}>
-          {MENU_ITEMS.map((item, index) => renderNavItem(item, index))}
-          {renderNavItem(
-            { id: "logout", labelKey: "floatingMenu.logout" },
-            MENU_ITEMS.length,
-            true,
-            handleLogout,
-          )}
-        </ul>
+        <div
+          id="floating-menu-panel"
+          className={`floating-menu__panel${panelVisible ? " floating-menu__panel--mounted" : ""}${panelAnimClass}`}
+          role="navigation"
+          aria-label={t("floatingMenu.aria")}
+          aria-hidden={!panelVisible}
+        >
+          <div className="floating-menu__panel-head">
+            {expanded ? (
+              <button
+                type="button"
+                className="floating-menu__close"
+                onClick={handleClose}
+                aria-label={t("floatingMenu.close")}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            ) : (
+              <span className="floating-menu__peek-spacer" aria-hidden />
+            )}
+          </div>
+
+          <ul className={`floating-menu__list${panelVisible ? " floating-menu__list--visible" : ""}`}>
+            {MENU_ITEMS.map((item, index) => renderNavItem(item, index))}
+            {renderNavItem(
+              { id: "logout", labelKey: "floatingMenu.logout" },
+              MENU_ITEMS.length,
+              true,
+              handleLogout,
+            )}
+          </ul>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -8,6 +8,7 @@ import {
   Flame, Timer, CheckCircle2, ArrowRight, Zap,
 } from 'lucide-react';
 import Link from 'next/link';
+import AppPageHeader from '@/frontend/components/layout/AppPageHeader';
 import RaceCard from '@/frontend/components/tournament/RaceCard';
 import PickSelector, { strategies } from '@/frontend/components/tournament/PickSelector';
 import TicketSummary from '@/frontend/components/tournament/TicketSummary';
@@ -59,7 +60,7 @@ function normalizeTournament(t) {
 
 function TournamentSkeleton() {
   return (
-    <div className="min-h-screen bg-brand-dark animate-pulse">
+    <div className="min-h-screen bg-[#161b30] animate-pulse">
       <div className="relative overflow-hidden">
         <div className="app-page pt-6 pb-8">
           <div className="h-4 w-32 bg-white/5 rounded mb-6" />
@@ -270,7 +271,7 @@ export default function TournamentClient() {
 
   if (error || !tournament) {
     return (
-      <div className="min-h-screen bg-brand-dark flex items-center justify-center">
+      <div className="min-h-screen bg-[#161b30] flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">🏇</div>
           <p className="text-white/40">Torneo no encontrado</p>
@@ -291,7 +292,7 @@ export default function TournamentClient() {
   const status = statusConfig[tournament.status] || statusConfig.upcoming;
 
   return (
-    <div className="min-h-screen bg-brand-dark">
+    <div className="min-h-screen">
       <div className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img src="/images/live-feed.jpg" alt="" className="w-full h-full object-cover opacity-25" />
@@ -300,6 +301,7 @@ export default function TournamentClient() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-purple/5 rounded-full blur-[120px]" />
 
         <div className="relative app-page pt-6 pb-8">
+          <AppPageHeader title={tournament.name} className="mb-6" />
           <Link href="/tournaments" className="inline-flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm mb-6 transition-colors">
             <ChevronLeft size={16} />
             <span>Volver a Torneos</span>
@@ -317,10 +319,6 @@ export default function TournamentClient() {
               </div>
 
               <p className="text-[11px] text-purple-light uppercase tracking-[0.2em] font-bold mb-2">TORNEO</p>
-
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent mb-1 leading-tight">
-                {tournament.name}
-              </h1>
 
               <p className="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-light to-cyan bg-clip-text text-transparent mb-2">
                 POINT RUSH

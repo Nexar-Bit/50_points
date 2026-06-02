@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Header from "@/frontend/components/layout/Header";
 import Footer from "@/frontend/components/layout/Footer";
 import FloatingMenuBar from "@/frontend/components/layout/FloatingMenuBar";
+import AppSurface from "@/frontend/components/layout/AppSurface";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 
 function isHomePath(pathname) {
@@ -34,7 +35,7 @@ export default function ConditionalShell({ children }) {
           </Suspense>
         ) : null}
         <main className={hideChrome ? "min-h-screen" : "app-main app-main--with-menu min-h-screen"}>
-          {children}
+          {hideChrome ? children : <AppSurface>{children}</AppSurface>}
         </main>
       </>
     );
@@ -48,7 +49,7 @@ export default function ConditionalShell({ children }) {
           hideChrome ? "min-h-screen" : "app-main min-h-screen pt-16 pb-16 md:pb-0"
         }
       >
-        {children}
+        {hideChrome ? children : <AppSurface>{children}</AppSurface>}
       </main>
       {!hideChrome ? <Footer /> : null}
     </>

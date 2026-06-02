@@ -5,7 +5,7 @@ import ProfileView from "@/frontend/components/profile/ProfileView";
 
 export default function ProfilePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-brand-dark" />}>
+    <Suspense fallback={<div className="min-h-[40vh]" />}>
       <ProfileView />
     </Suspense>
   );
