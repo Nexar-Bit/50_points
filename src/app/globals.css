@@ -7589,3 +7589,138 @@ body {
     display: grid;
   }
 }
+
+/* Tournament — 3 independent ticket sheets */
+.tournament-ticket-sheet {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1rem 1.1rem;
+  backdrop-filter: blur(12px);
+}
+
+.tournament-ticket-sheet__hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.tournament-ticket-sheet__tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.tournament-ticket-sheet__tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  padding: 0.55rem 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.tournament-ticket-sheet__tab--active {
+  border-color: rgba(168, 85, 247, 0.55);
+  background: rgba(124, 58, 237, 0.18);
+}
+
+.tournament-ticket-sheet__tab-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.tournament-ticket-sheet__tab-meta {
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.tournament-ticket-sheet__total {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.tournament-ticket-sheet__total strong {
+  font-size: 1.1rem;
+  color: #fbbf24;
+}
+
+.tournament-ticket-sheet__total-sub {
+  width: 100%;
+  font-size: 0.65rem;
+}
+
+.tournament-ticket-sheet__races {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.tournament-ticket-sheet__race {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tournament-ticket-sheet__race--done {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.tournament-ticket-sheet__race-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.tournament-ticket-sheet__race-mode {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #a78bfa;
+}
+
+.tournament-ticket-sheet__race-pts {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.tournament-ticket-sheet__modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tournament-ticket-sheet__mode-chip {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+}

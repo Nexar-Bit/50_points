@@ -36,12 +36,12 @@ export const translations = {
       homeLink: "Inicio",
     },
     freePlay: {
-      titleFree: "Modo gratuito activo",
+      titleFree: "3 tickets gratis e independientes",
       bodyFree:
-        "Puedes jugar con hasta 3 tickets por carrera sin saldo. Los modos de pago (PRO/ELITE) requieren fondos cuando esten disponibles.",
-      titleRegistered: "Juego gratuito disponible",
+        "Recibes 3 hojas de juego (Ticket 1, 2 y 3). Cada una recorre las 7 carreras del torneo con su propia estrategia por carrera y su propio puntaje. No comparten puntos ni modos.",
+      titleRegistered: "3 tickets por torneo",
       bodyRegistered:
-        "Sin fondos para modos de pago, sigue compitiendo con hasta 3 tickets gratis por carrera. Los modos premium requieren saldo cuando se activen.",
+        "Ticket 1, 2 y 3 son tres torneos completos en paralelo. En cada carrera eliges Full, Dual o Smart solo para el ticket activo. Al final cada ticket suma sus puntos por separado.",
       ctaPlay: "Ir a torneos",
       dismiss: "Cerrar aviso",
     },
@@ -727,12 +727,12 @@ export const translations = {
       homeLink: "Home",
     },
     freePlay: {
-      titleFree: "Free mode active",
+      titleFree: "3 independent free tickets",
       bodyFree:
-        "Play with up to 3 tickets per race at no cost. Paid modes (PRO/ELITE) require a balance when they launch.",
-      titleRegistered: "Free play available",
+        "You get 3 separate sheets (Ticket 1, 2 & 3). Each runs all 7 races with its own strategy per race and its own final score. They do not share points or modes.",
+      titleRegistered: "3 tickets per tournament",
       bodyRegistered:
-        "No funds for paid modes yet? You can still compete with up to 3 free tickets per race. Premium modes need a balance when enabled.",
+        "Tickets 1, 2 & 3 are three full parallel tournaments. Pick Full, Dual or Smart per race for the active ticket only. Each ticket totals its points separately.",
       ctaPlay: "Go to tournaments",
       dismiss: "Dismiss notice",
     },

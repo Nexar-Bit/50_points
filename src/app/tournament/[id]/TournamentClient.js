@@ -13,6 +13,7 @@ import RaceCard from '@/frontend/components/tournament/RaceCard';
 import PickSelector, { strategies } from '@/frontend/components/tournament/PickSelector';
 import TicketSummary from '@/frontend/components/tournament/TicketSummary';
 import TicketConfirmation from '@/frontend/components/tournament/TicketConfirmation';
+import TournamentTicketSheet from '@/frontend/components/tournament/TournamentTicketSheet';
 import { useAuth } from '@/frontend/contexts/AuthContext';
 import { fetchAuthJson } from '@/frontend/lib/api/client';
 import { fetchTournamentDetail } from '@/frontend/lib/api/tournaments';
@@ -108,7 +109,6 @@ export default function TournamentClient() {
   const [expandedRace, setExpandedRace] = useState(null);
   const [activeStrategy, setActiveStrategy] = useState('full');
   const [picks, setPicks] = useState({});
-  const [confirmedStrategies, setConfirmedStrategies] = useState({});
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [confirmedRace, setConfirmedRace] = useState(null);
   const [activeTicketNumber, setActiveTicketNumber] = useState(1);
@@ -136,19 +136,13 @@ export default function TournamentClient() {
       .then((data) => {
         if (!data?.tickets) return;
         const ticketMap = {};
-        const stratMap = {};
         for (const t of data.tickets) {
-          const key = `${t.raceId}-${t.ticketNumber}`;
-          ticketMap[key] = t;
-          if (t.ticketNumber === activeTicketNumber) {
-            stratMap[t.raceId] = STRATEGY_REVERSE[t.strategy] || 'full';
-          }
+          ticketMap[`${t.raceId}-${t.ticketNumber}`] = t;
         }
         setSubmittedTickets(ticketMap);
-        setConfirmedStrategies((prev) => ({ ...prev, ...stratMap }));
       })
       .catch(() => {});
-  }, [token, tournamentRaw, activeTicketNumber]);
+  }, [token, tournamentRaw]);
 
   const tournament = useMemo(() => {
     if (!tournamentRaw) return null;
@@ -230,10 +224,13 @@ export default function TournamentClient() {
       });
 
       setConfirmedRace(expandedRace);
-      setConfirmedStrategies((prev) => ({ ...prev, [expandedRace]: activeStrategy }));
       setSubmittedTickets((prev) => ({
         ...prev,
-        [`${expandedRace}-${activeTicketNumber}`]: data.ticket,
+        [`${expandedRace}-${activeTicketNumber}`]: {
+          ...data.ticket,
+          raceId: expandedRace,
+          ticketNumber: activeTicketNumber,
+        },
       }));
       setShowConfirmation(true);
     } catch (err) {
@@ -250,14 +247,44 @@ export default function TournamentClient() {
   }, []);
 
   const ticketKey = useCallback(
-    (raceId) => `${raceId}-${activeTicketNumber}`,
+    (raceId, ticketNum = activeTicketNumber) => `${raceId}-${ticketNum}`,
     [activeTicketNumber]
   );
 
-  const isRaceConfirmed = useCallback(
-    (raceId) => !!submittedTickets[ticketKey(raceId)],
-    [submittedTickets, ticketKey]
+  const submittedForRace = useCallback(
+    (raceId, ticketNum = activeTicketNumber) => submittedTickets[ticketKey(raceId, ticketNum)],
+    [submittedTickets, ticketKey, activeTicketNumber]
   );
+
+  const confirmedStrategyForRace = useCallback(
+    (raceId) => {
+      const sub = submittedForRace(raceId);
+      return sub ? STRATEGY_REVERSE[sub.strategy] || 'full' : null;
+    },
+    [submittedForRace]
+  );
+
+  const isRaceConfirmed = useCallback(
+    (raceId) => !!submittedForRace(raceId),
+    [submittedForRace]
+  );
+
+  const handleSelectTicket = useCallback((ticketNum) => {
+    setActiveTicketNumber(ticketNum);
+    setExpandedRace(null);
+    setPicks({});
+    setActiveStrategy('full');
+  }, []);
+
+  const confirmedCount = useMemo(() => {
+    if (!tournament) return 0;
+    return tournament.races.filter((r) => submittedForRace(r.id)).length;
+  }, [tournament, submittedForRace]);
+
+  const pendingCount = useMemo(() => {
+    if (!tournament) return 0;
+    return tournament.races.length - confirmedCount;
+  }, [tournament, confirmedCount]);
 
   const toggleRace = useCallback(
     (raceId) => {
@@ -404,7 +431,7 @@ export default function TournamentClient() {
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white/[0.03] border border-white/10 rounded-xl p-3 text-center backdrop-blur-lg">
                 <div className="flex items-center justify-center gap-1.5 text-green-400 mb-1">
                   <CheckCircle2 size={14} />
-                  <span className="text-lg font-bold">{Object.keys(confirmedStrategies).length}</span>
+                  <span className="text-lg font-bold">{confirmedCount}</span>
                 </div>
                 <p className="text-[10px] text-white/40 uppercase tracking-wider">Confirmadas</p>
               </motion.div>
@@ -418,38 +445,21 @@ export default function TournamentClient() {
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-white/[0.03] border border-white/10 rounded-xl p-3 text-center backdrop-blur-lg">
                 <div className="flex items-center justify-center gap-1.5 text-purple-light mb-1">
                   <Timer size={14} />
-                  <span className="text-lg font-bold">{tournament.races.length - Object.keys(confirmedStrategies).length}</span>
+                  <span className="text-lg font-bold">{pendingCount}</span>
                 </div>
                 <p className="text-[10px] text-white/40 uppercase tracking-wider">Pendientes</p>
               </motion.div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <div className="mb-4">
+              <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-1">
                 <Zap size={18} className="text-purple-light" />
                 Programa de Carreras
               </h2>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-white/40">Ticket</span>
-                {[1, 2, 3].map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => {
-                      setActiveTicketNumber(n);
-                      setExpandedRace(null);
-                      setPicks({});
-                    }}
-                    className={`w-8 h-8 rounded-lg text-xs font-bold border transition-all ${
-                      activeTicketNumber === n
-                        ? 'bg-purple text-white border-purple-light'
-                        : 'bg-white/5 text-white/50 border-white/10 hover:border-white/20'
-                    }`}
-                  >
-                    {n}
-                  </button>
-                ))}
-              </div>
+              <p className="text-xs text-white/40">
+                Editando <span className="text-purple-light font-bold">Ticket {activeTicketNumber}</span>
+                {' '}— 7 carreras independientes de los otros tickets
+              </p>
             </div>
 
             <div className="space-y-3">
@@ -459,7 +469,7 @@ export default function TournamentClient() {
                     race={race}
                     activeStrategy={activeStrategy}
                     selectedHorses={picks[race.id] || []}
-                    confirmedStrategy={isRaceConfirmed(race.id) ? confirmedStrategies[race.id] : null}
+                    confirmedStrategy={confirmedStrategyForRace(race.id)}
                     onPickHorse={expandedRace === race.id ? handlePickHorse : () => {}}
                     onStrategyChange={expandedRace === race.id ? handleStrategyChange : undefined}
                     isExpanded={expandedRace === race.id}
@@ -472,6 +482,13 @@ export default function TournamentClient() {
           </div>
 
           <div className="w-full lg:w-[320px] flex-shrink-0 space-y-4">
+            <TournamentTicketSheet
+              races={tournament.races}
+              activeTicketNumber={activeTicketNumber}
+              onSelectTicket={handleSelectTicket}
+              submittedTickets={submittedTickets}
+            />
+
             {nextRace && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-white/[0.03] backdrop-blur-lg border border-white/10 rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-4">
@@ -549,7 +566,9 @@ export default function TournamentClient() {
                 </div>
                 <div className="flex gap-2">
                   <span className="w-5 h-5 rounded-full bg-purple/20 text-purple-light flex items-center justify-center text-[10px] font-bold flex-shrink-0">4</span>
-                  <p>El mayor puntaje total en todas las carreras gana!</p>
+                  <p>
+                    Tienes <span className="text-gold font-semibold">3 tickets gratis</span> por torneo: cada uno recorre las 7 carreras y suma su propio total (no se mezclan)
+                  </p>
                 </div>
               </div>
             </motion.div>
