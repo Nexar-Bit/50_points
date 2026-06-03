@@ -133,33 +133,33 @@ function StrategyPointColumn({ variant, label, taglineLines, imageSrc }) {
 function MyFiftyPointsBrand({ tagline }) {
   return (
     <div className="my-points-brand">
-      <p className="my-points-brand-label">
-        MY
-      </p>
+      <p className="my-points-brand-label">MY</p>
 
-      <div className="my-points-fifty-row">
-        <span className="my-points-fifty-num" aria-hidden>
-          5
-        </span>
-        <span className="my-points-zero-mark-wrap" aria-hidden>
-          <span className="my-points-zero-mark">
-            <span className="my-points-zero-mark__bar my-points-zero-mark__bar--top" />
-            <span className="my-points-zero-mark__bar my-points-zero-mark__bar--mid" />
-            <span className="my-points-zero-mark__bar my-points-zero-mark__bar--bot" />
+      <div className="my-points-brand-stack">
+        <div className="my-points-fifty-row">
+          <span className="my-points-digit my-points-fifty-num" aria-hidden>
+            5
           </span>
-        </span>
+          <span className="my-points-digit my-points-zero-mark-wrap" aria-hidden>
+            <span className="my-points-zero-mark">
+              <span className="my-points-zero-mark__bar my-points-zero-mark__bar--top" />
+              <span className="my-points-zero-mark__bar my-points-zero-mark__bar--mid" />
+              <span className="my-points-zero-mark__bar my-points-zero-mark__bar--bot" />
+            </span>
+          </span>
+        </div>
+
+        <h1 className="my-points-word" aria-label="MY 50 POINTS">
+          P
+          <span className="my-points-letter-o" aria-hidden>
+            <span className="my-points-letter-o__outline" />
+            <span className="my-points-letter-o__dot" />
+          </span>
+          INTS
+        </h1>
+
+        <div className="hero-tagline-divider" aria-hidden />
       </div>
-
-      <h1 className="my-points-word" aria-label="MY 50 POINTS">
-        P
-        <span className="my-points-letter-o" aria-hidden>
-          <span className="my-points-letter-o__outline" />
-          <span className="my-points-letter-o__dot" />
-        </span>
-        INTS
-      </h1>
-
-      <div className="hero-tagline-divider" aria-hidden />
 
       <p className={`my-points-tagline ${caveat.className}`}>
         <span className="my-points-tagline__phrase">{tagline}</span>
@@ -177,14 +177,6 @@ function HeroCtaPanel({ t, entering, onGuestEnter }) {
   return (
     <div className="hero-cta-panel">
       <div className="hero-cta-panel__buttons">
-        <Link href="/login" className="hero-cta-btn hero-cta-btn--gold group">
-          <span className="hero-cta-btn__main">
-            <LogIn className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
-            <span className="hero-cta-btn__label">{t("hero.loginExisting")}</span>
-          </span>
-          <span className="hero-cta-btn__sub">{t("hero.loginExistingSub")}</span>
-        </Link>
-
         <Link href="/register" className="hero-cta-btn hero-cta-btn--purple group">
           <span className="hero-cta-btn__main">
             <UserPlus className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
@@ -205,6 +197,14 @@ function HeroCtaPanel({ t, entering, onGuestEnter }) {
           </span>
           <span className="hero-cta-btn__sub">{t("hero.enterSub")}</span>
         </button>
+
+        <Link href="/login" className="hero-cta-btn hero-cta-btn--gold group">
+          <span className="hero-cta-btn__main">
+            <LogIn className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
+            <span className="hero-cta-btn__label">{t("hero.loginExisting")}</span>
+          </span>
+          <span className="hero-cta-btn__sub">{t("hero.loginExistingSub")}</span>
+        </Link>
       </div>
 
       <p className="hero-cta-panel__slogan">

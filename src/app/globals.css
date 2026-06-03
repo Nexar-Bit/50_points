@@ -2061,11 +2061,16 @@ body {
 
 /* MY 50 POINTS hero branding */
 .my-points-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
   background: transparent;
 }
 
 .my-points-brand-label {
-  margin: 0 0 0.15rem 0.125rem;
+  margin: 0 0 0.35rem -0.06em;
+  padding: 0;
   font-size: clamp(1rem, 3.2vw, 1.5rem);
   font-weight: 700;
   letter-spacing: 0.28em;
@@ -2073,46 +2078,76 @@ body {
   text-transform: uppercase;
 }
 
+.my-points-brand-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: max-content;
+  max-width: 100%;
+}
+
 .my-points-fifty-row {
   --my-points-mark-h: clamp(6.25rem, 20vw, 10.5rem);
-  /* Match glyph ink height of “5”, not the full 1em line box */
-  --my-points-zero-d: 0.86em;
-  --my-points-five-stroke: calc(var(--my-points-zero-d) * 0.11);
+  /* One square for both glyphs — width/height enforced on .my-points-digit */
+  --my-points-digit-size: 1em;
+  --my-points-zero-size: 0.82em;
+  --my-points-five-stroke: calc(var(--my-points-digit-size) * 0.155);
   font-size: var(--my-points-mark-h);
   display: inline-flex;
   align-items: center;
-  gap: 0;
-  margin-top: -0.25rem;
+  justify-content: flex-start;
+  gap: 0.08em;
+  margin: 0 0 0 -0.06em;
+  line-height: 0;
 }
 
-@supports (width: 1cap) {
-  .my-points-fifty-row {
-    --my-points-zero-d: 1cap;
-  }
+/* Shared equal box (inline-block so width/height apply on spans) */
+.my-points-digit {
+  display: inline-block;
+  width: var(--my-points-digit-size);
+  height: var(--my-points-digit-size);
+  max-width: var(--my-points-digit-size);
+  max-height: var(--my-points-digit-size);
+  box-sizing: border-box;
+  vertical-align: top;
+  flex: 0 0 var(--my-points-digit-size);
+  overflow: hidden;
+}
+
+.my-points-fifty-num.my-points-digit {
+  /* Tight left edge without clipping the overscaled “5” */
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  flex: 0 0 auto;
+  overflow: visible;
 }
 
 .my-points-fifty-num {
-  flex-shrink: 0;
-  font-size: 1em;
+  /* Slightly overscale so cap height fills the same 1em box as the “0” ring */
+  font-size: calc(var(--my-points-digit-size) * 1.08);
   font-weight: 900;
   color: #fff;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  margin-right: 0.125em;
+  letter-spacing: -0.05em;
+  line-height: var(--my-points-digit-size);
+  text-align: left;
+  padding: 0;
+  margin: 0;
+}
+
+.my-points-zero-mark-wrap.my-points-digit {
+  width: var(--my-points-zero-size);
+  height: var(--my-points-zero-size);
+  max-width: var(--my-points-zero-size);
+  max-height: var(--my-points-zero-size);
+  flex: 0 0 var(--my-points-zero-size);
+  padding: calc(var(--my-points-zero-size) * 0.155);
 }
 
 .my-points-zero-mark-wrap {
   position: relative;
-  flex: 0 0 var(--my-points-zero-d);
-  width: var(--my-points-zero-d);
-  height: var(--my-points-zero-d);
-  min-width: var(--my-points-zero-d);
-  min-height: var(--my-points-zero-d);
-  padding: var(--my-points-five-stroke);
   border-radius: 50%;
-  box-sizing: border-box;
   background: #fff;
-  overflow: hidden;
   filter: drop-shadow(0 0 16px rgba(124, 58, 237, 0.3));
 }
 
@@ -2155,8 +2190,10 @@ body {
   color: #fff;
   letter-spacing: 0.02em;
   line-height: 0.95;
-  margin-top: -0.15rem;
+  margin: 0.05rem 0 0;
+  padding: 0;
   text-transform: uppercase;
+  align-self: flex-start;
 }
 
 .my-points-letter-o {
@@ -2191,8 +2228,8 @@ body {
 .hero-tagline-divider {
   height: 2px;
   width: 100%;
-  max-width: 28rem;
-  margin: 0.75rem 0 0.65rem;
+  align-self: stretch;
+  margin: 0.65rem 0 0;
   background: linear-gradient(
     90deg,
     #7c3aed 0%,
@@ -2206,6 +2243,7 @@ body {
 }
 
 .my-points-tagline {
+  margin-top: 0.65rem;
   font-size: clamp(1.85rem, 5.5vw, 2.65rem);
   font-weight: 500;
   line-height: 1.2;
