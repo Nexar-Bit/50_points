@@ -6,6 +6,7 @@ import Header from "@/frontend/components/layout/Header";
 import Footer from "@/frontend/components/layout/Footer";
 import FloatingMenuBar from "@/frontend/components/layout/FloatingMenuBar";
 import AppSurface from "@/frontend/components/layout/AppSurface";
+import LanguageToggle from "@/frontend/components/layout/LanguageToggle";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 
 function isHomePath(pathname) {
@@ -26,6 +27,8 @@ export default function ConditionalShell({ children }) {
     return <main className="min-h-screen">{children}</main>;
   }
 
+  const showFloatingLanguageToggle = isAuthenticated && !hideChrome;
+
   if (isAuthenticated) {
     return (
       <>
@@ -34,6 +37,7 @@ export default function ConditionalShell({ children }) {
             <FloatingMenuBar />
           </Suspense>
         ) : null}
+        {showFloatingLanguageToggle ? <LanguageToggle className="app-lang-toggle" /> : null}
         <main className={hideChrome ? "min-h-screen" : "app-main app-main--with-menu min-h-screen"}>
           {hideChrome ? children : <AppSurface>{children}</AppSurface>}
         </main>

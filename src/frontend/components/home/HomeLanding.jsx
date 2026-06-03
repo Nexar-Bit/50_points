@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useRef, useEffect, useId } from "react";
+import { useState, useId } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Caveat } from "next/font/google";
-import { Globe, UserPlus, Play, LogIn } from "lucide-react";
+import { UserPlus, Play, LogIn } from "lucide-react";
+import LanguageToggle from "@/frontend/components/layout/LanguageToggle";
 
 const caveat = Caveat({
   subsets: ["latin"],
@@ -323,75 +324,6 @@ function HeroStatsBar({ t }) {
   );
 }
 
-const LANGUAGE_OPTIONS = [
-  { code: "es", labelKey: "hero.langSpanish" },
-  { code: "en", labelKey: "hero.langEnglish" },
-];
-
-function HeroLanguageSelector({ t, language, setLanguage }) {
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef(null);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const onPointerDown = (event) => {
-      if (!rootRef.current?.contains(event.target)) {
-        setOpen(false);
-      }
-    };
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-
-    document.addEventListener("mousedown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open]);
-
-  return (
-    <div ref={rootRef} className="hero-lang justify-self-end">
-      <div className="hero-lang__border">
-        <button
-          type="button"
-          className="hero-lang__trigger"
-          onClick={() => setOpen((prev) => !prev)}
-          aria-expanded={open}
-          aria-haspopup="listbox"
-          aria-label={t("hero.language")}
-        >
-          <Globe className="hero-lang__icon" aria-hidden />
-          <span>{t("hero.language")}</span>
-        </button>
-      </div>
-
-      {open && (
-        <ul className="hero-lang__menu" role="listbox" aria-label={t("hero.language")}>
-          {LANGUAGE_OPTIONS.map((option) => (
-            <li key={option.code} role="presentation">
-              <button
-                type="button"
-                role="option"
-                aria-selected={language === option.code}
-                className={`hero-lang__option${language === option.code ? " hero-lang__option--active" : ""}`}
-                onClick={() => {
-                  setLanguage(option.code);
-                  setOpen(false);
-                }}
-              >
-                {t(option.labelKey)}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
 function HeroStatsNav() {
   return (
     <div className="hero-stats-nav-wrap" aria-hidden>
@@ -417,7 +349,7 @@ function HeroStatsNav() {
 }
 
 export default function HomeLanding() {
-  const { t, language, setLanguage } = useLanguage();
+  const { t } = useLanguage();
   const { playAsGuest } = useAuth();
   const router = useRouter();
   const [entering, setEntering] = useState(false);
@@ -453,11 +385,7 @@ export default function HomeLanding() {
             <div className="flex justify-center min-w-0">
               <TournamentCrown label={t("hero.tournament")} />
             </div>
-            <HeroLanguageSelector
-              t={t}
-              language={language}
-              setLanguage={setLanguage}
-            />
+            <LanguageToggle className="justify-self-end" />
           </div>
         </AnimateInView>
 

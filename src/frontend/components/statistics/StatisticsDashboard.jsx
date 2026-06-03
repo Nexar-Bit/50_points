@@ -239,19 +239,22 @@ export default function StatisticsDashboard({ initialLevel = "tournament" }) {
         </div>
 
         {activeLevel === "race" && races.length > 0 ? (
-          <div className="mis-stats-race-pills mb-6">
-            {races.map((race) => (
-              <button
-                key={race.id}
-                type="button"
-                onClick={() => setSelectedRaceId(race.id)}
-                className={`mis-stats-race-pill${
-                  selectedRaceId === race.id ? " mis-stats-race-pill--active" : ""
-                }`}
-              >
-                {t("tournaments.race")} {race.raceNumber}
-              </button>
-            ))}
+          <div className="mis-stats-race-pills mb-6" role="tablist" aria-label={t("misTicketsStats.selectRace")}>
+            {races.map((race) => {
+              const isActive = selectedRaceId === race.id;
+              return (
+                <button
+                  key={race.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setSelectedRaceId(race.id)}
+                  className={`mis-stats-race-pill${isActive ? " mis-stats-race-pill--active" : ""}`}
+                >
+                  {t("tournaments.race")} {race.raceNumber}
+                </button>
+              );
+            })}
           </div>
         ) : null}
 
