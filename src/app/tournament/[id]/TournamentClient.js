@@ -217,6 +217,8 @@ export default function TournamentClient() {
         method: 'POST',
         body: JSON.stringify({
           raceId: expandedRace,
+          tournamentId: tournamentRaw?.id,
+          raceNumber: currentRace?.raceNumber ?? currentRace?.number,
           strategy: apiStrategy,
           picks: racePicks,
           ticketNumber: activeTicketNumber,
@@ -234,11 +236,26 @@ export default function TournamentClient() {
       }));
       setShowConfirmation(true);
     } catch (err) {
-      alert('Error de conexion');
+      const msg = err?.data?.detail || err?.message || 'Error al enviar el ticket';
+      alert(typeof msg === 'string' ? msg : 'Error al enviar el ticket');
+      if (err?.status === 404 && tournamentRaw?.slug) {
+        fetchTournamentDetail(tournamentRaw.slug, { refresh: false })
+          .then((data) => setTournamentRaw(data.tournament))
+          .catch(() => {});
+      }
     } finally {
       setSubmitting(false);
     }
-  }, [expandedRace, activeStrategy, picks, isAuthenticated, submitting, activeTicketNumber]);
+  }, [
+    expandedRace,
+    activeStrategy,
+    picks,
+    isAuthenticated,
+    submitting,
+    activeTicketNumber,
+    tournamentRaw,
+    currentRace,
+  ]);
 
   const handleCloseConfirmation = useCallback(() => {
     setShowConfirmation(false);
