@@ -34,6 +34,16 @@ const TABS = [
 
 const DEFAULT_TOURNAMENT_RACES = 7;
 
+function tournamentDateKey(date) {
+  if (!date) return "";
+  if (typeof date === "string") return date.split("T")[0];
+  try {
+    return new Date(date).toISOString().split("T")[0];
+  } catch {
+    return "";
+  }
+}
+
 function buildRaceSlots(races, totalRaces) {
   const maxFromList =
     races.length > 0 ? Math.max(...races.map((r) => r.raceNumber)) : 0;
@@ -312,6 +322,9 @@ export default function MisTicketsStatistics() {
   const { isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState("race");
   const [tournaments, setTournaments] = useState([]);
+  const [tournamentsLoading, setTournamentsLoading] = useState(true);
+  const [filterDateKey, setFilterDateKey] = useState("");
+  const [filterTrack, setFilterTrack] = useState("");
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [races, setRaces] = useState([]);
   const [selectedRaceId, setSelectedRaceId] = useState(null);
@@ -320,15 +333,59 @@ export default function MisTicketsStatistics() {
   const [tournamentStats, setTournamentStats] = useState(null);
 
   useEffect(() => {
-    fetchJson("/tournaments")
+    setTournamentsLoading(true);
+    fetchJson("/tournaments", { cache: "no-store" })
       .then((res) => {
         const list = res.tournaments || res || [];
         setTournaments(list);
         const live = list.find((x) => x.status === "live") || list[0];
-        if (live) setSelectedTournament(live);
+        if (live) {
+          setSelectedTournament(live);
+          setFilterDateKey(tournamentDateKey(live.date));
+          setFilterTrack(live.track || "");
+        }
       })
-      .catch(() => {});
+      .catch(() => setTournaments([]))
+      .finally(() => setTournamentsLoading(false));
   }, []);
+
+  const trackOptions = useMemo(() => {
+    const tracks = [...new Set(tournaments.map((x) => x.track).filter(Boolean))];
+    return tracks.sort((a, b) => a.localeCompare(b));
+  }, [tournaments]);
+
+  const dateOptions = useMemo(() => {
+    const byKey = new Map();
+    for (const tourn of tournaments) {
+      const key = tournamentDateKey(tourn.date);
+      if (!key || byKey.has(key)) continue;
+      byKey.set(key, formatTournamentDate(tourn.date));
+    }
+    return [...byKey.entries()]
+      .sort(([a], [b]) => b.localeCompare(a))
+      .map(([key, label]) => ({ key, label }));
+  }, [tournaments]);
+
+  const filteredTournaments = useMemo(() => {
+    return tournaments.filter((t) => {
+      if (filterDateKey && tournamentDateKey(t.date) !== filterDateKey) return false;
+      if (filterTrack && t.track !== filterTrack) return false;
+      return true;
+    });
+  }, [tournaments, filterDateKey, filterTrack]);
+
+  useEffect(() => {
+    if (!filteredTournaments.length) {
+      setSelectedTournament((prev) =>
+        prev && (filterDateKey || filterTrack) ? null : prev,
+      );
+      return;
+    }
+    setSelectedTournament((prev) => {
+      if (prev && filteredTournaments.some((t) => t.id === prev.id)) return prev;
+      return filteredTournaments[0];
+    });
+  }, [filteredTournaments, filterDateKey, filterTrack]);
 
   useEffect(() => {
     if (!selectedTournament) return;
@@ -434,8 +491,17 @@ export default function MisTicketsStatistics() {
     [tournamentStats, totalRaces],
   );
 
-  const filterDate = formatTournamentDate(selectedTournament?.date);
-  const filterTrack = selectedTournament?.track || raceStats?.track || "—";
+  const tournamentSelectValue =
+    selectedTournament?.id != null ? String(selectedTournament.id) : "";
+  const tournamentLabel =
+    selectedTournament?.name
+    || (tournamentsLoading
+      ? t("misTicketsStats.filterLoading")
+      : t("misTicketsStats.filterNoTournaments"));
+  const dateSelectLabel =
+    dateOptions.find((d) => d.key === filterDateKey)?.label
+    || t("misTicketsStats.filterAllDates");
+  const trackSelectLabel = filterTrack || t("misTicketsStats.filterAllTracks");
 
   return (
     <>
@@ -443,35 +509,77 @@ export default function MisTicketsStatistics() {
         title={t("misTicketsStats.pageTitle")}
         filters={
           <>
-            <div className="mis-stats-filter mis-stats-filter--tournament">
+            <label className="mis-stats-filter mis-stats-filter--tournament">
               <Trophy className="mis-stats-filter__icon" aria-hidden />
+              <span className="mis-stats-filter__label" title={tournamentLabel}>
+                {tournamentLabel}
+              </span>
               <select
                 className="mis-stats-filter__control"
-                value={selectedTournament?.id ?? ""}
-                title={selectedTournament?.name ?? ""}
+                aria-label={t("misTicketsStats.filterTournament")}
+                value={tournamentSelectValue}
+                disabled={tournamentsLoading || filteredTournaments.length === 0}
                 onChange={(e) => {
-                  const tourn = tournaments.find((x) => String(x.id) === e.target.value);
-                  setSelectedTournament(tourn || null);
+                  const tourn = filteredTournaments.find(
+                    (x) => String(x.id) === e.target.value,
+                  );
+                  if (tourn) {
+                    setSelectedTournament(tourn);
+                    setFilterDateKey(tournamentDateKey(tourn.date));
+                    setFilterTrack(tourn.track || "");
+                  }
                 }}
               >
-                {tournaments.map((tourn) => (
-                  <option key={tourn.id} value={tourn.id}>
-                    {tourn.name}
+                {filteredTournaments.length === 0 ? (
+                  <option value="">{t("misTicketsStats.filterNoTournaments")}</option>
+                ) : (
+                  filteredTournaments.map((tourn) => (
+                    <option key={tourn.id} value={String(tourn.id)}>
+                      {tourn.name}
+                    </option>
+                  ))
+                )}
+              </select>
+              <ChevronDown className="mis-stats-filter__chevron" aria-hidden />
+            </label>
+            <label className="mis-stats-filter">
+              <Calendar className="mis-stats-filter__icon" aria-hidden />
+              <span className="mis-stats-filter__label">{dateSelectLabel}</span>
+              <select
+                className="mis-stats-filter__control"
+                aria-label={t("misTicketsStats.filterDate")}
+                value={filterDateKey}
+                disabled={tournamentsLoading || dateOptions.length === 0}
+                onChange={(e) => setFilterDateKey(e.target.value)}
+              >
+                <option value="">{t("misTicketsStats.filterAllDates")}</option>
+                {dateOptions.map((d) => (
+                  <option key={d.key} value={d.key}>
+                    {d.label}
                   </option>
                 ))}
               </select>
               <ChevronDown className="mis-stats-filter__chevron" aria-hidden />
-            </div>
-            <div className="mis-stats-filter">
-              <Calendar className="mis-stats-filter__icon" aria-hidden />
-              <span className="mis-stats-filter__control">{filterDate}</span>
-              <ChevronDown className="mis-stats-filter__chevron" aria-hidden />
-            </div>
-            <div className="mis-stats-filter">
+            </label>
+            <label className="mis-stats-filter">
               <MapPin className="mis-stats-filter__icon" aria-hidden />
-              <span className="mis-stats-filter__control">{filterTrack}</span>
+              <span className="mis-stats-filter__label">{trackSelectLabel}</span>
+              <select
+                className="mis-stats-filter__control"
+                aria-label={t("misTicketsStats.filterTrack")}
+                value={filterTrack}
+                disabled={tournamentsLoading || trackOptions.length === 0}
+                onChange={(e) => setFilterTrack(e.target.value)}
+              >
+                <option value="">{t("misTicketsStats.filterAllTracks")}</option>
+                {trackOptions.map((track) => (
+                  <option key={track} value={track}>
+                    {track}
+                  </option>
+                ))}
+              </select>
               <ChevronDown className="mis-stats-filter__chevron" aria-hidden />
-            </div>
+            </label>
           </>
         }
       />
