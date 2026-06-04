@@ -9254,31 +9254,41 @@ html[data-modality="guest"] .modality-how-panel__list {
   position: relative;
   z-index: 2;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.75rem, 2vw, 1.1rem);
   width: 100%;
-  max-width: min(44rem, 92vw);
   padding: 0 clamp(1rem, 4vw, 1.5rem);
   margin: auto;
-  text-align: center;
   box-sizing: border-box;
 }
 
+/* Shared column width: head row sets bounds; slogan + bar share same left/right edges */
+.app-splash__stack {
+  --splash-title-size: clamp(2.5rem, 9.5vw, 4.25rem);
+  --splash-logo-size: calc(var(--splash-title-size) * 1.12);
+  --splash-row-gap: clamp(1rem, 3.2vh, 1.45rem);
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: var(--splash-row-gap);
+  justify-items: stretch;
+  width: max-content;
+  max-width: min(92vw, 36rem);
+}
+
 .app-splash__head {
-  display: inline-flex;
+  display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: clamp(0.75rem, 2.8vw, 1.35rem);
-  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .app-splash__title {
   margin: 0;
   flex-shrink: 0;
-  font-size: clamp(2.5rem, 9.5vw, 4.25rem);
+  font-size: var(--splash-title-size);
   font-weight: 900;
   font-style: italic;
   letter-spacing: 0.02em;
@@ -9320,25 +9330,30 @@ html[data-modality="guest"] .modality-how-panel__list {
 
 .app-splash__logo {
   display: block;
-  width: clamp(6.5rem, 24vw, 9.5rem);
-  height: auto;
-  max-height: clamp(4.5rem, 16vw, 6.5rem);
+  height: var(--splash-logo-size);
+  width: auto;
   object-fit: contain;
   filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.3))
     drop-shadow(0 0 28px rgba(34, 211, 238, 0.15));
 }
 
 .app-splash__slogan {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: clamp(0.5rem, 2vw, 1.25rem);
   margin: 0;
-  max-width: 100%;
-  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
   font-size: clamp(0.95rem, 3.2vw, 1.15rem);
   font-weight: 600;
   line-height: 1.45;
 }
 
 .app-splash__slogan-part {
-  display: inline-block;
+  flex: 0 1 auto;
+  white-space: nowrap;
 }
 
 .app-splash__slogan-part--purple {
@@ -9377,13 +9392,12 @@ html[data-modality="guest"] .modality-how-panel__list {
   }
 }
 
-/* Loading bar — grouped with brand block, centered as one unit */
+/* Progress line — same left/right edges as head + slogan */
 .app-splash__loader {
   --splash-loader-duration: 2.4s;
   position: relative;
-  width: min(78vw, 28rem);
-  max-width: 100%;
-  margin-top: clamp(0.35rem, 1.2vw, 0.65rem);
+  width: 100%;
+  box-sizing: border-box;
   pointer-events: none;
 }
 
@@ -9393,7 +9407,8 @@ html[data-modality="guest"] .modality-how-panel__list {
   height: 3px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.1);
-  overflow: visible;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .app-splash__loader-fill {
@@ -9461,11 +9476,23 @@ html[data-modality="guest"] .modality-how-panel__list {
 }
 
 @media (max-width: 520px) {
+  .app-splash__stack {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .app-splash__head {
     flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
     gap: 0.75rem;
   }
 
+  .app-splash__slogan {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.35rem 0.65rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

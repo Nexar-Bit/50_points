@@ -210,9 +210,9 @@ function HeroCtaPanel({ t, entering, onGuestEnter }) {
       <p className="hero-cta-panel__slogan">
         <span className="text-purple-light">{t("hero.sloganPoints")}</span>
         <span className="hero-slogan-dot hero-slogan-dot--purple" aria-hidden />
-        <span className="text-cyan-light">{t("hero.sloganGame")}</span>
-        <span className="hero-slogan-dot hero-slogan-dot--cyan" aria-hidden />
         <span className="text-gold-light">{t("hero.sloganStrategy")}</span>
+        <span className="hero-slogan-dot hero-slogan-dot--gold" aria-hidden />
+        <span className="text-cyan-light">{t("hero.sloganGame")}</span>
         <span className="hero-slogan-dot hero-slogan-dot--gold" aria-hidden />
       </p>
     </div>
