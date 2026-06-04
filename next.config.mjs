@@ -1,10 +1,28 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+/** Canonical project root (fixes FRONTEND vs frontend duplicate modules on Windows). */
+function canonicalRoot(dir = __dirname) {
+  if (process.platform !== 'win32') return dir;
+  try {
+    return fs.realpathSync.native(dir);
+  } catch {
+    return path.resolve(dir);
+  }
+}
+
+const projectRoot = canonicalRoot();
+
 /** @type {import('next').NextConfig} */
 const apiUrl =
   process.env.NEXT_PUBLIC_API_URL ||
   process.env.API_BACKEND_URL ||
   'http://localhost:8000';
 
- const nextConfig = {
+const nextConfig = {
   env: {
     // Expose backend URL to the browser bundle (Vercel: set API_BACKEND_URL only).
     NEXT_PUBLIC_API_URL: apiUrl,
@@ -33,6 +51,12 @@ const apiUrl =
     // causing prerender errors like "e[o] is not a function" on the next build.
     if (process.platform === 'win32') {
       config.cache = false;
+      config.context = projectRoot;
+      config.resolve = config.resolve ?? {};
+      config.resolve.modules = [
+        path.join(projectRoot, 'node_modules'),
+        'node_modules',
+      ];
     }
     if (dev) {
       config.watchOptions = {

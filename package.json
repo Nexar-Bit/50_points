@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "node scripts/next-cli.mjs dev",
+    "build": "node scripts/next-cli.mjs build",
+    "start": "node scripts/next-cli.mjs start",
+    "lint": "node scripts/next-cli.mjs lint"
   },
   "dependencies": {
     "framer-motion": "^12.40.0",

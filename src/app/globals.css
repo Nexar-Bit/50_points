@@ -9262,29 +9262,18 @@ html[data-modality="guest"] .modality-how-panel__list {
   box-sizing: border-box;
 }
 
-/* Stack = max(head, slogan); bar width follows slogan text, not the wider head row */
+/* Three rows share one width; equal vertical gaps; left/right edges align */
 .app-splash__stack {
   --splash-title-size: clamp(2.5rem, 9.5vw, 4.25rem);
-  --splash-logo-size: calc(var(--splash-title-size) * 1.12);
+  --splash-logo-size: var(--splash-title-size);
   --splash-row-gap: clamp(1rem, 3.2vh, 1.45rem);
-  --splash-slogan-gap: clamp(0.35rem, 1.2vw, 0.85rem);
   display: grid;
-  grid-template-rows: auto auto;
-  grid-template-columns: minmax(0, max-content);
-  gap: var(--splash-row-gap);
-  justify-items: start;
-  width: var(--splash-stack-px, max-content);
+  grid-template-rows: auto auto auto;
+  row-gap: var(--splash-row-gap);
+  justify-items: stretch;
+  width: max-content;
   max-width: min(92vw, 36rem);
-}
-
-/* Width = slogan text only; loader shares those exact edges */
-.app-splash__band {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: var(--splash-row-gap);
-  width: fit-content;
-  max-width: 100%;
+  margin-inline: auto;
   box-sizing: border-box;
 }
 
@@ -9294,7 +9283,6 @@ html[data-modality="guest"] .modality-how-panel__list {
   align-items: center;
   justify-content: space-between;
   gap: clamp(0.75rem, 2.8vw, 1.35rem);
-  justify-self: stretch;
   width: 100%;
   min-width: max-content;
   box-sizing: border-box;
@@ -9329,6 +9317,8 @@ html[data-modality="guest"] .modality-how-panel__list {
   display: flex;
   align-items: center;
   justify-content: center;
+  align-self: center;
+  height: var(--splash-title-size);
   animation: app-splash-logo-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.2s backwards;
 }
 
@@ -9345,9 +9335,11 @@ html[data-modality="guest"] .modality-how-panel__list {
 
 .app-splash__logo {
   display: block;
-  height: var(--splash-logo-size);
+  height: 100%;
+  max-height: var(--splash-logo-size);
   width: auto;
   object-fit: contain;
+  vertical-align: middle;
   filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.3))
     drop-shadow(0 0 28px rgba(34, 211, 238, 0.15));
 }
@@ -9356,21 +9348,15 @@ html[data-modality="guest"] .modality-how-panel__list {
   display: flex;
   flex-wrap: nowrap;
   align-items: baseline;
-  justify-content: flex-start;
-  gap: var(--splash-slogan-gap);
+  justify-content: space-between;
+  gap: clamp(0.35rem, 1.2vw, 0.75rem);
   margin: 0;
-  width: max-content;
-  max-width: 100%;
+  width: 100%;
+  min-width: max-content;
   box-sizing: border-box;
   font-size: clamp(0.95rem, 3.2vw, 1.15rem);
   font-weight: 600;
   line-height: 1.45;
-}
-
-.app-splash__band--spread .app-splash__slogan {
-  width: 100%;
-  justify-content: space-between;
-  gap: var(--splash-slogan-gap);
 }
 
 .app-splash__slogan-part {
@@ -9501,25 +9487,25 @@ html[data-modality="guest"] .modality-how-panel__list {
   .app-splash__stack {
     width: 100%;
     max-width: 100%;
-    grid-template-columns: minmax(0, 1fr);
   }
 
   .app-splash__head {
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: center;
     gap: 0.75rem;
     min-width: 0;
   }
 
-  .app-splash__band {
-    width: 100%;
+  .app-splash__logo-wrap {
+    height: var(--splash-logo-size);
   }
 
   .app-splash__slogan {
     flex-wrap: wrap;
-    width: 100%;
-    gap: 0.35rem 0.65rem;
+    justify-content: center;
+    min-width: 0;
+    gap: 0.35rem 0.5rem;
   }
 }
 

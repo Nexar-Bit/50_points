@@ -22,6 +22,16 @@ npm run dev
 
 Open: [http://localhost:3000](http://localhost:3000)
 
+### Windows: “modules differ in casing” warnings
+
+Always run commands from this folder using the exact name **`FRONTEND`** (not `cd frontend`). If webpack still warns about `FRONTEND` vs `frontend`:
+
+```powershell
+cd E:\Work\Workana\50points-main\50points-main\FRONTEND
+Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+npm run dev
+```
+
 ## Environment
 
 | Variable | Default | Description |
