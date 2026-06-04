@@ -1108,6 +1108,29 @@ body {
     0 0 36px rgba(34, 211, 238, 0.12);
 }
 
+/* Home — preview only; no direct tournament entry */
+.live-tournament-card--preview {
+  display: block;
+  cursor: default;
+  text-decoration: none;
+  pointer-events: none;
+}
+
+.live-tournament-card--preview:hover {
+  transform: none;
+}
+
+.live-tournament-card--preview .live-tournament-card__cta {
+  background: rgba(255, 255, 255, 0.06);
+  color: #a1a1aa;
+  box-shadow: none;
+  cursor: default;
+}
+
+.live-tournament-card--preview.live-tournament-card--featured {
+  animation: live-card-breathe 5.5s ease-in-out infinite;
+}
+
 @keyframes live-card-breathe {
   0%,
   100% {
@@ -9181,5 +9204,279 @@ html[data-modality="guest"] .modality-how-panel__list {
     margin-left: 0;
     width: 100%;
     padding-left: 2.5rem;
+  }
+}
+
+/* ——— App boot splash (TORNEO) ——— */
+.app-boot-gate__content--hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.app-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: 100svh;
+  background: #000;
+  overflow: hidden;
+  animation: app-splash-in 0.55s ease forwards;
+}
+
+.app-splash--exit {
+  animation: app-splash-out 0.52s ease forwards;
+}
+
+@keyframes app-splash-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes app-splash-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.app-splash__center {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 2vw, 1.1rem);
+  width: 100%;
+  max-width: min(44rem, 92vw);
+  padding: 0 clamp(1rem, 4vw, 1.5rem);
+  margin: auto;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.app-splash__head {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 2.8vw, 1.35rem);
+  max-width: 100%;
+}
+
+.app-splash__title {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: clamp(2.5rem, 9.5vw, 4.25rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1;
+  animation: app-splash-title-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s backwards;
+}
+
+@keyframes app-splash-title-in {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.app-splash__logo-wrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: app-splash-logo-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.2s backwards;
+}
+
+@keyframes app-splash-logo-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.app-splash__logo {
+  display: block;
+  width: clamp(6.5rem, 24vw, 9.5rem);
+  height: auto;
+  max-height: clamp(4.5rem, 16vw, 6.5rem);
+  object-fit: contain;
+  filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.3))
+    drop-shadow(0 0 28px rgba(34, 211, 238, 0.15));
+}
+
+.app-splash__slogan {
+  margin: 0;
+  max-width: 100%;
+  text-align: center;
+  font-size: clamp(0.95rem, 3.2vw, 1.15rem);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.app-splash__slogan-part {
+  display: inline-block;
+}
+
+.app-splash__slogan-part--purple {
+  color: #c084fc;
+}
+
+.app-splash__slogan-part--cyan {
+  color: #22d3ee;
+}
+
+.app-splash__slogan-part--gold {
+  color: #fbbf24;
+  text-shadow: 0 0 14px rgba(251, 191, 36, 0.4);
+}
+
+.app-splash__slogan-part--1 {
+  animation: app-splash-slogan-in 0.55s ease 0.45s backwards;
+}
+
+.app-splash__slogan-part--2 {
+  animation: app-splash-slogan-in 0.55s ease 0.62s backwards;
+}
+
+.app-splash__slogan-part--3 {
+  animation: app-splash-slogan-in 0.55s ease 0.79s backwards;
+}
+
+@keyframes app-splash-slogan-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading bar — grouped with brand block, centered as one unit */
+.app-splash__loader {
+  --splash-loader-duration: 2.4s;
+  position: relative;
+  width: min(78vw, 28rem);
+  max-width: 100%;
+  margin-top: clamp(0.35rem, 1.2vw, 0.65rem);
+  pointer-events: none;
+}
+
+.app-splash__loader-track {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: visible;
+}
+
+.app-splash__loader-fill {
+  position: relative;
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #9333ea 0%,
+    #a855f7 22%,
+    #22d3ee 52%,
+    #fbbf24 88%,
+    #f59e0b 100%
+  );
+  box-shadow:
+    0 0 12px rgba(168, 85, 247, 0.65),
+    0 0 22px rgba(34, 211, 238, 0.55),
+    0 0 32px rgba(251, 191, 36, 0.35);
+  animation: app-splash-loader-fill var(--splash-loader-duration) cubic-bezier(0.35, 0, 0.15, 1)
+    forwards;
+}
+
+.app-splash__loader-fill--complete {
+  width: 100% !important;
+  animation: none;
+}
+
+@keyframes app-splash-loader-fill {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.app-splash__loader-glow {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  transform: translate(50%, -50%);
+  background: radial-gradient(circle, #fff 0%, #e0f2fe 35%, rgba(34, 211, 238, 0) 72%);
+  box-shadow:
+    0 0 10px #fff,
+    0 0 18px rgba(34, 211, 238, 0.95),
+    0 0 28px rgba(168, 85, 247, 0.5);
+  animation: app-splash-loader-glow-pulse 0.9s ease-in-out infinite;
+}
+
+@keyframes app-splash-loader-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.88;
+    transform: translate(50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(50%, -50%) scale(1.15);
+  }
+}
+
+@media (max-width: 520px) {
+  .app-splash__head {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-splash,
+  .app-splash--exit,
+  .app-splash__title,
+  .app-splash__logo-wrap,
+  .app-splash__slogan-part,
+  .app-splash__loader-fill,
+  .app-splash__loader-glow {
+    animation: none !important;
+    width: 100% !important;
   }
 }

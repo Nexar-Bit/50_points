@@ -358,9 +358,9 @@ export default function HomeLanding() {
     setEntering(true);
     try {
       await playAsGuest();
-      router.push("/tournaments");
+      router.push("/modalidades");
     } catch {
-      router.push("/tournaments");
+      router.push("/modalidades");
     } finally {
       setEntering(false);
     }
@@ -424,7 +424,7 @@ export default function HomeLanding() {
 
         {/* REGISTER / ENTER + slogan — horizontal center, same vertical band */}
         <AnimateInView delay={0.2}>
-          <div className="hero-cta-panel-wrap">
+          <div id="hero-cta" className="hero-cta-panel-wrap">
             <HeroCtaPanel
               t={t}
               entering={entering}

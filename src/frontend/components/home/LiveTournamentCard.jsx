@@ -9,6 +9,7 @@ export default function LiveTournamentCard({
   t,
   featured = false,
   href = "/tournaments",
+  previewOnly = false,
 }) {
   const isLive =
     tournament.status === "LIVE" || tournament.status === "live";
@@ -27,12 +28,16 @@ export default function LiveTournamentCard({
     "live-tournament-card",
     isLive ? "live-tournament-card--active" : "live-tournament-card--upcoming",
     featured ? "live-tournament-card--featured" : "",
+    previewOnly ? "live-tournament-card--preview" : "",
   ]
     .filter(Boolean)
     .join(" ");
 
-  return (
-    <Link href={href} className={cardClass}>
+  const ctaLabel = previewOnly
+    ? t("tournamentsSection.chooseGameMode")
+    : t("tournamentsSection.enterTournament");
+
+  const shell = (
       <div className="live-tournament-card__shell">
         <div className="live-tournament-card__gloss" aria-hidden />
         <div className="live-tournament-card__gloss-edge" aria-hidden />
@@ -99,11 +104,26 @@ export default function LiveTournamentCard({
           </div>
 
           <span className="live-tournament-card__cta">
-            {t("tournamentsSection.enterTournament")}
-            <ChevronRight className="live-tournament-card__cta-icon" aria-hidden />
+            {ctaLabel}
+            {!previewOnly ? (
+              <ChevronRight className="live-tournament-card__cta-icon" aria-hidden />
+            ) : null}
           </span>
         </div>
       </div>
+  );
+
+  if (previewOnly) {
+    return (
+      <article className={cardClass} aria-label={tournament.trackName}>
+        {shell}
+      </article>
+    );
+  }
+
+  return (
+    <Link href={href} className={cardClass}>
+      {shell}
     </Link>
   );
 }

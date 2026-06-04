@@ -183,10 +183,33 @@ export default function HomePageClient({ initialTournaments = [] }) {
                     tournament={tournament}
                     t={t}
                     featured={i === 0}
-                    href={`/tournament/${tournament.slug}`}
+                    previewOnly
                   />
                 </AnimateInView>
               ))
+            )}
+          </div>
+
+          <p className="mt-6 text-center text-sm text-zinc-500 max-w-xl mx-auto">
+            {t("tournamentsSection.homeAccessHint")}
+          </p>
+          <div className="mt-4 flex justify-center">
+            {isAuthenticated ? (
+              <Link
+                href="/modalidades"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-purple to-purple-light btn-glow"
+              >
+                {t("tournamentsSection.goToGameModes")}
+                <ChevronRight className="w-4 h-4" aria-hidden />
+              </Link>
+            ) : (
+              <a
+                href="#hero-cta"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-purple to-purple-light btn-glow"
+              >
+                {t("tournamentsSection.chooseHowToPlay")}
+                <ChevronRight className="w-4 h-4" aria-hidden />
+              </a>
             )}
           </div>
         </div>

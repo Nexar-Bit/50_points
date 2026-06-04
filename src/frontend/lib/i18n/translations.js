@@ -216,6 +216,9 @@ export const translations = {
       pointsDistribution: "DISTRIBUCION DE TUS PUNTOS",
       generalDistribution: "DISTRIBUCION GENERAL DE PUNTOS",
     },
+    splash: {
+      loading: "Cargando 50points",
+    },
     hero: {
       liveBadge: "Torneos en vivo ahora",
       subtitle: "La Competencia Definitiva de Carreras de Caballos",
@@ -380,6 +383,11 @@ export const translations = {
       starts: "Comienza",
       players: "jugadores",
       enterTournament: "ENTRAR AL TORNEO",
+      chooseGameMode: "ELIGE UN MODO DE JUEGO",
+      homeAccessHint:
+        "Los torneos no se abren desde aqui. Inicia sesion, registrate o entra sin cuenta y elige una modalidad para competir.",
+      chooseHowToPlay: "ELEGIR COMO JUGAR",
+      goToGameModes: "IR A MODALIDADES",
       live: "EN VIVO",
       upcoming: "PROXIMO",
       empty: "No hay torneos en vivo en este momento. Intenta actualizar la pagina.",
@@ -1060,6 +1068,9 @@ export const translations = {
       pointsDistribution: "YOUR POINTS DISTRIBUTION",
       generalDistribution: "GENERAL POINTS DISTRIBUTION",
     },
+    splash: {
+      loading: "Loading 50points",
+    },
     hero: {
       liveBadge: "Live tournaments now",
       subtitle: "The Ultimate Horse Racing Competition",
@@ -1224,6 +1235,11 @@ export const translations = {
       starts: "Starts",
       players: "players",
       enterTournament: "ENTER TOURNAMENT",
+      chooseGameMode: "CHOOSE A GAME MODE",
+      homeAccessHint:
+        "Tournaments are not entered from here. Log in, sign up, or play as guest, then pick a game mode to compete.",
+      chooseHowToPlay: "CHOOSE HOW TO PLAY",
+      goToGameModes: "GO TO GAME MODES",
       live: "LIVE",
       upcoming: "UPCOMING",
       empty: "No live tournaments right now. Try refreshing the page.",
