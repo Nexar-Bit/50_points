@@ -9262,17 +9262,30 @@ html[data-modality="guest"] .modality-how-panel__list {
   box-sizing: border-box;
 }
 
-/* Shared column width: head row sets bounds; slogan + bar share same left/right edges */
+/* Stack = max(head, slogan); bar width follows slogan text, not the wider head row */
 .app-splash__stack {
   --splash-title-size: clamp(2.5rem, 9.5vw, 4.25rem);
   --splash-logo-size: calc(var(--splash-title-size) * 1.12);
   --splash-row-gap: clamp(1rem, 3.2vh, 1.45rem);
+  --splash-slogan-gap: clamp(0.35rem, 1.2vw, 0.85rem);
   display: grid;
-  grid-template-rows: auto auto auto;
+  grid-template-rows: auto auto;
+  grid-template-columns: minmax(0, max-content);
   gap: var(--splash-row-gap);
-  justify-items: stretch;
-  width: max-content;
+  justify-items: start;
+  width: var(--splash-stack-px, max-content);
   max-width: min(92vw, 36rem);
+}
+
+/* Width = slogan text only; loader shares those exact edges */
+.app-splash__band {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--splash-row-gap);
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .app-splash__head {
@@ -9281,7 +9294,9 @@ html[data-modality="guest"] .modality-how-panel__list {
   align-items: center;
   justify-content: space-between;
   gap: clamp(0.75rem, 2.8vw, 1.35rem);
+  justify-self: stretch;
   width: 100%;
+  min-width: max-content;
   box-sizing: border-box;
 }
 
@@ -9341,18 +9356,25 @@ html[data-modality="guest"] .modality-how-panel__list {
   display: flex;
   flex-wrap: nowrap;
   align-items: baseline;
-  justify-content: space-between;
-  gap: clamp(0.5rem, 2vw, 1.25rem);
+  justify-content: flex-start;
+  gap: var(--splash-slogan-gap);
   margin: 0;
-  width: 100%;
+  width: max-content;
+  max-width: 100%;
   box-sizing: border-box;
   font-size: clamp(0.95rem, 3.2vw, 1.15rem);
   font-weight: 600;
   line-height: 1.45;
 }
 
+.app-splash__band--spread .app-splash__slogan {
+  width: 100%;
+  justify-content: space-between;
+  gap: var(--splash-slogan-gap);
+}
+
 .app-splash__slogan-part {
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   white-space: nowrap;
 }
 
@@ -9454,7 +9476,7 @@ html[data-modality="guest"] .modality-how-panel__list {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  transform: translate(50%, -50%);
+  transform: translateY(-50%);
   background: radial-gradient(circle, #fff 0%, #e0f2fe 35%, rgba(34, 211, 238, 0) 72%);
   box-shadow:
     0 0 10px #fff,
@@ -9467,11 +9489,11 @@ html[data-modality="guest"] .modality-how-panel__list {
   0%,
   100% {
     opacity: 0.88;
-    transform: translate(50%, -50%) scale(1);
+    transform: translateY(-50%) scale(1);
   }
   50% {
     opacity: 1;
-    transform: translate(50%, -50%) scale(1.15);
+    transform: translateY(-50%) scale(1.15);
   }
 }
 
@@ -9479,6 +9501,7 @@ html[data-modality="guest"] .modality-how-panel__list {
   .app-splash__stack {
     width: 100%;
     max-width: 100%;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .app-splash__head {
@@ -9486,11 +9509,16 @@ html[data-modality="guest"] .modality-how-panel__list {
     align-items: flex-start;
     justify-content: flex-start;
     gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .app-splash__band {
+    width: 100%;
   }
 
   .app-splash__slogan {
     flex-wrap: wrap;
-    justify-content: flex-start;
+    width: 100%;
     gap: 0.35rem 0.65rem;
   }
 }
