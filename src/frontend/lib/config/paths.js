@@ -5,6 +5,9 @@ export const BASE_PATH = '';
 /** Brand logo file: public/Img/logo.png */
 export const LOGO_PATH = '/Img/logo.png';
 
+/** Game modes dashboard background: public/Img/mode-bg.png */
+export const MODE_BG_PATH = '/Img/mode-bg.png';
+
 /** Use with next/image and next/link — basePath is applied automatically. */
 export function asset(path) {
   return path.startsWith('/') ? path : `/${path}`;
@@ -31,4 +34,8 @@ export function logoFile() {
 /** Path for next/image (basePath applied by Next.js). */
 export function logoAsset() {
   return asset(LOGO_PATH);
+}
+
+export function modeBgFile() {
+  return staticFile(MODE_BG_PATH);
 }

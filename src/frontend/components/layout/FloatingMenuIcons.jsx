@@ -162,17 +162,71 @@ export function MenuIconPower({ className }) {
   );
 }
 
+export function MenuIconGameModes({ className }) {
+  return (
+    <Icon className={className}>
+      <rect x="5" y="5" width="6.5" height="6.5" rx="1.2" />
+      <rect x="12.5" y="5" width="6.5" height="6.5" rx="1.2" />
+      <rect x="5" y="12.5" width="6.5" height="6.5" rx="1.2" />
+      <rect x="12.5" y="12.5" width="6.5" height="6.5" rx="1.2" />
+    </Icon>
+  );
+}
+
+export function MenuIconChat({ className }) {
+  return (
+    <Icon className={className}>
+      <path d="M6.5 7.5h11a2 2 0 0 1 2 2v5.5a2 2 0 0 1-2 2H11l-3.5 3v-3H6.5a2 2 0 0 1-2-2V9.5a2 2 0 0 1 2-2z" />
+      <path d="M9 11.5h6" />
+      <path d="M9 14h4" />
+    </Icon>
+  );
+}
+
+export function MenuIconFeed({ className }) {
+  return (
+    <Icon className={className}>
+      <path d="M6 6.5h12v11H6z" />
+      <path d="M9 10.5l2.2 2.2L15 9" />
+      <circle cx="16.5" cy="9" r="1" fill="currentColor" stroke="none" />
+    </Icon>
+  );
+}
+
+export function MenuIconPrivacy({ className }) {
+  return (
+    <Icon className={className}>
+      <path d="M12 5.5l5.5 2.2v4.8c0 3.2-2.2 5.5-5.5 6.5-3.3-1-5.5-3.3-5.5-6.5V7.7L12 5.5z" />
+      <path d="M10 12.2l1.4 1.4 2.8-2.8" />
+    </Icon>
+  );
+}
+
+export function MenuIconSettings({ className }) {
+  return (
+    <Icon className={className}>
+      <circle cx="12" cy="12" r="2.4" />
+      <path d="M12 5.2v1.8M12 17v1.8M5.2 12h1.8M17 12h1.8M7.1 7.1l1.3 1.3M15.6 15.6l1.3 1.3M16.9 7.1l-1.3 1.3M8.4 15.6l-1.3 1.3" />
+    </Icon>
+  );
+}
+
 export const FLOATING_MENU_ICONS = {
+  profile: MenuIconUser,
   tickets: MenuIconTicket,
   tournaments: MenuIconTrophy,
+  gameModes: MenuIconGameModes,
   ranking: MenuIconPodium,
-  racecourses: MenuIconHorse,
-  statistics: MenuIconBarChart,
-  top10: MenuIconCircle10,
-  groups: MenuIconGroup,
+  chat: MenuIconChat,
   achievements: MenuIconStar,
   hallOfFame: MenuIconBuilding,
-  profile: MenuIconUser,
+  feed: MenuIconFeed,
+  statistics: MenuIconBarChart,
+  privacy: MenuIconPrivacy,
+  settings: MenuIconSettings,
   help: MenuIconHelp,
   logout: MenuIconPower,
+  racecourses: MenuIconHorse,
+  top10: MenuIconCircle10,
+  groups: MenuIconGroup,
 };

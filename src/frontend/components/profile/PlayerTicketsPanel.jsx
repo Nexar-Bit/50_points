@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, ChevronDown, ChevronUp } from "lucide-react";
+import ProfileIcon from "@/frontend/components/profile/ProfileIcons";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import {
   normalizeStrategyLabel,
@@ -23,7 +23,7 @@ export default function PlayerTicketsPanel({ tickets = [], tournamentId = null }
         aria-expanded={open}
       >
         <div className="flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-cyan" />
+          <ProfileIcon name="ticket" className="w-5 h-5 text-cyan" />
           <div className="text-left">
             <h2>{t("profile.ticketsPanelTitle")}</h2>
             <p>
@@ -35,7 +35,11 @@ export default function PlayerTicketsPanel({ tickets = [], tournamentId = null }
         </div>
         <div className="profile-tickets-panel__toggle-meta">
           <span>{tickets.length}</span>
-          {open ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+          {open ? (
+            <ProfileIcon name="chevron-up" className="w-5 h-5" />
+          ) : (
+            <ProfileIcon name="chevron-down" className="w-5 h-5" />
+          )}
         </div>
       </button>
 

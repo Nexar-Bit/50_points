@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Flame, Trophy, Clock } from "lucide-react";
+import ProfileIcon from "@/frontend/components/profile/ProfileIcons";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { fetchAuthJson } from "@/frontend/lib/api/client";
 
@@ -49,9 +49,9 @@ function TournamentInfoBanner({ tab, isEn, t }) {
             {(leader?.username || "?").slice(0, 2).toUpperCase()}
           </span>
           {tab.status === "live" ? (
-            <Flame className="ranking-info-banner__flame" />
+            <ProfileIcon name="flame" className="ranking-info-banner__flame" />
           ) : isWon ? (
-            <Trophy className="ranking-info-banner__flame" />
+            <ProfileIcon name="trophy" className="ranking-info-banner__flame" />
           ) : null}
         </div>
       </div>
@@ -63,7 +63,7 @@ function TournamentInfoBanner({ tab, isEn, t }) {
 
         {countdown && tab.status === "live" ? (
           <p className="ranking-info-banner__timer">
-            <Clock className="w-3.5 h-3.5" />
+            <ProfileIcon name="clock" className="w-3.5 h-3.5" />
             {isEn
               ? `${countdown.minutes} min ${String(countdown.seconds).padStart(2, "0")} sec until this turn closes`
               : `Faltan ${countdown.minutes} min ${String(countdown.seconds).padStart(2, "0")} seg para el cierre de este turno`}

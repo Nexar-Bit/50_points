@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Award, Trophy } from "lucide-react";
+import ProfileIcon from "@/frontend/components/profile/ProfileIcons";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import { useAchievementCards } from "@/frontend/contexts/AchievementCardsContext";
@@ -29,7 +29,7 @@ function MiniCard({ card, isEn, onClick, disabled }) {
         className="ach-gallery__thumb"
         style={{ borderColor: meta.color, boxShadow: `0 0 16px ${meta.color}33` }}
       >
-        <Trophy className="w-6 h-6" style={{ color: meta.color }} />
+        <ProfileIcon name="trophy" className="w-6 h-6" style={{ color: meta.color }} />
         <span className="ach-gallery__place">{card.place ? `${card.place}°` : "★"}</span>
       </div>
       <p className="ach-gallery__label">{label}</p>
@@ -73,7 +73,7 @@ export default function AchievementGallery({
   return (
     <section className="profile-gallery">
       <h2 className="text-lg font-bold mb-2 flex items-center gap-2">
-        <Award className="w-5 h-5 text-amber-400" />
+        <ProfileIcon name="achievements" className="w-5 h-5 text-amber-400" />
         {t("profile.achievementGallery")}
       </h2>
       <p className="text-xs text-zinc-500 mb-5">{t("profile.achievementGalleryHint")}</p>

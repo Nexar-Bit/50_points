@@ -346,7 +346,9 @@ export default function HomePageClient({ initialTournaments = [] }) {
             </div>
           </AnimateInView>
 
-          <VideoFeedPreview />
+          <div id="feed">
+            <VideoFeedPreview />
+          </div>
         </div>
       </section>
 

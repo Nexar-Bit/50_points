@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   MapPin, Calendar, Users, Trophy, Clock, ChevronLeft,
@@ -17,6 +17,13 @@ import TournamentTicketSheet from '@/frontend/components/tournament/TournamentTi
 import { useAuth } from '@/frontend/contexts/AuthContext';
 import { fetchAuthJson } from '@/frontend/lib/api/client';
 import { fetchTournamentDetail } from '@/frontend/lib/api/tournaments';
+import ModalityScope from '@/frontend/components/modalities/ModalityScope';
+import ModalityFlowNav from '@/frontend/components/modalities/ModalityFlowNav';
+import {
+  isValidModalityId,
+  readPersistedModality,
+  withModalityQuery,
+} from '@/frontend/lib/gameModalities';
 
 const STRATEGY_MAP = { full: 'full_point', dual: 'dual_point', smart: 'smart_pick' };
 const STRATEGY_REVERSE = { full_point: 'full', dual_point: 'dual', smart_pick: 'smart' };
@@ -98,7 +105,12 @@ function TournamentSkeleton() {
 
 export default function TournamentClient() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const { token, isAuthenticated } = useAuth();
+  const fromQuery = searchParams.get('modality');
+  const modalityId = isValidModalityId(fromQuery)
+    ? fromQuery
+    : readPersistedModality() || 'free';
 
   const [tournamentRaw, setTournamentRaw] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -336,17 +348,30 @@ export default function TournamentClient() {
   const status = statusConfig[tournament.status] || statusConfig.upcoming;
 
   return (
+    <ModalityScope modalityId={modalityId}>
     <div className="min-h-screen">
+      {isValidModalityId(fromQuery) ? (
+        <div className="app-page pt-4">
+          <ModalityFlowNav
+            modalityId={modalityId}
+            currentStep="play"
+            tournamentHref={`/tournament/${tournament.slug}`}
+          />
+        </div>
+      ) : null}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img src="/images/live-feed.jpg" alt="" className="w-full h-full object-cover opacity-25" />
           <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/60 via-brand-dark/90 to-brand-dark" />
         </div>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-purple/5 rounded-full blur-[120px]" />
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px]"
+          style={{ backgroundColor: 'var(--modality-glow, rgba(124,58,237,0.05))' }}
+        />
 
         <div className="relative app-page pt-6 pb-8">
           <AppPageHeader title={tournament.name} className="mb-6" />
-          <Link href="/tournaments" className="inline-flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm mb-6 transition-colors">
+          <Link href={withModalityQuery('/tournaments', modalityId)} className="inline-flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm mb-6 transition-colors">
             <ChevronLeft size={16} />
             <span>Volver a Torneos</span>
           </Link>
@@ -606,6 +631,7 @@ export default function TournamentClient() {
         />
       )}
     </div>
+    </ModalityScope>
   );
 }
 

@@ -3,22 +3,6 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import {
-  Trophy,
-  Flame,
-  Target,
-  TrendingUp,
-  Calendar,
-  MapPin,
-  Edit3,
-  ArrowLeft,
-  Lock,
-  Award,
-  Zap,
-  Star,
-  Shield,
-  Crown,
-} from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
@@ -28,33 +12,7 @@ import AchievementGallery from "@/frontend/components/profile/AchievementGallery
 import TournamentRankingTabs from "@/frontend/components/profile/TournamentRankingTabs";
 import PlayerTicketsPanel from "@/frontend/components/profile/PlayerTicketsPanel";
 import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
-
-const performanceData = [
-  { day: "Mon", points: 320 },
-  { day: "Tue", points: 180 },
-  { day: "Wed", points: 540 },
-  { day: "Thu", points: 410 },
-  { day: "Fri", points: 290 },
-  { day: "Sat", points: 650 },
-  { day: "Sun", points: 480 },
-];
-
-const achievements = [
-  { id: 1, name: "Primera Victoria", nameEn: "First Win", description: "Gana tu primera seleccion", descEn: "Win your first selection", icon: Star, unlocked: true, color: "#f59e0b", group: "Iniciacion", groupEn: "Beginner" },
-  { id: 2, name: "Racha de 5", nameEn: "5 Streak", description: "5 carreras ganadoras seguidas", descEn: "5 winning races in a row", icon: Flame, unlocked: true, color: "#a855f7", group: "Racha", groupEn: "Streak" },
-  { id: 3, name: "Top 10 Diario", nameEn: "Daily Top 10", description: "Alcanza el top 10 diario", descEn: "Reach daily top 10", icon: TrendingUp, unlocked: true, color: "#06b6d4", group: "Ranking", groupEn: "Ranking" },
-  { id: 4, name: "Full Point Maestro", nameEn: "Full Point Master", description: "3 Full Points consecutivos", descEn: "3 consecutive Full Points", icon: Zap, unlocked: true, color: "#7c3aed", group: "Full Point", groupEn: "Full Point" },
-  { id: 5, name: "Smart Pick Pro", nameEn: "Smart Pick Pro", description: "5 Smart Picks consecutivos", descEn: "5 consecutive Smart Picks", icon: Target, unlocked: true, color: "#f59e0b", group: "Smart Pick", groupEn: "Smart Pick" },
-  { id: 6, name: "Comeback Kid", nameEn: "Comeback Kid", description: "Sube +20 posiciones en un torneo", descEn: "Climb +20 positions in a tournament", icon: TrendingUp, unlocked: true, color: "#10b981", group: "Comeback", groupEn: "Comeback" },
-  { id: 7, name: "Campeon de Torneo", nameEn: "Tournament Champion", description: "Gana un torneo completo", descEn: "Win a full tournament", icon: Crown, unlocked: false, color: "#f59e0b", group: "Dominancia", groupEn: "Dominance" },
-  { id: 8, name: "Club 1000 Puntos", nameEn: "1000 Points Club", description: "1000+ puntos en un solo dia", descEn: "1000+ points in a single day", icon: Zap, unlocked: false, color: "#a855f7", group: "Puntos", groupEn: "Points" },
-  { id: 9, name: "Seleccion Perfecta", nameEn: "Perfect Selection", description: "Todos clasifican en Smart Pick", descEn: "All place in Smart Pick", icon: Shield, unlocked: false, color: "#06b6d4", group: "Smart Pick", groupEn: "Smart Pick" },
-  { id: 10, name: "Rey de Gulfstream", nameEn: "Gulfstream King", description: "Record historico en Gulfstream Park", descEn: "All-time record at Gulfstream Park", icon: Crown, unlocked: false, color: "#f59e0b", group: "Hipodromo", groupEn: "Racetrack" },
-  { id: 11, name: "Full Point 50x", nameEn: "Full Point 50x", description: "Full Point con dividendo 50+", descEn: "Full Point with 50+ dividend", icon: Star, unlocked: false, color: "#ef4444", group: "Legendario", groupEn: "Legendary" },
-  { id: 12, name: "VIP Hall", nameEn: "VIP Hall", description: "Entra al VIP All-Time", descEn: "Enter VIP All-Time", icon: Award, unlocked: false, color: "#d97706", group: "Mitico", groupEn: "Mythic" },
-];
-
-const maxPoints = Math.max(...performanceData.map((d) => d.points));
+import ProfileIcon from "@/frontend/components/profile/ProfileIcons";
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -106,9 +64,16 @@ export default function ProfileView({ userId: viewUserId }) {
   }, [resolvedId, isOwnProfile, authLoading, tryAwardRecordTies]);
 
   useEffect(() => {
-    if (profileSection !== "achievements" || loading) return;
+    if (loading) return undefined;
+    const sectionIds = {
+      achievements: "achievements",
+      privacy: "profile-privacy",
+      settings: "profile-settings",
+    };
+    const targetId = sectionIds[profileSection];
+    if (!targetId) return undefined;
     const timer = window.setTimeout(() => {
-      achievementsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 150);
     return () => window.clearTimeout(timer);
   }, [profileSection, loading]);
@@ -141,6 +106,13 @@ export default function ProfileView({ userId: viewUserId }) {
       currentStreak: u.stats?.bestStreak ?? 0,
     };
   }, [profile, isEn]);
+
+  const achievements = profile?.achievements ?? [];
+  const performanceHistory = profile?.performanceHistory ?? [];
+  const maxPoints = useMemo(
+    () => Math.max(1, ...performanceHistory.map((d) => d.points ?? 0)),
+    [performanceHistory]
+  );
 
   const allTickets = profile?.allTickets ?? [];
   const ticketsForPanel = useMemo(() => {
@@ -191,6 +163,8 @@ export default function ProfileView({ userId: viewUserId }) {
   const winRateOffset =
     circumference - ((userProfile?.winRate ?? 0) / 100) * circumference;
 
+  const unlockedCount = achievements.filter((a) => a.unlocked).length;
+
   if (authLoading || loading) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center text-zinc-500">
@@ -202,6 +176,7 @@ export default function ProfileView({ userId: viewUserId }) {
   if (!viewUserId && !isAuthenticated) {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center gap-4 text-center px-4">
+        <ProfileIcon name="login" className="w-10 h-10 text-purple-light" />
         <p className="text-zinc-400">{t("profile.loginToView")}</p>
         <Link href="/login" className="text-purple-light hover:underline">
           {t("nav.login")}
@@ -213,6 +188,7 @@ export default function ProfileView({ userId: viewUserId }) {
   if (!resolvedId || !userProfile) {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center gap-4 text-center px-4">
+        <ProfileIcon name="user" className="w-10 h-10 text-zinc-500" />
         <p className="text-zinc-400">{t("profile.notFound")}</p>
         <Link href="/" className="text-purple-light hover:underline">
           {t("profile.backToHome")}
@@ -259,7 +235,8 @@ export default function ProfileView({ userId: viewUserId }) {
               {isOwnProfile ? (
                 <h2 className="text-3xl font-bold">{userProfile.username}</h2>
               ) : null}
-              <span className="px-3 py-1 rounded-full bg-purple/15 border border-purple/20 text-purple-light text-xs font-semibold">
+              <span className="px-3 py-1 rounded-full bg-purple/15 border border-purple/20 text-purple-light text-xs font-semibold inline-flex items-center gap-1.5">
+                <ProfileIcon name="leader" className="w-3.5 h-3.5" />
                 #{userProfile.globalRank} {t("profile.global")}
               </span>
             </div>
@@ -268,11 +245,11 @@ export default function ProfileView({ userId: viewUserId }) {
             ) : null}
             <div className="flex flex-col sm:flex-row items-center gap-4 text-sm text-zinc-500">
               <span className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" />
+                <ProfileIcon name="calendar" className="w-4 h-4" />
                 {t("profile.memberSince")} {userProfile.memberSince}
               </span>
               <span className="flex items-center gap-1.5">
-                <MapPin className="w-4 h-4" />
+                <ProfileIcon name="map-pin" className="w-4 h-4" />
                 {userProfile.location}
               </span>
             </div>
@@ -283,7 +260,7 @@ export default function ProfileView({ userId: viewUserId }) {
               type="button"
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 text-sm text-zinc-300 hover:border-purple/30 hover:text-white transition-all bg-white/[0.02]"
             >
-              <Edit3 className="w-4 h-4" />
+              <ProfileIcon name="edit" className="w-4 h-4" />
               {t("profile.editProfile")}
             </button>
           ) : null}
@@ -297,7 +274,7 @@ export default function ProfileView({ userId: viewUserId }) {
         >
           <motion.div variants={fadeUp} className="glass-card rounded-2xl p-5 text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Trophy className="w-5 h-5 text-purple-light" />
+              <ProfileIcon name="points" className="w-5 h-5 text-purple-light" />
               <span className="text-xs text-zinc-500 uppercase tracking-wider font-semibold">
                 {t("profile.totalPoints")}
               </span>
@@ -309,7 +286,7 @@ export default function ProfileView({ userId: viewUserId }) {
 
           <motion.div variants={fadeUp} className="glass-card rounded-2xl p-5 text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Target className="w-5 h-5 text-cyan" />
+              <ProfileIcon name="win-rate" className="w-5 h-5 text-cyan" />
               <span className="text-xs text-zinc-500 uppercase tracking-wider font-semibold">
                 {t("profile.winRate")}
               </span>
@@ -345,7 +322,7 @@ export default function ProfileView({ userId: viewUserId }) {
 
           <motion.div variants={fadeUp} className="glass-card rounded-2xl p-5 text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Award className="w-5 h-5 text-yellow-400" />
+              <ProfileIcon name="tournaments" className="w-5 h-5 text-yellow-400" />
               <span className="text-xs text-zinc-500 uppercase tracking-wider font-semibold">
                 {t("profile.tournaments")}
               </span>
@@ -355,13 +332,13 @@ export default function ProfileView({ userId: viewUserId }) {
 
           <motion.div variants={fadeUp} className="glass-card rounded-2xl p-5 text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Flame className="w-5 h-5 text-orange-400" />
+              <ProfileIcon name="streak" className="w-5 h-5 text-orange-400" />
               <span className="text-xs text-zinc-500 uppercase tracking-wider font-semibold">
                 {t("profile.streak")}
               </span>
             </div>
             <div className="flex items-center justify-center gap-2">
-              <Flame className="w-7 h-7 text-orange-400" />
+              <ProfileIcon name="streak" className="w-7 h-7 text-orange-400" />
               <span className="text-3xl font-black text-orange-400">{userProfile.currentStreak}</span>
             </div>
           </motion.div>
@@ -385,136 +362,174 @@ export default function ProfileView({ userId: viewUserId }) {
           />
         </div>
 
-        {isOwnProfile ? (
-          <>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="glass-card rounded-2xl p-6 mb-10"
-            >
-              <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-purple-light" />
-                {t("profile.performanceHistory")}
-              </h2>
-              <div className="flex items-end gap-3 sm:gap-4 h-48">
-                {performanceData.map((d, i) => {
-                  const heightPct = (d.points / maxPoints) * 100;
-                  return (
-                    <div key={d.day} className="flex-1 flex flex-col items-center gap-2">
-                      <motion.div
-                        initial={{ height: 0 }}
-                        animate={{ height: `${heightPct}%` }}
-                        transition={{ duration: 0.8, delay: 0.1 * i, ease: "easeOut" }}
-                        className="w-full max-w-[40px] rounded-t-lg bg-gradient-to-t from-purple to-purple-light relative group cursor-pointer"
-                      >
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 rounded bg-[#1a1a2e] border border-white/10 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                          {d.points} {t("common.pts")}
-                        </div>
-                      </motion.div>
-                      <span className="text-xs text-zinc-500">{d.day}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.35 }}
-              className="glass-card rounded-2xl p-6 mb-10"
-            >
-              <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-                <Target className="w-5 h-5 text-cyan" />
-                {t("profile.strategyBreakdown")}
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {Object.entries(strategyBreakdown).map(([key, strat]) => (
-                  <div
-                    key={key}
-                    className="rounded-xl p-4 border border-white/5 bg-white/[0.02]"
-                    style={{ borderLeftWidth: 3, borderLeftColor: strat.color }}
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-bold text-white">{strat.label}</span>
-                      <span
-                        className="text-xs px-2 py-0.5 rounded-full font-medium"
-                        style={{ backgroundColor: strat.color + "15", color: strat.color }}
-                      >
-                        {strat.winRate}% {t("profile.success")}
-                      </span>
-                    </div>
-                    <div className="space-y-2 text-xs">
-                      <div className="flex justify-between text-zinc-400">
-                        <span>{t("profile.plays")}</span>
-                        <span className="text-white font-medium">{strat.count}</span>
+        {isOwnProfile && performanceHistory.length > 0 ? (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="glass-card rounded-2xl p-6 mb-10"
+          >
+            <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
+              <ProfileIcon name="performance" className="w-5 h-5 text-purple-light" />
+              {t("profile.performanceHistory")}
+            </h2>
+            <div className="flex items-end gap-3 sm:gap-4 h-48">
+              {performanceHistory.map((d, i) => {
+                const heightPct = ((d.points ?? 0) / maxPoints) * 100;
+                const dayLabel = isEn ? d.day : d.dayEs || d.day;
+                return (
+                  <div key={d.date || i} className="flex-1 flex flex-col items-center gap-2">
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: `${heightPct}%` }}
+                      transition={{ duration: 0.8, delay: 0.1 * i, ease: "easeOut" }}
+                      className="w-full max-w-[40px] rounded-t-lg bg-gradient-to-t from-purple to-purple-light relative group cursor-pointer"
+                    >
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 rounded bg-[#1a1a2e] border border-white/10 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                        {d.points} {t("common.pts")}
                       </div>
-                      <div className="flex justify-between text-zinc-400">
-                        <span>{t("profile.wins")}</span>
-                        <span className="text-white font-medium">{strat.wins}</span>
-                      </div>
-                      <div className="flex justify-between text-zinc-400">
-                        <span>{t("profile.totalPointsLabel")}</span>
-                        <span className="font-bold" style={{ color: strat.color }}>
-                          {(strat.totalPoints ?? 0).toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="flex justify-between text-zinc-400">
-                        <span>{t("profile.bestPlay")}</span>
-                        <span className="text-emerald-400 font-medium">+{strat.best}</span>
-                      </div>
-                    </div>
-                    <div className="mt-3 h-1.5 bg-white/5 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full"
-                        style={{ width: `${strat.winRate}%`, backgroundColor: strat.color }}
-                      />
-                    </div>
+                    </motion.div>
+                    <span className="text-xs text-zinc-500">{dayLabel}</span>
                   </div>
-                ))}
-              </div>
-            </motion.div>
-          </>
+                );
+              })}
+            </div>
+          </motion.div>
         ) : null}
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="glass-card rounded-2xl p-6"
-        >
-          <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-            <Award className="w-5 h-5 text-yellow-400" />
-            {t("profile.achievements")}
-          </h2>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-zinc-500">
-              {achievements.filter((a) => a.unlocked).length}/{achievements.length}{" "}
-              {t("profile.unlocked")}
-            </span>
-            <div className="h-1.5 w-32 bg-white/5 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-purple to-cyan"
-                style={{
-                  width: `${(achievements.filter((a) => a.unlocked).length / achievements.length) * 100}%`,
-                }}
-              />
+        {isOwnProfile ? (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.35 }}
+            className="glass-card rounded-2xl p-6 mb-10"
+          >
+            <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
+              <ProfileIcon name="strategy" className="w-5 h-5 text-cyan" />
+              {t("profile.strategyBreakdown")}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {Object.entries(strategyBreakdown).map(([key, strat]) => (
+                <div
+                  key={key}
+                  className="rounded-xl p-4 border border-white/5 bg-white/[0.02]"
+                  style={{ borderLeftWidth: 3, borderLeftColor: strat.color }}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-bold text-white">{strat.label}</span>
+                    <span
+                      className="text-xs px-2 py-0.5 rounded-full font-medium"
+                      style={{ backgroundColor: strat.color + "15", color: strat.color }}
+                    >
+                      {strat.winRate}% {t("profile.success")}
+                    </span>
+                  </div>
+                  <div className="space-y-2 text-xs">
+                    <div className="flex justify-between text-zinc-400">
+                      <span>{t("profile.plays")}</span>
+                      <span className="text-white font-medium">{strat.count}</span>
+                    </div>
+                    <div className="flex justify-between text-zinc-400">
+                      <span>{t("profile.wins")}</span>
+                      <span className="text-white font-medium">{strat.wins}</span>
+                    </div>
+                    <div className="flex justify-between text-zinc-400">
+                      <span>{t("profile.totalPointsLabel")}</span>
+                      <span className="font-bold" style={{ color: strat.color }}>
+                        {(strat.totalPoints ?? 0).toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-zinc-400">
+                      <span>{t("profile.bestPlay")}</span>
+                      <span className="text-emerald-400 font-medium">+{strat.best}</span>
+                    </div>
+                  </div>
+                  <div className="mt-3 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{ width: `${strat.winRate}%`, backgroundColor: strat.color }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {achievements.map((achievement) => (
-              <AchievementBadge key={achievement.id} achievement={achievement} isEn={isEn} />
-            ))}
-          </div>
-        </motion.div>
+          </motion.div>
+        ) : null}
+
+        {achievements.length > 0 ? (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="glass-card rounded-2xl p-6"
+          >
+            <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
+              <ProfileIcon name="achievements" className="w-5 h-5 text-yellow-400" />
+              {t("profile.achievements")}
+            </h2>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-zinc-500">
+                {unlockedCount}/{achievements.length} {t("profile.unlocked")}
+              </span>
+              <div className="h-1.5 w-32 bg-white/5 rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-purple to-cyan"
+                  style={{
+                    width: `${(unlockedCount / achievements.length) * 100}%`,
+                  }}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {achievements.map((achievement) => (
+                <AchievementBadge
+                  key={achievement.id}
+                  achievement={achievement}
+                  isEn={isEn}
+                  t={t}
+                />
+              ))}
+            </div>
+          </motion.div>
+        ) : null}
+
+        {isOwnProfile ? (
+          <>
+            <div id="profile-privacy" className="scroll-mt-24 mt-10 glass-card rounded-2xl p-6">
+              <h2 className="text-lg font-bold mb-2 flex items-center gap-2">
+                <ProfileIcon name="privacy" className="w-5 h-5 text-cyan" />
+                {t("floatingMenu.privacy")}
+              </h2>
+              <p className="text-sm text-zinc-500 leading-relaxed">
+                {isEn
+                  ? "Privacy preferences and data controls will appear here."
+                  : "Las preferencias de privacidad y controles de datos apareceran aqui."}
+              </p>
+            </div>
+            <div id="profile-settings" className="scroll-mt-24 mt-6 glass-card rounded-2xl p-6">
+              <h2 className="text-lg font-bold mb-2 flex items-center gap-2">
+                <ProfileIcon name="settings" className="w-5 h-5 text-purple-light" />
+                {t("floatingMenu.settings")}
+              </h2>
+              <p className="text-sm text-zinc-500 leading-relaxed">
+                {isEn
+                  ? "Account settings and notifications will appear here."
+                  : "La configuracion de cuenta y notificaciones aparecera aqui."}
+              </p>
+            </div>
+          </>
+        ) : null}
       </div>
     </div>
   );
 }
 
-function AchievementBadge({ achievement, isEn }) {
-  const Icon = achievement.icon;
+function AchievementBadge({ achievement, isEn, t }) {
+  const copy = t(`profile.achievementItems.${achievement.id}`);
+  const name = isEn ? copy?.nameEn : copy?.name;
+  const description = isEn ? copy?.descEn : copy?.description;
+  const group = isEn ? achievement.groupEn : achievement.group;
+
   return (
     <motion.div
       whileHover={{
@@ -532,7 +547,7 @@ function AchievementBadge({ achievement, isEn }) {
     >
       {!achievement.unlocked && (
         <div className="absolute top-3 right-3">
-          <Lock className="w-4 h-4 text-zinc-600" />
+          <ProfileIcon name="lock" className="w-4 h-4 text-zinc-600" />
         </div>
       )}
       <div
@@ -545,7 +560,8 @@ function AchievementBadge({ achievement, isEn }) {
             : "rgba(255,255,255,0.03)",
         }}
       >
-        <Icon
+        <ProfileIcon
+          name={achievement.icon}
           className="w-6 h-6"
           style={{ color: achievement.unlocked ? achievement.color : "#3f3f46" }}
         />
@@ -555,17 +571,17 @@ function AchievementBadge({ achievement, isEn }) {
           achievement.unlocked ? "text-zinc-500" : "text-zinc-700"
         }`}
       >
-        {isEn ? achievement.groupEn : achievement.group}
+        {group}
       </p>
       <h3
         className={`text-sm font-bold mb-1 ${
           achievement.unlocked ? "text-white" : "text-zinc-600"
         }`}
       >
-        {isEn ? achievement.nameEn : achievement.name}
+        {name}
       </h3>
       <p className={`text-xs ${achievement.unlocked ? "text-zinc-500" : "text-zinc-700"}`}>
-        {isEn ? achievement.descEn : achievement.description}
+        {description}
       </p>
     </motion.div>
   );

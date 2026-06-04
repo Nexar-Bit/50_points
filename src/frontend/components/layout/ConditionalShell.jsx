@@ -38,7 +38,11 @@ export default function ConditionalShell({ children }) {
           </Suspense>
         ) : null}
         {showFloatingLanguageToggle ? <LanguageToggle className="app-lang-toggle" /> : null}
-        <main className={hideChrome ? "min-h-screen" : "app-main app-main--with-menu min-h-screen"}>
+        <main
+          className={
+            hideChrome ? "min-h-screen" : "app-main app-main--with-menu app-main--immersive min-h-screen"
+          }
+        >
           {hideChrome ? children : <AppSurface>{children}</AppSurface>}
         </main>
       </>

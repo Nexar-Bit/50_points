@@ -9,18 +9,21 @@ import { useAuth } from "@/frontend/contexts/AuthContext";
 import { FLOATING_MENU_ICONS } from "@/frontend/components/layout/FloatingMenuIcons";
 import FloatingMenuTabElectrons from "@/frontend/components/layout/FloatingMenuTabElectrons";
 
+/** Platform menu order (player-mode spec): profile → tickets → … → help; logout last. */
 const MENU_ITEMS = [
+  { id: "profile", href: "/profile", labelKey: "floatingMenu.profile" },
   { id: "tickets", href: "/statistics", labelKey: "floatingMenu.tickets" },
   { id: "tournaments", href: "/tournaments", labelKey: "floatingMenu.tournaments" },
+  { id: "gameModes", href: "/modalidades", labelKey: "floatingMenu.gameModes" },
   { id: "ranking", href: "/leaderboard", labelKey: "floatingMenu.ranking" },
-  { id: "racecourses", href: "/statistics/explorer?level=racetrack", labelKey: "floatingMenu.racecourses" },
-  { id: "statistics", href: "/statistics/explorer", labelKey: "floatingMenu.statistics" },
-  { id: "top10", href: "/legends", labelKey: "floatingMenu.top10" },
-  { id: "groups", href: "/groups", labelKey: "floatingMenu.groups" },
+  { id: "chat", href: "/chat", labelKey: "floatingMenu.chat" },
   { id: "achievements", href: "/profile?section=achievements", labelKey: "floatingMenu.achievements" },
   { id: "hallOfFame", href: "/hall-of-fame", labelKey: "floatingMenu.hallOfFame" },
-  { id: "profile", href: "/profile", labelKey: "floatingMenu.profile" },
-  { id: "help", href: "/how-to-play", labelKey: "floatingMenu.help" },
+  { id: "feed", href: "/#feed", labelKey: "floatingMenu.feed" },
+  { id: "statistics", href: "/statistics/explorer", labelKey: "floatingMenu.statistics" },
+  { id: "privacy", href: "/profile?section=privacy", labelKey: "floatingMenu.privacy" },
+  { id: "settings", href: "/profile?section=settings", labelKey: "floatingMenu.settings" },
+  { id: "help", href: "/how-to-play?section=faq", labelKey: "floatingMenu.help" },
 ];
 
 const PANEL_ANIM_MS = 320;
@@ -33,7 +36,6 @@ export default function FloatingMenuBar() {
   const pathname = usePathname() || "";
   const searchParams = useSearchParams();
   const section = searchParams.get("section");
-  const statsLevel = searchParams.get("level");
   const router = useRouter();
   const { t } = useLanguage();
   const { logout } = useAuth();
@@ -123,30 +125,37 @@ export default function FloatingMenuBar() {
     router.push("/");
   }, [logout, handleClose, router]);
 
+  const viewTab = searchParams.get("tab");
+  const howSection = searchParams.get("section");
+
   const isActive = (item) => {
     switch (item.id) {
+      case "profile":
+        return isProfilePath(pathname) && !section;
       case "tickets":
         return pathname === "/statistics";
-      case "statistics":
-        return pathname.startsWith("/statistics/explorer") && statsLevel !== "racetrack";
-      case "racecourses":
-        return pathname.startsWith("/statistics/explorer") && statsLevel === "racetrack";
       case "tournaments":
         return pathname === "/tournaments" || pathname.startsWith("/tournament/");
+      case "gameModes":
+        return pathname === "/modalidades" || pathname.startsWith("/modalidades/");
       case "ranking":
-        return pathname === "/leaderboard";
-      case "top10":
-        return pathname === "/legends";
-      case "groups":
-        return pathname.startsWith("/groups");
+        return pathname === "/leaderboard" && viewTab !== "chat";
+      case "chat":
+        return pathname === "/chat" || (pathname === "/leaderboard" && viewTab === "chat");
       case "achievements":
         return isProfilePath(pathname) && section === "achievements";
-      case "profile":
-        return isProfilePath(pathname) && section !== "achievements";
       case "hallOfFame":
         return pathname === "/hall-of-fame";
+      case "feed":
+        return false;
+      case "statistics":
+        return pathname.startsWith("/statistics/explorer");
+      case "privacy":
+        return isProfilePath(pathname) && section === "privacy";
+      case "settings":
+        return isProfilePath(pathname) && section === "settings";
       case "help":
-        return pathname === "/how-to-play";
+        return pathname === "/how-to-play" && howSection === "faq";
       default:
         return false;
     }
@@ -204,7 +213,7 @@ export default function FloatingMenuBar() {
 
   return (
     <>
-      {expanded && isOverlayLayout ? (
+      {expanded ? (
         <button
           type="button"
           className="floating-menu__backdrop"

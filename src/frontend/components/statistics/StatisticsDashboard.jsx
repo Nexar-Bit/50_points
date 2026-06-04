@@ -2,7 +2,16 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, BarChart3, Globe2, MapPin, Trophy, User, Flag } from "lucide-react";
+import {
+  ArrowLeft,
+  BarChart3,
+  ChevronDown,
+  Globe2,
+  MapPin,
+  Trophy,
+  User,
+  Flag,
+} from "lucide-react";
 import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
@@ -206,36 +215,64 @@ export default function StatisticsDashboard({ initialLevel = "tournament" }) {
         </div>
 
         <div className="mis-stats-filters mb-6">
-          <div className="mis-stats-filter">
-          <select
-            className="bg-transparent border-none outline-none text-inherit"
-            value={selectedTournament?.id ?? ""}
-            onChange={(e) => {
-              const tourn = tournaments.find((x) => String(x.id) === e.target.value);
-              setSelectedTournament(tourn || null);
-              if (tourn?.track) setSelectedTrack(tourn.track);
-            }}
-          >
-            {tournaments.map((tourn) => (
-              <option key={tourn.id} value={tourn.id}>
-                {tourn.name}
-              </option>
-            ))}
-          </select>
-          </div>
-          <div className="mis-stats-filter">
-          <select
-            className="bg-transparent border-none outline-none text-inherit"
-            value={selectedTrack ?? ""}
-            onChange={(e) => setSelectedTrack(e.target.value || null)}
-          >
-            {tracks.map((track) => (
-              <option key={track} value={track}>
-                {track}
-              </option>
-            ))}
-          </select>
-          </div>
+          <label className="mis-stats-filter mis-stats-filter--tournament">
+            <Trophy className="mis-stats-filter__icon" aria-hidden />
+            <span
+              className="mis-stats-filter__label"
+              title={selectedTournament?.name || t("misTicketsStats.filterNoTournaments")}
+            >
+              {selectedTournament?.name || t("misTicketsStats.filterNoTournaments")}
+            </span>
+            <select
+              className="mis-stats-filter__control"
+              aria-label={t("misTicketsStats.filterTournament")}
+              value={selectedTournament?.id ?? ""}
+              disabled={tournaments.length === 0}
+              onChange={(e) => {
+                const tourn = tournaments.find((x) => String(x.id) === e.target.value);
+                setSelectedTournament(tourn || null);
+                if (tourn?.track) setSelectedTrack(tourn.track);
+              }}
+            >
+              {tournaments.length === 0 ? (
+                <option value="">{t("misTicketsStats.filterNoTournaments")}</option>
+              ) : (
+                tournaments.map((tourn) => (
+                  <option key={tourn.id} value={tourn.id}>
+                    {tourn.name}
+                  </option>
+                ))
+              )}
+            </select>
+            <ChevronDown className="mis-stats-filter__chevron" aria-hidden />
+          </label>
+          <label className="mis-stats-filter">
+            <MapPin className="mis-stats-filter__icon" aria-hidden />
+            <span
+              className="mis-stats-filter__label"
+              title={selectedTrack || t("misTicketsStats.filterAllTracks")}
+            >
+              {selectedTrack || t("misTicketsStats.filterAllTracks")}
+            </span>
+            <select
+              className="mis-stats-filter__control"
+              aria-label={t("misTicketsStats.filterTrack")}
+              value={selectedTrack ?? ""}
+              disabled={tracks.length === 0}
+              onChange={(e) => setSelectedTrack(e.target.value || null)}
+            >
+              {tracks.length === 0 ? (
+                <option value="">{t("misTicketsStats.filterAllTracks")}</option>
+              ) : (
+                tracks.map((track) => (
+                  <option key={track} value={track}>
+                    {track}
+                  </option>
+                ))
+              )}
+            </select>
+            <ChevronDown className="mis-stats-filter__chevron" aria-hidden />
+          </label>
         </div>
 
         {activeLevel === "race" && races.length > 0 ? (
