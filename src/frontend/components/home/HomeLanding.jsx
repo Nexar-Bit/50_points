@@ -177,7 +177,15 @@ function HeroCtaPanel({ t, entering, onGuestEnter }) {
   return (
     <div className="hero-cta-panel">
       <div className="hero-cta-panel__buttons">
-        <Link href="/register" className="hero-cta-btn hero-cta-btn--purple group">
+        <Link href="/login" className="hero-cta-btn hero-cta-btn--purple group">
+          <span className="hero-cta-btn__main">
+            <LogIn className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
+            <span className="hero-cta-btn__label">{t("hero.loginExisting")}</span>
+          </span>
+          <span className="hero-cta-btn__sub">{t("hero.loginExistingSub")}</span>
+        </Link>
+
+        <Link href="/register" className="hero-cta-btn hero-cta-btn--cyan group">
           <span className="hero-cta-btn__main">
             <UserPlus className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
             <span className="hero-cta-btn__label">{t("hero.register")}</span>
@@ -189,7 +197,7 @@ function HeroCtaPanel({ t, entering, onGuestEnter }) {
           type="button"
           onClick={onGuestEnter}
           disabled={entering}
-          className="hero-cta-btn hero-cta-btn--cyan group disabled:opacity-60"
+          className="hero-cta-btn hero-cta-btn--gold group disabled:opacity-60"
         >
           <span className="hero-cta-btn__main">
             <Play className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
@@ -197,14 +205,6 @@ function HeroCtaPanel({ t, entering, onGuestEnter }) {
           </span>
           <span className="hero-cta-btn__sub">{t("hero.enterSub")}</span>
         </button>
-
-        <Link href="/login" className="hero-cta-btn hero-cta-btn--gold group">
-          <span className="hero-cta-btn__main">
-            <LogIn className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
-            <span className="hero-cta-btn__label">{t("hero.loginExisting")}</span>
-          </span>
-          <span className="hero-cta-btn__sub">{t("hero.loginExistingSub")}</span>
-        </Link>
       </div>
 
       <p className="hero-cta-panel__slogan">
