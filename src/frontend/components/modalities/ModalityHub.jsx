@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Trophy, Crown, Star, User, Lock, ChevronRight, MoreVertical, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { modeBgFile } from "@/frontend/lib/config/paths";
+import { useModality } from "@/frontend/contexts/ModalityContext";
 import {
   HUB_DISPLAY_ORDER,
   getModality,
@@ -21,6 +22,7 @@ const ICONS = {
 
 export default function ModalityHub() {
   const { t } = useLanguage();
+  const { activeModalityId } = useModality();
   const order = HUB_DISPLAY_ORDER;
   const howLines = t("gameModalities.howBullets");
   const howPreview = Array.isArray(howLines) ? howLines[0] : "";
@@ -50,7 +52,7 @@ export default function ModalityHub() {
                 const mod = getModality(id);
                 const Icon = ICONS[mod.icon] || Trophy;
                 const locked = !mod.available;
-                const isActive = id === "free" && !locked;
+                const isActive = id === activeModalityId && !locked;
 
                 return (
                   <li key={id}>

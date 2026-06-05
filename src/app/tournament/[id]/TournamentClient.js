@@ -24,6 +24,7 @@ import {
   readPersistedModality,
   withModalityQuery,
 } from '@/frontend/lib/gameModalities';
+import { markTrackTicketUsed } from '@/frontend/lib/trackTicketUsage';
 
 const STRATEGY_MAP = { full: 'full_point', dual: 'dual_point', smart: 'smart_pick' };
 const STRATEGY_REVERSE = { full_point: 'full', dual_point: 'dual', smart_pick: 'smart' };
@@ -111,6 +112,10 @@ export default function TournamentClient() {
   const modalityId = isValidModalityId(fromQuery)
     ? fromQuery
     : readPersistedModality() || 'free';
+  const returnPath = searchParams.get('return');
+  const trackFromQuery = searchParams.get('track');
+  const ticketFromQuery = Number.parseInt(searchParams.get('ticket') || '', 10);
+  const playFirst = searchParams.get('play') === '1';
 
   const [tournamentRaw, setTournamentRaw] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -123,8 +128,17 @@ export default function TournamentClient() {
   const [picks, setPicks] = useState({});
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [confirmedRace, setConfirmedRace] = useState(null);
-  const [activeTicketNumber, setActiveTicketNumber] = useState(1);
+  const [activeTicketNumber, setActiveTicketNumber] = useState(
+    ticketFromQuery >= 1 && ticketFromQuery <= 3 ? ticketFromQuery : 1,
+  );
   const [countdown, setCountdown] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [ticketMarkedComplete, setTicketMarkedComplete] = useState(false);
+
+  useEffect(() => {
+    if (ticketFromQuery >= 1 && ticketFromQuery <= 3) {
+      setActiveTicketNumber(ticketFromQuery);
+    }
+  }, [ticketFromQuery]);
 
   useEffect(() => {
     const slug = params.id;
@@ -160,6 +174,17 @@ export default function TournamentClient() {
     if (!tournamentRaw) return null;
     return normalizeTournament(tournamentRaw);
   }, [tournamentRaw]);
+
+  useEffect(() => {
+    if (!playFirst || !tournament?.races?.length) return;
+    const first =
+      tournament.races.find((r) => r.number === 1 || r.raceNumber === 1) || tournament.races[0];
+    if (first?.id) {
+      setExpandedRace(first.id);
+      setActiveStrategy('full');
+      setPicks({});
+    }
+  }, [playFirst, tournament]);
 
   const nextRace = useMemo(() => {
     if (!tournament) return null;
@@ -315,6 +340,29 @@ export default function TournamentClient() {
     return tournament.races.length - confirmedCount;
   }, [tournament, confirmedCount]);
 
+  const allRacesPlayed =
+    tournament &&
+    confirmedCount >= tournament.totalRaces &&
+    ticketFromQuery >= 1 &&
+    ticketFromQuery <= 3;
+
+  useEffect(() => {
+    if (!allRacesPlayed || ticketMarkedComplete || !trackFromQuery) return;
+    markTrackTicketUsed(trackFromQuery, ticketFromQuery, tournament?.slug);
+    setTicketMarkedComplete(true);
+  }, [
+    allRacesPlayed,
+    ticketMarkedComplete,
+    trackFromQuery,
+    ticketFromQuery,
+    tournament?.slug,
+  ]);
+
+  const backHref = returnPath
+    ? withModalityQuery(returnPath, modalityId)
+    : withModalityQuery('/tournaments', modalityId);
+  const showFreeFlowNav = isValidModalityId(fromQuery) && modalityId !== 'free';
+
   const toggleRace = useCallback(
     (raceId) => {
       if (isRaceConfirmed(raceId)) return;
@@ -350,7 +398,7 @@ export default function TournamentClient() {
   return (
     <ModalityScope modalityId={modalityId}>
     <div className="min-h-screen">
-      {isValidModalityId(fromQuery) ? (
+      {showFreeFlowNav ? (
         <div className="app-page pt-4">
           <ModalityFlowNav
             modalityId={modalityId}
@@ -371,10 +419,25 @@ export default function TournamentClient() {
 
         <div className="relative app-page pt-6 pb-8">
           <AppPageHeader title={tournament.name} className="mb-6" />
-          <Link href={withModalityQuery('/tournaments', modalityId)} className="inline-flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm mb-6 transition-colors">
+          <Link href={backHref} className="inline-flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm mb-6 transition-colors">
             <ChevronLeft size={16} />
-            <span>Volver a Torneos</span>
+            <span>{returnPath ? 'Volver a hipódromos' : 'Volver a Torneos'}</span>
           </Link>
+
+          {allRacesPlayed && returnPath ? (
+            <div className="mb-6 rounded-xl border border-emerald-500/35 bg-emerald-500/10 px-4 py-3">
+              <p className="text-sm text-emerald-200/90 mb-2">
+                Completaste las 7 carreras con el Ticket {ticketFromQuery}. Tu ticket quedó marcado como usado.
+              </p>
+              <Link
+                href={backHref}
+                className="inline-flex items-center gap-2 text-sm font-bold text-emerald-300 hover:text-emerald-200"
+              >
+                Volver a elegir otro ticket
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+          ) : null}
 
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div className="flex-1">

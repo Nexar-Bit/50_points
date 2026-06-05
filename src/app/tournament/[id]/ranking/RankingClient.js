@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
+import ModalityScope from '@/frontend/components/modalities/ModalityScope';
+import { readPersistedModality, resolveActiveModality } from '@/frontend/lib/gameModalities';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft, Trophy, Activity, MessageCircle, Info,
@@ -27,7 +29,13 @@ const tabs = [
 
 export default function RankingClient() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const { user } = useAuth();
+  const modalityId = resolveActiveModality({
+    searchModality: searchParams.get('modality'),
+    user,
+    persisted: readPersistedModality(),
+  });
   const { tryAwardTournament } = useAchievementCards();
   const { checkGlobalRank, checkTournamentRank } = useRankingUpdates();
   const [tournament, setTournament] = useState(null);
@@ -118,6 +126,7 @@ export default function RankingClient() {
   const status = statusConfig[tournament.status] || statusConfig.upcoming;
 
   return (
+    <ModalityScope modalityId={modalityId}>
     <div className="min-h-screen">
       <div className="relative overflow-hidden">
         <div className="absolute inset-0">
@@ -195,5 +204,6 @@ export default function RankingClient() {
         onSelect={setActiveTicketIndex}
       />
     </div>
+    </ModalityScope>
   );
 }

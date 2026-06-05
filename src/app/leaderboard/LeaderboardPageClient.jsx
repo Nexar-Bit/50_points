@@ -24,23 +24,25 @@ import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import { useRankingUpdates } from "@/frontend/contexts/RankingUpdatesContext";
 import { fetchJson } from "@/frontend/lib/api/client";
+import { getModality, getModalityBadgeClasses, gameModeToModalityId } from "@/frontend/lib/gameModalities";
+
+function getModeFilterMeta(gameMode) {
+  const mod = getModality(gameModeToModalityId(gameMode));
+  const badge = getModalityBadgeClasses(gameMode);
+  return { label: badge.label, className: badge.className, available: mod.available };
+}
 
 const LEADERBOARD_POLL_MS = 12000;
 
 const ROWS_PER_PAGE = 10;
 
-const MODE_CONFIG = {
-  1: { label: "INVITADO", bg: "bg-zinc-600/30", text: "text-zinc-300", border: "border-zinc-500/40", available: true },
-  2: { label: "REGISTRADO", bg: "bg-purple-600/30", text: "text-purple-300", border: "border-purple-500/40", available: true },
-  3: { label: "PRO", bg: "bg-yellow-600/20", text: "text-yellow-400", border: "border-yellow-500/30", available: false },
-  4: { label: "ELITE", bg: "bg-red-600/20", text: "text-red-400", border: "border-red-500/30", available: false },
-};
-
-function ModeBadge({ gameMode }) {
-  const cfg = MODE_CONFIG[gameMode] || MODE_CONFIG[2];
+function ModeBadge({ gameMode, isGuest = false }) {
+  const { className, label } = getModalityBadgeClasses(gameMode, isGuest);
   return (
-    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wide border ${cfg.bg} ${cfg.text} ${cfg.border}`}>
-      {cfg.label}
+    <span
+      className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wide border ${className}`}
+    >
+      {label}
     </span>
   );
 }
@@ -362,7 +364,7 @@ export default function LeaderboardPageClient() {
         >
           <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Modo:</span>
           {[1, 2, 3, 4].map((mode) => {
-            const cfg = MODE_CONFIG[mode];
+            const cfg = getModeFilterMeta(mode);
             const isChecked = selectedModes.includes(mode);
             const isAvailable = cfg.available;
             return (
@@ -372,7 +374,7 @@ export default function LeaderboardPageClient() {
                   !isAvailable
                     ? "opacity-40 cursor-not-allowed border-white/5 bg-white/[0.02]"
                     : isChecked
-                    ? `${cfg.bg} ${cfg.border}`
+                    ? cfg.className
                     : "border-white/10 bg-white/[0.02] hover:border-white/20"
                 }`}
               >

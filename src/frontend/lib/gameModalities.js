@@ -18,30 +18,35 @@ export const MODALITIES = {
     gameMode: 1,
     available: true,
     icon: "user",
+    badgeLabel: "INVITADO",
   },
+  /** Registered, plays free — green/cyan identity in rankings and UI */
   free: {
     id: "free",
+    accent: "#34d399",
+    bgBase: "#041208",
+    bgGradient:
+      "radial-gradient(ellipse 120% 80% at 12% 0%, rgba(16, 185, 129, 0.42) 0%, transparent 55%), radial-gradient(ellipse 90% 60% at 88% 100%, rgba(52, 211, 153, 0.22) 0%, transparent 50%), linear-gradient(180deg, #031109 0%, #061810 50%, #041208 100%)",
+    border: "rgba(52, 211, 153, 0.45)",
+    glow: "rgba(16, 185, 129, 0.28)",
+    gameMode: 2,
+    available: true,
+    icon: "trophy",
+    badgeLabel: "REGISTRADO",
+  },
+  /** Registered, pays to play — purple identity */
+  paid: {
+    id: "paid",
     accent: "#a855f7",
     bgBase: "#100818",
     bgGradient:
       "radial-gradient(ellipse 120% 80% at 15% 0%, rgba(124, 58, 237, 0.45) 0%, transparent 55%), radial-gradient(ellipse 90% 60% at 85% 100%, rgba(168, 85, 247, 0.22) 0%, transparent 50%), #0b0612",
     border: "rgba(168, 85, 247, 0.45)",
     glow: "rgba(168, 85, 247, 0.28)",
-    gameMode: 2,
-    available: true,
-    icon: "trophy",
-  },
-  paid: {
-    id: "paid",
-    accent: "#22d3ee",
-    bgBase: "#061218",
-    bgGradient:
-      "radial-gradient(ellipse 120% 80% at 12% 0%, rgba(6, 182, 212, 0.4) 0%, transparent 55%), radial-gradient(ellipse 90% 60% at 88% 100%, rgba(34, 211, 238, 0.18) 0%, transparent 50%), #050d12",
-    border: "rgba(34, 211, 238, 0.4)",
-    glow: "rgba(34, 211, 238, 0.25)",
     gameMode: 3,
     available: false,
     icon: "ticket",
+    badgeLabel: "PAGO",
   },
   special: {
     id: "special",
@@ -54,8 +59,91 @@ export const MODALITIES = {
     gameMode: 4,
     available: false,
     icon: "star",
+    badgeLabel: "ESPECIAL",
   },
 };
+
+const GAME_MODE_TO_MODALITY = {
+  1: "guest",
+  2: "free",
+  3: "paid",
+  4: "special",
+};
+
+export function gameModeToModalityId(gameMode, isGuest = false) {
+  if (isGuest) return "guest";
+  const mode = Number(gameMode);
+  return GAME_MODE_TO_MODALITY[mode] || "free";
+}
+
+export function modalityIdToGameMode(modalityId) {
+  return getModality(modalityId).gameMode;
+}
+
+/** Default modality from account (guest → guest, registered → free). */
+export function defaultModalityForUser(user) {
+  if (!user) return null;
+  if (user.isGuest) return "guest";
+  return gameModeToModalityId(user.gameMode, false);
+}
+
+/**
+ * Resolve active modality: route override > ?modality > path > persisted > user.
+ */
+export function resolveActiveModality({
+  override = null,
+  pathname = "",
+  searchModality = null,
+  user = null,
+  persisted = null,
+} = {}) {
+  if (isValidModalityId(override)) return override;
+  if (isValidModalityId(searchModality)) return searchModality;
+  const pathMatch = pathname.match(/\/modalidades\/([^/]+)/);
+  if (pathMatch && isValidModalityId(pathMatch[1])) return pathMatch[1];
+  if (isValidModalityId(persisted)) return persisted;
+  const fromUser = defaultModalityForUser(user);
+  if (fromUser) return fromUser;
+  return "free";
+}
+
+/** Tailwind badge classes for leaderboard / ranking rows */
+export function getModalityBadgeClasses(gameMode, isGuest = false) {
+  const mod = getModality(gameModeToModalityId(gameMode, isGuest));
+  const id = mod.id;
+  const map = {
+    guest: "bg-white/10 text-zinc-200 border-purple-500/50",
+    free: "bg-emerald-600/20 text-emerald-300 border-emerald-500/40",
+    paid: "bg-purple-600/30 text-purple-300 border-purple-500/40",
+    special: "bg-yellow-600/20 text-yellow-300 border-yellow-500/40",
+  };
+  return {
+    className: map[id] || map.free,
+    label: mod.badgeLabel || id.toUpperCase(),
+  };
+}
+
+export function applyModalityToDocument(modalityId) {
+  if (typeof document === "undefined") return;
+  const id = isValidModalityId(modalityId) ? modalityId : "free";
+  const mod = getModality(id);
+  const root = document.documentElement;
+  root.setAttribute("data-modality", id);
+  root.style.setProperty("--modality-accent", mod.accent);
+  root.style.setProperty("--modality-border", mod.border);
+  root.style.setProperty("--modality-glow", mod.glow);
+  root.style.setProperty("--modality-bg", mod.bgGradient);
+}
+
+export function clearModalityFromDocument() {
+  if (typeof document === "undefined") return;
+  const root = document.documentElement;
+  root.removeAttribute("data-modality");
+  root.style.removeProperty("--modality-accent");
+  root.style.removeProperty("--modality-border");
+  root.style.removeProperty("--modality-glow");
+  root.style.removeProperty("--modality-bg");
+}
 
 const STORAGE_KEY = "50points_active_modality";
 
@@ -72,6 +160,11 @@ export function persistModality(id) {
   sessionStorage.setItem(STORAGE_KEY, id);
 }
 
+export function clearPersistedModality() {
+  if (typeof window === "undefined") return;
+  sessionStorage.removeItem(STORAGE_KEY);
+}
+
 export function readPersistedModality() {
   if (typeof window === "undefined") return null;
   const id = sessionStorage.getItem(STORAGE_KEY);
@@ -84,8 +177,8 @@ export function hubModalityOrder(isGuest) {
   return ["free", "guest", "paid", "special"];
 }
 
-/** Hub screen visual order (matches design spec: 1 free, 2 paid, 3 special, 4 guest). */
-export const HUB_DISPLAY_ORDER = ["free", "paid", "special", "guest"];
+/** Hub sidebar order: paid (purple) → free (cyan) → special (gold) → guest (white). */
+export const HUB_DISPLAY_ORDER = ["paid", "free", "special", "guest"];
 
 export function trackSlug(trackName) {
   return encodeURIComponent(
@@ -112,7 +205,32 @@ export function modalityPath(modalityId, segment, params = {}) {
 }
 
 export function withModalityQuery(href, modalityId) {
+  if (!href || typeof href !== "string") return href || "/";
   if (!modalityId || !href.startsWith("/")) return href;
   const sep = href.includes("?") ? "&" : "?";
   return `${href}${sep}modality=${modalityId}`;
+}
+
+/** Direct tournament entry from hipódromo ticket (free flow). */
+export function buildTournamentEntryHref({
+  tournamentSlug,
+  modalityId,
+  ticketNum,
+  trackSlug,
+  returnPath,
+  playFirst = false,
+}) {
+  const params = new URLSearchParams();
+  if (modalityId) params.set("modality", modalityId);
+  if (ticketNum != null) params.set("ticket", String(ticketNum));
+  if (trackSlug) params.set("track", trackSlug);
+  if (returnPath) params.set("return", returnPath);
+  if (playFirst) params.set("play", "1");
+  const qs = params.toString();
+  return `/tournament/${tournamentSlug}${qs ? `?${qs}` : ""}`;
+}
+
+export function buildModalityReturnPath(modalityId, trackSlug) {
+  const base = `/modalidades/${modalityId}`;
+  return trackSlug ? `${base}?track=${encodeURIComponent(trackSlug)}` : base;
 }

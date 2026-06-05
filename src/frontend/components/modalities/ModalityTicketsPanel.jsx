@@ -13,6 +13,7 @@ import { useLiveTournamentsPoll } from "@/frontend/lib/hooks/useLiveTournamentsP
 import { mapTournamentForHomeCard } from "@/frontend/lib/api/mappers";
 import ModalityFlowNav from "@/frontend/components/modalities/ModalityFlowNav";
 import ModalityPageShell from "@/frontend/components/modalities/ModalityPageShell";
+import FreeTicketsMessage from "@/frontend/components/modalities/FreeTicketsMessage";
 
 export default function ModalityTicketsPanel({ modalityId, trackSlugParam }) {
   const { t } = useLanguage();
@@ -67,9 +68,15 @@ export default function ModalityTicketsPanel({ modalityId, trackSlugParam }) {
           <p className="modality-page__subtitle">
             {modalityId === "guest"
               ? t("gameModalities.ticketsGuestSub")
-              : t("gameModalities.ticketsSub")}
+              : modalityId === "free"
+                ? null
+                : t("gameModalities.ticketsSub")}
           </p>
         </header>
+
+        {modalityId === "free" ? (
+          <FreeTicketsMessage className="modality-tickets-free-message" />
+        ) : null}
 
         {featured ? (
           <div

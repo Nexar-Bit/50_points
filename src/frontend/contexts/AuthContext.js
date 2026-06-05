@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { fetchJson, fetchAuthJson } from '@/frontend/lib/api/client';
+import { clearPersistedModality, persistModality } from '@/frontend/lib/gameModalities';
 
 const AuthContext = createContext(null);
 
@@ -51,6 +52,7 @@ export function AuthProvider({ children }) {
           localStorage.setItem('50points_token', data.token);
           setToken(data.token);
           setUser(data.user);
+          if (data.user?.isGuest) persistModality('guest');
         } catch {
           localStorage.removeItem('50points_guest_token');
         }
@@ -72,6 +74,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('50points_token', data.token);
     setToken(data.token);
     setUser(data.user);
+    persistModality('paid');
     return data.user;
   };
 
@@ -83,6 +86,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('50points_token', data.token);
     setToken(data.token);
     setUser(data.user);
+    persistModality('free');
     return data.user;
   };
 
@@ -94,12 +98,14 @@ export function AuthProvider({ children }) {
     }
     setToken(data.token);
     setUser(data.user);
+    persistModality('guest');
     return data.user;
   };
 
   const logout = () => {
     localStorage.removeItem('50points_token');
     localStorage.removeItem('50points_guest_token');
+    clearPersistedModality();
     setToken(null);
     setUser(null);
   };

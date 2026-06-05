@@ -36,7 +36,7 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(form.username.trim(), form.email.trim() || undefined, form.password);
-      router.push("/tournaments");
+      router.push("/modalidades/free");
     } catch (err) {
       setError(err.message);
     } finally {

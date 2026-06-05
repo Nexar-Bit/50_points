@@ -202,6 +202,27 @@ export function MenuIconPrivacy({ className }) {
   );
 }
 
+export function MenuIconHome({ className }) {
+  return (
+    <Icon className={className}>
+      <path d="M5.5 11.5 12 6l6.5 5.5" />
+      <path d="M7.5 11.5V18.5h9V11.5" />
+      <path d="M10 18.5h4v-3.5H10z" />
+    </Icon>
+  );
+}
+
+export function MenuIconMainHub({ className }) {
+  return (
+    <Icon className={className}>
+      <rect x="5" y="5" width="6.5" height="6.5" rx="1.2" />
+      <rect x="12.5" y="5" width="6.5" height="6.5" rx="1.2" />
+      <rect x="5" y="12.5" width="6.5" height="6.5" rx="1.2" />
+      <rect x="12.5" y="12.5" width="6.5" height="6.5" rx="1.2" />
+    </Icon>
+  );
+}
+
 export function MenuIconSettings({ className }) {
   return (
     <Icon className={className}>
@@ -212,6 +233,8 @@ export function MenuIconSettings({ className }) {
 }
 
 export const FLOATING_MENU_ICONS = {
+  home: MenuIconHome,
+  mainPage: MenuIconMainHub,
   profile: MenuIconUser,
   tickets: MenuIconTicket,
   tournaments: MenuIconTrophy,

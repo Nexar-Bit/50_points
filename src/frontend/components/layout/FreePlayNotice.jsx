@@ -5,13 +5,14 @@ import Link from "next/link";
 import { Ticket, X } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
+import FreeTicketsMessage from "@/frontend/components/modalities/FreeTicketsMessage";
 
 const DISMISS_KEY = "50points_free_play_notice_dismissed";
 
-/** gameMode 1 = guest/free launch tier; 2 = registered; 3+ = paid tiers (not launched). */
+/** gameMode 1 = guest; 2 = registered free (cyan); 3+ = paid tiers (not launched). */
 function noticeVariant(user) {
   if (!user) return null;
-  if (user.gameMode === 1 || user.isGuest) return "free";
+  if (user.gameMode === 1 || user.isGuest) return "guest";
   if (user.gameMode === 2) return "registered";
   return "paidLocked";
 }
@@ -43,13 +44,14 @@ export default function FreePlayNotice() {
   const variant = noticeVariant(user);
   if (!hydrated || !isAuthenticated || !user || !variant || dismissed) return null;
 
-  const isFree = variant === "free";
-  const title = isFree ? t("freePlay.titleFree") : t("freePlay.titleRegistered");
-  const body = isFree ? t("freePlay.bodyFree") : t("freePlay.bodyRegistered");
+  const isRegisteredFree = variant === "registered";
+  const isGuest = variant === "guest";
 
   return (
     <div
-      className={`free-play-notice${isFree ? " free-play-notice--free" : ""}`}
+      className={`free-play-notice${
+        isRegisteredFree ? " free-play-notice--registered" : isGuest ? " free-play-notice--guest" : ""
+      }`}
       role="status"
       aria-live="polite"
     >
@@ -58,10 +60,16 @@ export default function FreePlayNotice() {
         <span className="free-play-notice__ticket-count">3</span>
       </div>
       <div className="free-play-notice__text">
-        <p className="free-play-notice__title">{title}</p>
-        <p className="free-play-notice__body">{body}</p>
-        {!isFree ? (
-          <Link href="/tournaments" className="free-play-notice__cta">
+        {isRegisteredFree ? (
+          <FreeTicketsMessage className="free-tickets-message--compact" />
+        ) : (
+          <>
+            <p className="free-play-notice__title">{t("freePlay.titleFree")}</p>
+            <p className="free-play-notice__body">{t("freePlay.bodyFree")}</p>
+          </>
+        )}
+        {!isRegisteredFree ? (
+          <Link href="/modalidades/free" className="free-play-notice__cta">
             {t("freePlay.ctaPlay")}
           </Link>
         ) : null}
