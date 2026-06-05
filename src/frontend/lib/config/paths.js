@@ -8,6 +8,9 @@ export const LOGO_PATH = '/Img/logo.png';
 /** Game modes dashboard background: public/Img/mode-bg.png */
 export const MODE_BG_PATH = '/Img/mode-bg.png';
 
+/** Guest racetracks hero background: public/Img/av-bg.png */
+export const AV_BG_PATH = '/Img/av-bg.png';
+
 /** Use with next/image and next/link — basePath is applied automatically. */
 export function asset(path) {
   return path.startsWith('/') ? path : `/${path}`;
@@ -38,4 +41,8 @@ export function logoAsset() {
 
 export function modeBgFile() {
   return staticFile(MODE_BG_PATH);
+}
+
+export function avBgFile() {
+  return staticFile(AV_BG_PATH);
 }

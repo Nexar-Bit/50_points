@@ -21,6 +21,7 @@ import FreeTicketsOverviewBar from "@/frontend/components/modalities/FreeTickets
 import TicketFamilyGallery from "@/frontend/components/modalities/TicketFamilyGallery";
 import { logoFile } from "@/frontend/lib/config/paths";
 import { getTournamentImageUrl } from "@/frontend/lib/tournamentImages";
+import GuestAvTracksPage from "@/frontend/components/modalities/GuestAvTracksPage";
 
 function buildTracks(tournaments) {
   const map = new Map();
@@ -309,6 +310,12 @@ export default function ModalityTracksList({ modalityId }) {
         loading={loading}
         t={t}
       />
+    );
+  }
+
+  if (modalityId === "guest") {
+    return (
+      <GuestAvTracksPage modalityId={modalityId} tracks={tracks} loading={loading} />
     );
   }
 

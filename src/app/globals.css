@@ -6760,9 +6760,58 @@ body:has(.floating-menu--expanded) .app-main--immersive .app-surface__inner {
   transition: background 0.55s ease;
 }
 
-/* Modality ambient background — only on modality flow pages, not profile/hub/etc. */
-html[data-modality] .app-surface:has(.modality-page) {
+/* Modality ambient background — modality routes only (not profile, chat, guest AV, etc.) */
+html[data-modality] .app-surface:has(.modality-page:not(.chat-page):not(.modality-page--guest-av)) {
   background: var(--modality-bg, #0b0e1b);
+}
+
+/* Chat uses the standard dark shell — modality tints break contrast on feed UI */
+html[data-modality] .app-surface:has(.chat-page) {
+  background: #0b0e1b;
+}
+
+/* Guest flow (tracks/tickets) — dark shell; identity via white panels + purple accents */
+html[data-modality="guest"] .app-surface:has(.modality-page:not(.modality-page--hub):not(.modality-page--guest-av)) {
+  background: #0b0e1b;
+}
+
+/* Guest AV racetracks — immersive av-bg layout */
+.app-main:has(.av-tracks-surface),
+.app-surface:has(.av-tracks-surface),
+html[data-modality] .app-surface:has(.av-tracks-surface),
+html[data-modality="guest"] .app-surface:has(.av-tracks-surface) {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+body:has(.av-tracks-surface) {
+  background-color: #0a0510;
+}
+
+.app-surface:has(.av-tracks-surface) {
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: #f4f4f5;
+  padding-bottom: 0;
+}
+
+.app-surface:has(.av-tracks-surface) .app-surface__inner {
+  padding: 0;
+  max-width: none;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.app-surface:has(.av-tracks-surface) .app-surface__chrome {
+  display: none;
+}
+
+.modality-page--guest-av {
+  max-width: none;
+  width: 100%;
+  padding-bottom: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .app-surface__inner,
@@ -8385,6 +8434,350 @@ body:has(.modality-hub-surface) {
     linear-gradient(180deg, rgba(10, 5, 16, 0.28) 0%, transparent 40%, transparent 72%, rgba(10, 5, 16, 0.32) 100%);
 }
 
+/* Guest racetracks — av-bg.png immersive page */
+.av-tracks-surface {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+.av-tracks-surface__bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center right;
+  pointer-events: none;
+  user-select: none;
+}
+
+.av-tracks-surface__veil {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(8, 4, 18, 0.92) 0%,
+      rgba(8, 4, 18, 0.78) 38%,
+      rgba(8, 4, 18, 0.35) 62%,
+      rgba(8, 4, 18, 0.12) 100%
+    ),
+    linear-gradient(180deg, rgba(8, 4, 18, 0.55) 0%, transparent 28%, transparent 70%, rgba(8, 4, 18, 0.75) 100%);
+}
+
+.av-tracks-layout {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding:
+    max(0.85rem, env(safe-area-inset-top, 0px))
+    max(var(--app-page-gutter), env(safe-area-inset-right, 0px))
+    max(1.25rem, env(safe-area-inset-bottom, 0px))
+    max(calc(var(--app-menu-tab-width) + 0.65rem), env(safe-area-inset-left, 0px));
+  box-sizing: border-box;
+}
+
+.av-tracks-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.av-tracks-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  text-decoration: none;
+  color: #fafafa;
+  flex-shrink: 0;
+}
+
+.av-tracks-brand__mark {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.45));
+}
+
+.av-tracks-brand__name {
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.av-tracks-hero {
+  max-width: 36rem;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+
+.av-tracks-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(168, 85, 247, 0.45);
+  background: rgba(124, 58, 237, 0.18);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #e9d5ff;
+}
+
+.av-tracks-hero__badge-icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  color: #c4b5fd;
+}
+
+.av-tracks-hero__title {
+  margin: 0 0 0.65rem;
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.av-tracks-hero__title-line {
+  display: block;
+  font-size: clamp(1.85rem, 6vw, 3rem);
+  color: #fff;
+}
+
+.av-tracks-hero__title-accent {
+  display: block;
+  font-size: clamp(1.85rem, 6vw, 3rem);
+  background: linear-gradient(90deg, #a855f7 0%, #c084fc 45%, #e9d5ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.av-tracks-hero__subtitle {
+  margin: 0;
+  max-width: 28rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.av-tracks-main {
+  flex: 1;
+  max-width: 38rem;
+  width: 100%;
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.av-tracks-status {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.av-tracks-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.av-tracks-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.65rem 0.75rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  background: rgba(12, 8, 22, 0.72);
+  box-shadow:
+    0 0 0 1px rgba(168, 85, 247, 0.08) inset,
+    0 0 24px rgba(124, 58, 237, 0.12);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.av-tracks-card:hover {
+  border-color: rgba(192, 132, 252, 0.55);
+  background: rgba(18, 10, 32, 0.82);
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(168, 85, 247, 0.15) inset,
+    0 0 32px rgba(124, 58, 237, 0.22);
+}
+
+.av-tracks-card__thumb {
+  width: 4.5rem;
+  height: 3.25rem;
+  border-radius: 0.45rem;
+  background: rgba(255, 255, 255, 0.06) center / cover no-repeat;
+  flex-shrink: 0;
+}
+
+.av-tracks-card__body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.av-tracks-card__name {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #fafafa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.av-tracks-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.65rem;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.av-tracks-card__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.av-tracks-card__meta-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.av-tracks-card__live-text {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #4ade80;
+}
+
+.av-tracks-card__live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(74, 222, 128, 0.45);
+  background: rgba(34, 197, 94, 0.12);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #bbf7d0;
+  flex-shrink: 0;
+}
+
+.av-tracks-card__live-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: #4ade80;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+.av-tracks-card__chevron {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: rgba(255, 255, 255, 0.55);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.av-tracks-features {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+  max-width: 52rem;
+}
+
+@media (min-width: 640px) {
+  .av-tracks-features {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+.av-tracks-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(168, 85, 247, 0.22);
+  background: rgba(10, 6, 20, 0.65);
+  backdrop-filter: blur(8px);
+}
+
+.av-tracks-feature__icon-wrap {
+  flex-shrink: 0;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 0.45rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124, 58, 237, 0.22);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+}
+
+.av-tracks-feature__icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: #c084fc;
+}
+
+.av-tracks-feature__title {
+  margin: 0 0 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fafafa;
+}
+
+.av-tracks-feature__desc {
+  margin: 0;
+  font-size: 0.65rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 720px) {
+  .av-tracks-card {
+    grid-template-columns: 3.75rem minmax(0, 1fr) auto;
+  }
+
+  .av-tracks-card__live-pill {
+    display: none;
+  }
+}
+
 .modality-hub-layout {
   position: relative;
   z-index: 2;
@@ -9049,17 +9442,17 @@ body:has(.modality-hub-surface) {
   color: #3f3f46;
 }
 
-/* Guest modality flow — light ambient, readable panels */
-html[data-modality="guest"] .modality-page__title {
-  color: #4c1d95;
+/* Guest modality flow — dark shell with light panels */
+html[data-modality="guest"] .modality-page:not(.modality-page--hub) .modality-page__title {
+  color: #f4f4f5;
 }
 
-html[data-modality="guest"] .modality-page__subtitle {
-  color: #6b7280;
+html[data-modality="guest"] .modality-page:not(.modality-page--hub) .modality-page__subtitle {
+  color: #a1a1aa;
 }
 
-html[data-modality="guest"] .modality-page__eyebrow:not(.modality-page__eyebrow--accent) {
-  color: #7c3aed;
+html[data-modality="guest"] .modality-page:not(.modality-page--hub) .modality-page__eyebrow:not(.modality-page__eyebrow--accent) {
+  color: #c4b5fd;
 }
 
 html[data-modality="guest"] .modality-flow-nav {
@@ -9075,15 +9468,19 @@ html[data-modality="guest"] .modality-track-row,
 html[data-modality="guest"] .modality-ticket-row,
 html[data-modality="guest"] .modality-how-panel,
 html[data-modality="guest"] .modality-panel {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(124, 58, 237, 0.35);
-  color: #374151;
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(124, 58, 237, 0.4);
+  color: #27272a;
+}
+
+html[data-modality="guest"] .modality-track-row__name {
+  color: #18181b;
 }
 
 html[data-modality="guest"] .modality-track-row__loc,
 html[data-modality="guest"] .modality-track-row__meta,
 html[data-modality="guest"] .modality-ticket-row__hint {
-  color: #6b7280;
+  color: #52525b;
 }
 
 html[data-modality="guest"] .modality-how-panel__list {
