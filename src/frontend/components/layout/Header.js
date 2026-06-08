@@ -21,6 +21,15 @@ export default function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { user, isAuthenticated, logout } = useAuth();
   const isHallOfFame = pathname.includes("/hall-of-fame");
+  const isImmersiveBg =
+    pathname === "/comenzar" ||
+    pathname === "/how-to-play" ||
+    /^\/modalidades\/(guest|free)\/?$/.test(pathname) ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    isHallOfFame;
+  const headerSurfaceClass =
+    isImmersiveBg ? "bg-transparent border-transparent" : "glass-strong";
   const languageOptions = [
     { code: "es", label: t("hero.langSpanish") },
     { code: "en", label: t("hero.langEnglish") },
@@ -62,7 +71,7 @@ export default function Header() {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-50 ${isHallOfFame ? "bg-transparent border-transparent" : "glass-strong"}`}>
+      <header className={`fixed top-0 left-0 right-0 z-50 ${headerSurfaceClass}`}>
         <div className="app-page">
           <div className="relative flex items-center justify-between h-16 sm:h-18">
             <Link href="/" className="flex items-center group md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2">

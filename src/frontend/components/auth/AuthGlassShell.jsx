@@ -29,11 +29,14 @@ export function AuthGlassButton({ className = "", children, type = "button", ...
 }
 
 export default function AuthGlassShell({ title, backLabel, backHref = "/", children, footer }) {
+  const authBg = userBgFile();
+
   return (
-    <div
-      className="auth-glass-page"
-      style={{ "--auth-glass-bg": `url(${userBgFile()})` }}
-    >
+    <div className="auth-glass-page">
+      <div className="auth-glass-page__ambient" aria-hidden>
+        <img src={authBg} alt="" className="auth-glass-page__bg" />
+        <div className="auth-glass-page__veil" />
+      </div>
       <AuthGlassOrbs />
       <div className="auth-glass-wrap">
         {backLabel ? (

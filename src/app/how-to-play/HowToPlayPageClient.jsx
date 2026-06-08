@@ -92,6 +92,9 @@ export default function HowToPlayPageClient() {
   return (
     <div className="how-to-play-surface">
       <div className="how-to-play-surface__ambient" aria-hidden>
+        {heroBg ? (
+          <img src={heroBg} alt="" className="how-to-play-surface__hero-bg" />
+        ) : null}
         <div className="how-to-play-surface__fog" />
         <div className="how-to-play-surface__glow" />
         {noise ? (
@@ -105,9 +108,6 @@ export default function HowToPlayPageClient() {
       <div className="how-to-play__inner">
         <AnimateInView>
           <header className="how-to-play__hero">
-            {heroBg ? (
-              <img src={heroBg} alt="" className="how-to-play__hero-bg" />
-            ) : null}
             <div className="how-to-play__hero-scrim" aria-hidden />
             <div className="how-to-play__hero-horses" aria-hidden />
             <div className="how-to-play__hero-content">

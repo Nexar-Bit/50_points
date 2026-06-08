@@ -391,7 +391,7 @@ export default function HomeLanding() {
   return (
     <section className="relative min-h-screen bg-[#030305] overflow-hidden">
       {/* Main background */}
-      <div className="absolute inset-0 hero-main-bg">
+      <div className="absolute inset-0 hero-main-bg" aria-hidden>
         <img src={mainBg} alt="" className="hero-main-bg__image" />
         <div className="absolute inset-0 hero-main-bg__shade" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40" />

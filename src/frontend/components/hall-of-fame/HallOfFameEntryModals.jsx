@@ -135,12 +135,6 @@ export default function HallOfFameEntryModals() {
             <Frame step={0} className="hof-entry-card--official">
               <div className="hof-entry-official__vignette" aria-hidden />
               <header className="hof-entry-official__header">
-                <HofAssetImage
-                  src={hofAsset("crownSilver")}
-                  alt=""
-                  className="hof-entry-official__crown"
-                  fallback={<Crown className="hof-entry-official__crown-fallback" strokeWidth={1.25} />}
-                />
                 <h2 id="hof-entry-title" className="hof-entry-card__title hof-entry-card__title--official">
                   {t("hallOfFame.entry.hofTitle")}
                 </h2>
@@ -152,14 +146,21 @@ export default function HallOfFameEntryModals() {
               </header>
 
               <div className="hof-entry-official__profile">
-                <div className="hof-entry-official__avatar-row">
+                <div className="hof-entry-official__avatar-emblem">
+                  <HofAssetImage
+                    src={hofAsset("crownSilver")}
+                    alt=""
+                    className="hof-entry-official__crown"
+                    fallback={<Crown className="hof-entry-official__crown-fallback" strokeWidth={1.25} />}
+                  />
                   <HofAssetImage
                     src={hofAsset("laurelSilverLeft")}
                     alt=""
                     className="hof-entry-official__laurel-side hof-entry-official__laurel-side--l"
-                    fallback={<span className="hof-entry-official__laurel-fallback" aria-hidden />}
+                    fallback={<span className="hof-entry-official__laurel-fallback hof-entry-official__laurel-fallback--l" aria-hidden />}
                   />
                   <div className="hof-entry-official__avatar-wrap">
+                    <span className="hof-entry-official__avatar-halo" aria-hidden />
                     <HofAssetImage
                       src={hofAsset("avatarGlowPurple")}
                       alt=""
@@ -171,7 +172,7 @@ export default function HallOfFameEntryModals() {
                     src={hofAsset("laurelSilverRight")}
                     alt=""
                     className="hof-entry-official__laurel-side hof-entry-official__laurel-side--r"
-                    fallback={<span className="hof-entry-official__laurel-fallback" aria-hidden />}
+                    fallback={<span className="hof-entry-official__laurel-fallback hof-entry-official__laurel-fallback--r" aria-hidden />}
                   />
                 </div>
                 <p className="hof-entry-official__name">{entry.username}</p>
@@ -342,13 +343,27 @@ export default function HallOfFameEntryModals() {
                 <span className="hof-entry-feat__header-title">{t("hallOfFame.entry.featReason")}</span>
               </header>
 
-              <div className="hof-entry-feat__trophy-wrap">
-                <span className="hof-entry-feat__trophy-ring" aria-hidden />
+              <div className="hof-entry-feat__trophy-emblem">
                 <HofAssetImage
-                  src={hofAsset("trophyGoldStar")}
+                  src={hofAsset("laurelGoldLeft")}
                   alt=""
-                  className="hof-entry-feat__trophy-img"
-                  fallback={<Trophy className="hof-entry-feat__trophy-fallback" strokeWidth={1.5} />}
+                  className="hof-entry-feat__laurel hof-entry-feat__laurel--l"
+                  fallback={<span className="hof-entry-feat__laurel-fallback hof-entry-feat__laurel-fallback--l" aria-hidden />}
+                />
+                <div className="hof-entry-feat__trophy-wrap">
+                  <span className="hof-entry-feat__trophy-ring" aria-hidden />
+                  <HofAssetImage
+                    src={hofAsset("trophyGoldStar")}
+                    alt=""
+                    className="hof-entry-feat__trophy-img"
+                    fallback={<Trophy className="hof-entry-feat__trophy-fallback" strokeWidth={1.5} />}
+                  />
+                </div>
+                <HofAssetImage
+                  src={hofAsset("laurelGoldRight")}
+                  alt=""
+                  className="hof-entry-feat__laurel hof-entry-feat__laurel--r"
+                  fallback={<span className="hof-entry-feat__laurel-fallback hof-entry-feat__laurel-fallback--r" aria-hidden />}
                 />
               </div>
 
@@ -387,7 +402,6 @@ export default function HallOfFameEntryModals() {
               <div className="hof-entry-feat__divider" aria-hidden />
 
               <blockquote className="hof-entry-feat__quote">
-                <LaurelPair theme="gold" className="hof-entry-feat__quote-laurels" />
                 <span>{entry.featQuote}</span>
               </blockquote>
             </Frame>

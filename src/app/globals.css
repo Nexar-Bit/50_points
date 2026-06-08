@@ -2478,6 +2478,10 @@ body:has(.modality-hub-surface) .app-lang-toggle .hero-lang__trigger {
   user-select: none;
 }
 
+.hof-scene:not(.hof-scene--embedded) .hof-scene__ambient .hof-scene__bg--fixed {
+  object-position: center top;
+}
+
 .hof-scene__fade {
   position: absolute;
   inset: 0;
@@ -4054,19 +4058,31 @@ body:has(.modality-hub-surface) .app-lang-toggle .hero-lang__trigger {
 }
 
 .hof-entry-official__crown {
-  display: block;
-  width: 1.65rem;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 4;
+  width: 4.95rem;
   height: auto;
-  margin: 0 auto 0.3rem;
-  filter: drop-shadow(0 2px 6px rgba(212, 212, 216, 0.45));
+  margin: 0;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 0 16px rgba(212, 212, 216, 0.7))
+    drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+  pointer-events: none;
 }
 
 .hof-entry-official__crown-fallback {
-  display: block;
-  width: 1.5rem;
-  height: 1.5rem;
-  margin: 0 auto 0.3rem;
-  color: #d4d4d8;
+  position: absolute;
+  top: 0.2rem;
+  left: 50%;
+  z-index: 4;
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #e4e4e7;
+  filter: drop-shadow(0 0 16px rgba(212, 212, 216, 0.6));
+  pointer-events: none;
 }
 
 .hof-entry-official__eyebrow {
@@ -4093,61 +4109,116 @@ body:has(.modality-hub-surface) .app-lang-toggle .hero-lang__trigger {
   position: relative;
   z-index: 1;
   text-align: center;
-  margin: 0.55rem 0 0.35rem;
+  margin: 0.35rem 0 0.35rem;
 }
 
-.hof-entry-official__avatar-row {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 0.15rem;
+.hof-entry-official__avatar-emblem {
+  position: relative;
+  width: 8.25rem;
+  height: 7.35rem;
+  margin: 0 auto;
 }
 
 .hof-entry-official__laurel-side {
-  width: 3.25rem;
+  position: absolute;
+  top: 5rem;
+  z-index: 1;
+  width: 3.85rem;
   height: auto;
-  margin-bottom: 0.85rem;
-  filter: drop-shadow(0 0 6px rgba(212, 212, 216, 0.25));
-  flex-shrink: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgba(212, 212, 216, 0.3));
+}
+
+.hof-entry-official__laurel-side--l {
+  left: 0;
+  transform: translate(0.65rem, -50%);
+}
+
+.hof-entry-official__laurel-side--r {
+  right: 0;
+  transform: translate(-0.65rem, -50%);
 }
 
 .hof-entry-official__laurel-fallback {
-  display: block;
-  width: 1.75rem;
-  height: 2.75rem;
-  margin-bottom: 0.85rem;
+  position: absolute;
+  top: 5rem;
+  z-index: 1;
+  width: 2.15rem;
+  height: 3.35rem;
   border: 2px solid rgba(212, 212, 216, 0.45);
-  border-radius: 0 0 50% 50%;
   opacity: 0.55;
+  pointer-events: none;
+}
+
+.hof-entry-official__laurel-fallback--l {
+  left: 0.85rem;
+  transform: translateY(-42%);
+  border-radius: 0 0 0 50%;
+  border-right: none;
+}
+
+.hof-entry-official__laurel-fallback--r {
+  right: 0.85rem;
+  transform: translateY(-42%);
+  border-radius: 0 0 50% 0;
+  border-left: none;
 }
 
 .hof-entry-official__avatar-wrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  position: absolute;
+  top: 2.65rem;
+  left: 50%;
+  z-index: 2;
+  width: 4.75rem;
+  height: 4.75rem;
+  transform: translateX(-50%);
+}
+
+.hof-entry-official__avatar-halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: 5.85rem;
+  height: 5.85rem;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(168, 85, 247, 0.9);
+  box-shadow:
+    0 0 18px rgba(168, 85, 247, 0.75),
+    0 0 36px rgba(124, 58, 237, 0.45),
+    inset 0 0 14px rgba(168, 85, 247, 0.22);
+  pointer-events: none;
 }
 
 .hof-entry-official__avatar-glow {
   position: absolute;
-  inset: -32%;
-  width: 164%;
-  height: 164%;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 7.25rem;
+  height: 7.25rem;
+  transform: translate(-50%, -50%);
   object-fit: contain;
+  object-position: center center;
   pointer-events: none;
 }
 
 .hof-entry-official__avatar {
-  position: relative;
-  z-index: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
   width: 4.75rem;
   height: 4.75rem;
   border-radius: 50%;
-  border: 2px solid rgba(168, 85, 247, 0.55);
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  object-position: center center;
+  border: 2px solid rgba(251, 191, 36, 0.55);
   box-shadow:
-    0 0 32px rgba(168, 85, 247, 0.65),
-    0 0 64px rgba(124, 58, 237, 0.35);
+    0 0 20px rgba(251, 191, 36, 0.35),
+    0 4px 14px rgba(0, 0, 0, 0.45);
 }
 
 .hof-entry-official__name {
@@ -4872,15 +4943,70 @@ body:has(.modality-hub-surface) .app-lang-toggle .hero-lang__trigger {
   text-transform: uppercase;
 }
 
-.hof-entry-feat__trophy-wrap {
+.hof-entry-feat__trophy-emblem {
   position: relative;
+  width: 10rem;
+  height: 7rem;
+  margin: 0.35rem auto 0.65rem;
+}
+
+.hof-entry-feat__laurel {
+  position: absolute;
+  top: 50%;
+  z-index: 0;
+  width: 7.05rem;
+  height: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.4));
+}
+
+.hof-entry-feat__laurel--l {
+  left: 0;
+  transform: translate(0.85rem, -50%);
+}
+
+.hof-entry-feat__laurel--r {
+  right: 0;
+  transform: translate(-0.85rem, -50%);
+}
+
+.hof-entry-feat__laurel-fallback {
+  position: absolute;
+  top: 50%;
+  z-index: 0;
+  width: 3.5rem;
+  height: 5.25rem;
+  border: 2px solid rgba(251, 191, 36, 0.5);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.hof-entry-feat__laurel-fallback--l {
+  left: 1rem;
+  transform: translateY(-50%);
+  border-radius: 0 0 0 50%;
+  border-right: none;
+}
+
+.hof-entry-feat__laurel-fallback--r {
+  right: 1rem;
+  transform: translateY(-50%);
+  border-radius: 0 0 50% 0;
+  border-left: none;
+}
+
+.hof-entry-feat__trophy-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 6.25rem;
   height: 6.25rem;
-  margin: 0.35rem auto 0.65rem;
+  margin: 0;
+  transform: translate(-50%, -50%);
 }
 
 .hof-entry-feat__trophy-ring {
@@ -5011,10 +5137,6 @@ body:has(.modality-hub-surface) .app-lang-toggle .hero-lang__trigger {
   line-height: 1.55;
   text-align: center;
   color: #e4e4e7;
-}
-
-.hof-entry-feat__quote-laurels .hof-entry-laurels__leaf {
-  width: 2.35rem;
 }
 
 .hof-entry-profile-grid {
@@ -10719,22 +10841,22 @@ html[data-modality="free"] .modality-page--free-tracks {
   width: 100%;
   margin: 0;
   padding-bottom: 0;
-  min-height: calc(100dvh - 4rem);
+  min-height: 100dvh;
 }
 
 .app-main--workflow-tracks {
   width: 100%;
   max-width: 100%;
   overflow-x: clip;
-  background: #05050d;
+  background: transparent;
 }
 
 .app-main--workflow-tracks .app-surface,
 html[data-modality] .app-surface:has(.tracks-workflow-surface),
 html[data-modality="guest"] .app-surface:has(.tracks-workflow-surface),
 html[data-modality="free"] .app-surface:has(.tracks-workflow-surface) {
-  background: #05050d;
-  min-height: calc(100dvh - 4rem);
+  background: transparent;
+  min-height: 100dvh;
   padding-bottom: 0;
 }
 
@@ -10766,16 +10888,45 @@ body:has(.tracks-workflow-surface) {
 
 .tracks-workflow-surface {
   position: relative;
+  z-index: 1;
   width: 100%;
-  min-height: calc(100dvh - 5.5rem);
+  min-height: 100dvh;
   color: #f4f4f5;
   overflow-x: clip;
 }
 
-.tracks-workflow-surface__ambient {
+/* Full-viewport fixed backgrounds — immersive pages */
+.ticket-landing__bg-layer,
+.tracks-workflow-surface__ambient,
+.how-to-play-surface__ambient,
+.auth-glass-page__ambient,
+.hof-scene__ambient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ticket-landing__hero-bg,
+.tracks-workflow-surface__hero-bg,
+.how-to-play-surface__hero-bg,
+.auth-glass-page__bg,
+.hof-scene__bg--fixed {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.tracks-workflow-surface__ambient {
   pointer-events: none;
   overflow: hidden;
 }
@@ -10802,13 +10953,7 @@ body:has(.tracks-workflow-surface) {
 }
 
 .tracks-workflow-surface__hero-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  opacity: 0.42;
+  opacity: 0.5;
 }
 
 .tracks-workflow-surface__trails {
@@ -11316,7 +11461,7 @@ html[data-modality="guest"] .tracks-workflow-surface .modality-track-row__meta {
   padding-left: 0;
   padding-right: 0;
   overflow-x: clip;
-  background: #030305;
+  background: transparent;
 }
 
 .app-main--comenzar.app-main--immersive .ticket-landing {
@@ -11327,33 +11472,37 @@ html[data-modality="guest"] .tracks-workflow-surface .modality-track-row__meta {
   padding-right: max(0.65rem, env(safe-area-inset-right, 0px));
 }
 
-.ticket-landing-surface {
-  position: relative;
-  width: 100%;
-  min-height: calc(100dvh - 4rem);
-  overflow-x: clip;
-  color: #fafafa;
-  background: #030305;
+.app-main--comenzar:not(.app-main--immersive) .ticket-landing {
+  padding-top: max(
+    clamp(2.5rem, 6vw, 4rem),
+    calc(4.5rem + env(safe-area-inset-top, 0px))
+  );
 }
 
-@media (max-width: 767px) {
-  .ticket-landing-surface {
-    min-height: calc(100dvh - 4rem - 4rem);
-  }
+.app-main--how-to-play:not(.app-main--immersive) .how-to-play__inner {
+  padding-top: max(4.5rem, calc(4rem + env(safe-area-inset-top, 0px)));
+}
+
+.app-main--workflow-tracks:not(.app-main--immersive) .tracks-workflow__inner {
+  padding-top: max(4.5rem, calc(4rem + env(safe-area-inset-top, 0px)));
+}
+
+.app-main:not(.app-main--immersive):has(.hof-scene:not(.hof-scene--embedded)) .hof-scene {
+  padding-top: max(4.5rem, calc(4rem + env(safe-area-inset-top, 0px)));
+}
+
+.ticket-landing-surface {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 100dvh;
+  overflow-x: clip;
+  color: #fafafa;
+  background: transparent;
 }
 
 .ticket-landing__bg-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
   pointer-events: none;
-}
-
-.ticket-landing__hero-bg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
 }
 
 .ticket-landing__shade {
@@ -13525,34 +13674,37 @@ body:has(.ticket-landing-surface) {
 .auth-glass-page {
   position: relative;
   isolation: isolate;
+  z-index: 1;
   width: 100%;
-  min-height: calc(100dvh - 8rem);
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1.25rem;
+  padding: max(5rem, calc(4rem + env(safe-area-inset-top, 0px))) 1.25rem 2rem;
   box-sizing: border-box;
   color: #f8fafc;
-  background-color: #050505;
-  background-image: var(--auth-glass-bg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: transparent;
   overflow: hidden;
 }
 
-@media (min-width: 768px) {
-  .auth-glass-page {
-    min-height: calc(100dvh - 4rem);
-  }
-}
-
-.auth-glass-page::before {
-  content: "";
+.auth-glass-page__veil {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.22);
   pointer-events: none;
+}
+
+body:has(.auth-glass-page) {
+  background-color: #050505;
+}
+
+.app-surface:has(.hof-scene:not(.hof-scene--embedded)),
+.app-main:has(.hof-scene:not(.hof-scene--embedded)) {
+  background: transparent;
+}
+
+body:has(.hof-scene:not(.hof-scene--embedded)) {
+  background-color: #050508;
 }
 
 .auth-glass-orbs {
@@ -13883,7 +14035,7 @@ body:has(.ticket-landing-surface) {
   padding-left: 0;
   padding-right: 0;
   overflow-x: clip;
-  background: #05000a;
+  background: transparent;
 }
 
 body:has(.how-to-play-surface) {
@@ -13904,27 +14056,24 @@ body:has(.floating-menu--expanded) .app-main--how-to-play.app-main--immersive .h
 
 .how-to-play-surface {
   position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 100%;
-  min-height: calc(100dvh - 4rem);
+  min-height: 100dvh;
   overflow-x: clip;
   color: #fafafa;
+  background: transparent;
   --htp-accent: #bc13fe;
   --htp-accent-soft: rgba(188, 19, 254, 0.35);
 }
 
-@media (max-width: 767px) {
-  .how-to-play-surface {
-    min-height: calc(100dvh - 4rem - 4rem);
-  }
-}
-
 .how-to-play-surface__ambient {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
   pointer-events: none;
   overflow: hidden;
+}
+
+.how-to-play-surface__hero-bg {
+  opacity: 0.48;
 }
 
 .how-to-play-surface__fog {
@@ -13939,7 +14088,12 @@ body:has(.floating-menu--expanded) .app-main--how-to-play.app-main--immersive .h
 .how-to-play-surface__glow {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 0%, rgba(5, 0, 10, 0.4) 45%, #05000a 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(5, 0, 10, 0.35) 0%,
+    rgba(5, 0, 10, 0.5) 40%,
+    rgba(5, 0, 10, 0.72) 100%
+  );
 }
 
 .how-to-play-surface__noise {
@@ -13975,15 +14129,6 @@ body:has(.floating-menu--expanded) .app-main--how-to-play.app-main--immersive .h
   justify-content: center;
   overflow: hidden;
   border-bottom: 1px solid rgba(188, 19, 254, 0.2);
-}
-
-.how-to-play__hero-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
 }
 
 .how-to-play__hero-scrim {
@@ -14152,30 +14297,18 @@ body:has(.floating-menu--expanded) .app-main--how-to-play.app-main--immersive .h
 }
 
 .how-to-play-step__bg--blur {
-  left: -5%;
-  top: -5%;
-  width: 110%;
-  height: 110%;
-  filter: blur(12px);
-  opacity: 0.92;
+  left: -8%;
+  top: -8%;
+  width: 116%;
+  height: 116%;
+  filter: blur(16px);
+  opacity: 0.95;
 }
 
 .how-to-play-step__bg--sharp {
   inset: 0;
   width: 100%;
   height: 100%;
-  -webkit-mask-image: radial-gradient(
-    ellipse 92% 88% at 62% 50%,
-    #000 48%,
-    rgba(0, 0, 0, 0.55) 72%,
-    transparent 100%
-  );
-  mask-image: radial-gradient(
-    ellipse 92% 88% at 62% 50%,
-    #000 48%,
-    rgba(0, 0, 0, 0.55) 72%,
-    transparent 100%
-  );
 }
 
 .how-to-play-step__scrim {

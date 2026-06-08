@@ -101,14 +101,17 @@ export default function HallOfFamePodium({ players, title, subtitle, pointsWord,
       ? staticFile("/Img/hall-of-fame-headmark-en.png")
       : staticFile("/Img/hall-of-fame-headmark-es.png");
 
+  const bgSrc = staticFile("/Img/hall-of-fame-bg.png");
+
   return (
     <section className={`hof-scene${embedded ? " hof-scene--embedded" : ""}`}>
-      <img
-        src={staticFile("/Img/hall-of-fame-bg.png")}
-        alt=""
-        className="hof-scene__bg"
-        aria-hidden
-      />
+      {embedded ? (
+        <img src={bgSrc} alt="" className="hof-scene__bg" aria-hidden />
+      ) : (
+        <div className="hof-scene__ambient" aria-hidden>
+          <img src={bgSrc} alt="" className="hof-scene__bg hof-scene__bg--fixed" />
+        </div>
+      )}
       <div className="hof-scene__fade" aria-hidden />
 
       <motion.div

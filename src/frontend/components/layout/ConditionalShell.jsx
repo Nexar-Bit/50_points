@@ -33,6 +33,16 @@ function isChromelessPath(pathname) {
   return isHomePath(pathname);
 }
 
+function isImmersiveBgPath(pathname) {
+  return (
+    isComenzarPath(pathname) ||
+    isHowToPlayPath(pathname) ||
+    isWorkflowTracksPath(pathname) ||
+    isAuthPath(pathname) ||
+    pathname.includes("/hall-of-fame")
+  );
+}
+
 export default function ConditionalShell({ children }) {
   const pathname = usePathname() || "";
   const { isAuthenticated, loading } = useAuth();
@@ -42,6 +52,7 @@ export default function ConditionalShell({ children }) {
   const onWorkflowTracks = isWorkflowTracksPath(pathname);
   const onHowToPlay = isHowToPlayPath(pathname);
   const hideChrome = isChromelessPath(pathname);
+  const immersiveBg = isImmersiveBgPath(pathname);
   const skipSurface = hideChrome || onAuth || onComenzar || onHowToPlay;
 
   if (loading) {
@@ -88,14 +99,16 @@ export default function ConditionalShell({ children }) {
           hideChrome
             ? "min-h-screen"
             : onAuth
-              ? "app-main app-main--auth min-h-screen pt-16 pb-16 md:pb-0"
+              ? "app-main app-main--auth min-h-screen"
               : onComenzar
-                ? "app-main app-main--comenzar min-h-screen pt-16 pb-16 md:pb-0"
+                ? "app-main app-main--comenzar min-h-screen"
                 : onWorkflowTracks
-                  ? "app-main app-main--workflow-tracks min-h-screen pt-16 pb-16 md:pb-0"
+                  ? "app-main app-main--workflow-tracks min-h-screen"
                   : onHowToPlay
-                    ? "app-main app-main--how-to-play min-h-screen pt-16 pb-16 md:pb-0"
-                    : "app-main min-h-screen pt-16 pb-16 md:pb-0"
+                    ? "app-main app-main--how-to-play min-h-screen"
+                    : immersiveBg
+                      ? "app-main min-h-screen"
+                      : "app-main min-h-screen pt-16 pb-16 md:pb-0"
         }
       >
         {skipSurface ? children : <AppSurface>{children}</AppSurface>}
