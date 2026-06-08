@@ -1,107 +1,105 @@
 "use client";
 
 import Link from "next/link";
-import { Trophy, Crown, Star, User, Lock, ChevronRight, MoreVertical, ArrowRight } from "lucide-react";
+import { ArrowRight, Lock } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
-import { modeBgFile } from "@/frontend/lib/config/paths";
-import { useModality } from "@/frontend/contexts/ModalityContext";
-import {
-  HUB_DISPLAY_ORDER,
-  getModality,
-  modalityPath,
-} from "@/frontend/lib/gameModalities";
+import { getModality, modalityPath } from "@/frontend/lib/gameModalities";
 import ModalityPageShell from "@/frontend/components/modalities/ModalityPageShell";
-import ModalityHubShowcase from "@/frontend/components/modalities/ModalityHubShowcase";
+import {
+  MODALITY_CARD_ASSET_KEY,
+  ticketWorkflowAsset,
+} from "@/frontend/lib/config/ticketWorkflowAssets";
 
-const ICONS = {
-  trophy: Trophy,
-  ticket: Crown,
-  star: Star,
-  user: User,
-};
+const HUB_GROUPS = [
+  { key: "free", labelKey: "hubCategoryFree", modes: ["guest", "free"] },
+  { key: "paid", labelKey: "hubCategoryPaid", modes: ["paid", "special"] },
+];
+
+function ModalityHubModeCard({ modeId, t }) {
+  const mod = getModality(modeId);
+  const locked = !mod.available;
+  const cardBgKey = MODALITY_CARD_ASSET_KEY[modeId];
+  const cardBg = cardBgKey ? ticketWorkflowAsset(cardBgKey) : "";
+  const className = `modality-hub-mode-card modality-hub-mode-card--${modeId}${
+    locked ? " modality-hub-mode-card--locked" : ""
+  }`;
+  const cardStyle = cardBg ? { backgroundImage: `url(${cardBg})` } : undefined;
+
+  const content = (
+    <>
+      <h3 className="modality-hub-mode-card__tournament">
+        {t(`gameModalities.${modeId}.hubTournament`)}
+      </h3>
+      <p className="modality-hub-mode-card__play">{t(`gameModalities.${modeId}.hubPlayLine`)}</p>
+      <p className="modality-hub-mode-card__detail">{t(`gameModalities.${modeId}.hubDetail`)}</p>
+      {t(`gameModalities.${modeId}.hubAudience`) ? (
+        <p className="modality-hub-mode-card__audience">
+          {t(`gameModalities.${modeId}.hubAudience`)}
+        </p>
+      ) : null}
+      {locked ? <Lock className="modality-hub-mode-card__lock" aria-hidden strokeWidth={2} /> : null}
+    </>
+  );
+
+  if (locked) {
+    return (
+      <div className={className} style={cardStyle} aria-disabled="true">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <Link href={modalityPath(modeId, "tracks")} className={className} style={cardStyle}>
+      {content}
+    </Link>
+  );
+}
 
 export default function ModalityHub() {
   const { t } = useLanguage();
-  const { activeModalityId } = useModality();
-  const order = HUB_DISPLAY_ORDER;
-  const howLines = t("gameModalities.howBullets");
-  const howPreview = Array.isArray(howLines) ? howLines[0] : "";
+  const howAudiences = t("gameModalities.hubHowAudiences");
+  const audienceList = Array.isArray(howAudiences) ? howAudiences : [];
 
   return (
     <ModalityPageShell className="modality-page--hub">
       <div className="modality-hub-surface">
-        <img
-          className="modality-hub-surface__bg"
-          src={modeBgFile()}
-          alt=""
-          aria-hidden
-          decoding="async"
-          fetchPriority="high"
-        />
-        <div className="modality-hub-surface__veil" aria-hidden />
+        <div className="modality-hub-board">
+          <h1 className="modality-hub-board__title">{t("gameModalities.hubTitle")}</h1>
 
-        <div className="modality-hub-layout">
-          <aside className="modality-hub-sidebar">
-            <header className="modality-hub-sidebar__head">
-              <h1 className="modality-hub-sidebar__title">{t("gameModalities.hubTitle")}</h1>
-              <p className="modality-hub-sidebar__arena">{t("gameModalities.hubArena")}</p>
-            </header>
+          <div className="modality-hub-groups">
+            {HUB_GROUPS.map((group) => (
+              <section key={group.key} className="modality-hub-group" aria-labelledby={`hub-${group.key}`}>
+                <h2 id={`hub-${group.key}`} className="modality-hub-group__legend">
+                  {t(`gameModalities.${group.labelKey}`)}
+                </h2>
+                <div className="modality-hub-group__cards">
+                  {group.modes.map((modeId) => (
+                    <ModalityHubModeCard key={modeId} modeId={modeId} t={t} />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
 
-            <ul className="modality-hub-list">
-              {order.map((id, index) => {
-                const mod = getModality(id);
-                const Icon = ICONS[mod.icon] || Trophy;
-                const locked = !mod.available;
-                const isActive = id === activeModalityId && !locked;
-
-                return (
-                  <li key={id}>
-                    <Link
-                      href={locked ? "#" : modalityPath(id, "tracks")}
-                      className={`modality-hub-card modality-hub-card--${id}${
-                        locked ? " modality-hub-card--locked" : ""
-                      }${isActive ? " modality-hub-card--active" : ""}`}
-                      aria-disabled={locked}
-                      aria-current={isActive ? "page" : undefined}
-                      onClick={locked ? (e) => e.preventDefault() : undefined}
-                    >
-                      <span className="modality-hub-card__icon-wrap">
-                        <Icon className="modality-hub-card__icon" aria-hidden strokeWidth={1.75} />
-                      </span>
-                      <span className="modality-hub-card__body">
-                        <span className="modality-hub-card__title">
-                          {t("gameModalities.modalityLabel")} {index + 1}
-                        </span>
-                        <span className="modality-hub-card__desc">
-                          {t(`gameModalities.${id}.title`)}
-                        </span>
-                      </span>
-                      {locked ? (
-                        <Lock className="modality-hub-card__trail" aria-hidden strokeWidth={2} />
-                      ) : isActive ? (
-                        <ChevronRight className="modality-hub-card__trail" aria-hidden strokeWidth={2} />
-                      ) : id === "guest" ? (
-                        <MoreVertical className="modality-hub-card__trail" aria-hidden strokeWidth={2} />
-                      ) : (
-                        <span className="modality-hub-card__trail modality-hub-card__trail--spacer" aria-hidden />
-                      )}
-                    </Link>
-                  </li>
-                );
-              })}
+          <section className="modality-hub-how" aria-labelledby="modality-hub-how-title">
+            <h2 id="modality-hub-how-title" className="modality-hub-how__title">
+              {t("gameModalities.howTitle")}
+            </h2>
+            <p className="modality-hub-how__lead">{t("gameModalities.hubHowLead")}</p>
+            <ul className="modality-hub-how__audiences">
+              {audienceList.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
             </ul>
-
-            <div className="modality-hub-sidebar__how">
-              <h2>{t("gameModalities.howTitle")}</h2>
-              <p>{howPreview}</p>
-              <Link href="/how-to-play" className="modality-hub-sidebar__learn">
-                {t("gameModalities.learnMore")}
-                <ArrowRight className="w-3.5 h-3.5" aria-hidden />
-              </Link>
-            </div>
-          </aside>
-
-          <ModalityHubShowcase order={order} />
+            <p className="modality-hub-how__text">{t("gameModalities.hubHowGoal")}</p>
+            <p className="modality-hub-how__text">{t("gameModalities.hubHowTickets")}</p>
+            <p className="modality-hub-how__text">{t("gameModalities.hubHowRegistered")}</p>
+            <Link href="/how-to-play" className="modality-hub-how__learn">
+              {t("gameModalities.learnMore")}
+              <ArrowRight className="w-3.5 h-3.5" aria-hidden />
+            </Link>
+          </section>
         </div>
       </div>
     </ModalityPageShell>

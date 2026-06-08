@@ -11,6 +11,9 @@ export const MODE_BG_PATH = '/Img/mode-bg.png';
 /** Guest racetracks hero background: public/Img/av-bg.png */
 export const AV_BG_PATH = '/Img/av-bg.png';
 
+/** Login / register background: public/Img/user-background.png */
+export const USER_BG_PATH = '/Img/user-background.png';
+
 /** Use with next/image and next/link — basePath is applied automatically. */
 export function asset(path) {
   return path.startsWith('/') ? path : `/${path}`;
@@ -45,4 +48,8 @@ export function modeBgFile() {
 
 export function avBgFile() {
   return staticFile(AV_BG_PATH);
+}
+
+export function userBgFile() {
+  return staticFile(USER_BG_PATH);
 }

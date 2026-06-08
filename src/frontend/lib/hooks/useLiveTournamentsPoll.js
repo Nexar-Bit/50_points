@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { fetchTournamentsList } from '@/frontend/lib/api/tournaments';
 import { mapTournamentForHomeCard } from '@/frontend/lib/api/mappers';
+import { ROUTE_CHANGE_EVENT } from '@/frontend/lib/navigationCache';
 
 /** How often the UI pulls latest DB data (backend scrapes every ~8s). */
 export const LIVE_DATA_POLL_MS = 5000;
@@ -54,9 +55,15 @@ export function useLiveTournamentsPoll({
     tick();
     const id = setInterval(tick, pollMs);
 
+    const onRouteChange = () => {
+      tick();
+    };
+    window.addEventListener(ROUTE_CHANGE_EVENT, onRouteChange);
+
     return () => {
       cancelled = true;
       clearInterval(id);
+      window.removeEventListener(ROUTE_CHANGE_EVENT, onRouteChange);
     };
   }, [enabled, forHome, mapFn, pollMs]);
 }

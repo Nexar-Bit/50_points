@@ -42,16 +42,13 @@ function getStepBullets(step, t) {
 function LiveTournamentCardSkeleton() {
   return (
     <div
-      className="live-tournament-card live-tournament-card--upcoming animate-pulse pointer-events-none"
+      className="live-tournament-card live-tournament-card--upcoming live-tournament-card--cover animate-pulse pointer-events-none"
       aria-hidden
     >
       <div className="live-tournament-card__shell">
-        <div className="h-32 bg-white/5" />
-        <div className="p-5 space-y-3">
-          <div className="h-5 w-2/3 bg-white/5 rounded" />
-          <div className="h-3 w-1/2 bg-white/5 rounded" />
-          <div className="h-2 w-full bg-white/5 rounded-full" />
-          <div className="h-10 w-full bg-white/5 rounded-xl mt-4" />
+        <div className="h-40 bg-white/5" />
+        <div className="p-4">
+          <div className="h-10 w-full bg-white/5 rounded-full" />
         </div>
       </div>
     </div>
@@ -194,23 +191,13 @@ export default function HomePageClient({ initialTournaments = [] }) {
             {t("tournamentsSection.homeAccessHint")}
           </p>
           <div className="mt-4 flex justify-center">
-            {isAuthenticated ? (
-              <Link
-                href="/modalidades"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-purple to-purple-light btn-glow"
-              >
-                {t("tournamentsSection.goToGameModes")}
-                <ChevronRight className="w-4 h-4" aria-hidden />
-              </Link>
-            ) : (
-              <a
-                href="#hero-cta"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-purple to-purple-light btn-glow"
-              >
-                {t("tournamentsSection.chooseHowToPlay")}
-                <ChevronRight className="w-4 h-4" aria-hidden />
-              </a>
-            )}
+            <Link
+              href="/comenzar"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-purple to-purple-light btn-glow"
+            >
+              {isAuthenticated ? t("tournamentsSection.goToGameModes") : t("tournamentsSection.chooseHowToPlay")}
+              <ChevronRight className="w-4 h-4" aria-hidden />
+            </Link>
           </div>
         </div>
       </section>

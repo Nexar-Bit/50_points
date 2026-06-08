@@ -1,28 +1,53 @@
 "use client";
 
+import { useCallback, useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Shield,
-  MapPin,
-  Calendar,
-  ChevronRight,
-  Trophy,
-  Zap,
-  ShieldCheck,
-} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Shield, MapPin, ChevronDown, ChevronUp } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { avBgFile, logoFile } from "@/frontend/lib/config/paths";
-import { modalityPath } from "@/frontend/lib/gameModalities";
 import ModalityPageShell from "@/frontend/components/modalities/ModalityPageShell";
-
-const FEATURES = [
-  { id: "top", icon: Trophy, titleKey: "guestTracks.featureTopTracks", descKey: "guestTracks.featureTopTracksDesc" },
-  { id: "live", icon: Zap, titleKey: "guestTracks.featureLive", descKey: "guestTracks.featureLiveDesc" },
-  { id: "secure", icon: ShieldCheck, titleKey: "guestTracks.featureSecure", descKey: "guestTracks.featureSecureDesc" },
-];
+import TrackTicketsPanel from "@/frontend/components/modalities/TrackTicketsPanel";
+import TicketFamilyGallery from "@/frontend/components/modalities/TicketFamilyGallery";
 
 export default function GuestAvTracksPage({ modalityId, tracks, loading }) {
   const { t } = useLanguage();
+  const router = useRouter();
+  const [expandedSlug, setExpandedSlug] = useState(null);
+  const [usageVersion, setUsageVersion] = useState(0);
+  const [gallery, setGallery] = useState(null);
+
+  const expandedTrack = tracks.find((tr) => tr.slug === expandedSlug) || null;
+
+  const refreshUsage = useCallback(() => {
+    setUsageVersion((v) => v + 1);
+  }, []);
+
+  useEffect(() => {
+    const onRefresh = () => refreshUsage();
+    window.addEventListener("focus", onRefresh);
+    window.addEventListener("50points-tickets-updated", onRefresh);
+    return () => {
+      window.removeEventListener("focus", onRefresh);
+      window.removeEventListener("50points-tickets-updated", onRefresh);
+    };
+  }, [refreshUsage]);
+
+  const openGallery = useCallback((track, ticketIndex = 0) => {
+    setExpandedSlug(track.slug);
+    setGallery({ track, ticketIndex });
+  }, []);
+
+  const handlePlayTicket = useCallback(
+    (_ticketNum, href) => {
+      if (href) router.push(href);
+    },
+    [router],
+  );
+
+  const toggleTrack = (slug) => {
+    setExpandedSlug((prev) => (prev === slug ? null : slug));
+  };
 
   return (
     <ModalityPageShell modalityId={modalityId} className="modality-page--guest-av">
@@ -34,6 +59,7 @@ export default function GuestAvTracksPage({ modalityId, tracks, loading }) {
           aria-hidden
           decoding="async"
           fetchPriority="high"
+          loading="eager"
         />
         <div className="av-tracks-surface__veil" aria-hidden />
 
@@ -63,70 +89,80 @@ export default function GuestAvTracksPage({ modalityId, tracks, loading }) {
             ) : tracks.length === 0 ? (
               <p className="av-tracks-status">{t("tournamentsSection.empty")}</p>
             ) : (
-              <ul className="av-tracks-list">
-                {tracks.map((track) => (
-                  <li key={track.slug}>
-                    <Link
-                      href={modalityPath(modalityId, "tickets", { trackSlug: track.slug })}
-                      className="av-tracks-card"
+              <ul className="modality-tracks-accordion modality-tracks-accordion--guest">
+                {tracks.map((track) => {
+                  const isOpen = expandedSlug === track.slug;
+                  return (
+                    <li
+                      key={track.slug}
+                      className={`modality-tracks-accordion__item${isOpen ? " modality-tracks-accordion__item--open" : ""}`}
                     >
-                      <span
-                        className="av-tracks-card__thumb"
-                        style={
-                          track.imageUrl
-                            ? { backgroundImage: `url(${track.imageUrl})` }
-                            : undefined
-                        }
-                      />
-                      <span className="av-tracks-card__body">
-                        <span className="av-tracks-card__name">{track.name}</span>
-                        <span className="av-tracks-card__meta">
+                      <button
+                        type="button"
+                        className="modality-track-row modality-track-row--button modality-track-row--guest"
+                        onClick={() => toggleTrack(track.slug)}
+                        aria-expanded={isOpen}
+                      >
+                        <span
+                          className="modality-track-row__thumb"
+                          style={
+                            track.imageUrl
+                              ? { backgroundImage: `url(${track.imageUrl})` }
+                              : undefined
+                          }
+                        />
+                        <span className="modality-track-row__info">
+                          <span className="modality-track-row__name">{track.name}</span>
                           {track.location ? (
-                            <span className="av-tracks-card__meta-item">
-                              <MapPin className="av-tracks-card__meta-icon" aria-hidden />
+                            <span className="modality-track-row__loc">
+                              <MapPin className="w-3 h-3 inline mr-1 opacity-60" aria-hidden />
                               {track.location}
                             </span>
                           ) : null}
-                          <span className="av-tracks-card__meta-item">
-                            <Calendar className="av-tracks-card__meta-icon" aria-hidden />
+                          <span className="modality-track-row__meta">
                             {track.count === 1
                               ? t("gameModalities.oneTournamentAtTrack")
                               : `${track.count} ${t("gameModalities.tournamentsAtTrack")}`}
+                            {track.live ? (
+                              <span className="modality-track-row__live">{t("gameModalities.live")}</span>
+                            ) : null}
                           </span>
-                          {track.live ? (
-                            <span className="av-tracks-card__live-text">{t("gameModalities.live")}</span>
-                          ) : null}
                         </span>
-                      </span>
-                      {track.live ? (
-                        <span className="av-tracks-card__live-pill">
-                          <span className="av-tracks-card__live-dot" aria-hidden />
-                          {t("gameModalities.live")}
-                        </span>
-                      ) : null}
-                      <ChevronRight className="av-tracks-card__chevron" aria-hidden strokeWidth={2} />
-                    </Link>
-                  </li>
-                ))}
+                        {isOpen ? (
+                          <ChevronUp className="modality-track-row__chevron" aria-hidden />
+                        ) : (
+                          <ChevronDown className="modality-track-row__chevron" aria-hidden />
+                        )}
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             )}
-          </div>
 
-          <footer className="av-tracks-features">
-            {FEATURES.map(({ id, icon: Icon, titleKey, descKey }) => (
-              <div key={id} className="av-tracks-feature">
-                <span className="av-tracks-feature__icon-wrap">
-                  <Icon className="av-tracks-feature__icon" aria-hidden strokeWidth={1.75} />
-                </span>
-                <div className="av-tracks-feature__copy">
-                  <p className="av-tracks-feature__title">{t(titleKey)}</p>
-                  <p className="av-tracks-feature__desc">{t(descKey)}</p>
-                </div>
+            {expandedTrack?.tournamentSlug ? (
+              <div id="track-tickets-dock" className="track-tickets-dock">
+                <TrackTicketsPanel
+                  modalityId={modalityId}
+                  trackSlug={expandedTrack.slug}
+                  tournamentSlug={expandedTrack.tournamentSlug}
+                  usageVersion={usageVersion}
+                  onOpenGallery={(ticketIndex) => openGallery(expandedTrack, ticketIndex)}
+                  onPlayTicket={handlePlayTicket}
+                />
               </div>
-            ))}
-          </footer>
+            ) : null}
+          </div>
         </div>
       </div>
+
+      <TicketFamilyGallery
+        open={!!gallery}
+        track={gallery?.track}
+        modalityId={modalityId}
+        initialTicketIndex={gallery?.ticketIndex ?? 0}
+        onClose={() => setGallery(null)}
+      />
     </ModalityPageShell>
   );
 }

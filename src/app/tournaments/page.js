@@ -1,5 +1,14 @@
 import { Suspense } from "react";
 import TournamentsPageClient from "@/app/tournaments/TournamentsPageClient";
+import { buildPageMetadata } from "@/frontend/lib/seo/metadata";
+
+export const metadata = buildPageMetadata({
+  title: "Live Tournaments",
+  description:
+    "Join live horse racing tournaments on 50points. Pick horses, earn points, and climb the rankings.",
+  path: "/tournaments",
+  keywords: ["live tournaments", "horse racing", "competition", "50points"],
+});
 
 function TournamentsPageFallback() {
   return (

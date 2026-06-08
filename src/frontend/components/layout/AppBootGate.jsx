@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import AppSplashScreen from "@/frontend/components/layout/AppSplashScreen";
 
-const MIN_SPLASH_MS = 2400;
-const EXIT_MS = 520;
+/** Hide splash as soon as auth bootstrap completes (no artificial delay). */
+const MIN_SPLASH_MS = 0;
+const EXIT_MS = 320;
 
 /**
  * Full-screen TORNEO splash on cold load while auth/bootstrap finishes.

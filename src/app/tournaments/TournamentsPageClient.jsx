@@ -18,16 +18,13 @@ import {
 function LiveTournamentCardSkeleton() {
   return (
     <div
-      className="live-tournament-card live-tournament-card--upcoming animate-pulse pointer-events-none"
+      className="live-tournament-card live-tournament-card--upcoming live-tournament-card--cover animate-pulse pointer-events-none"
       aria-hidden
     >
       <div className="live-tournament-card__shell">
-        <div className="h-32 bg-white/5" />
-        <div className="p-5 space-y-3">
-          <div className="h-5 w-2/3 bg-white/5 rounded" />
-          <div className="h-3 w-1/2 bg-white/5 rounded" />
-          <div className="h-2 w-full bg-white/5 rounded-full" />
-          <div className="h-10 w-full bg-white/5 rounded-xl mt-4" />
+        <div className="h-40 bg-white/5" />
+        <div className="p-4">
+          <div className="h-10 w-full bg-white/5 rounded-full" />
         </div>
       </div>
     </div>

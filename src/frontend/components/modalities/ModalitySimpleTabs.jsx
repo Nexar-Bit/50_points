@@ -6,9 +6,10 @@ import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { getModality } from "@/frontend/lib/gameModalities";
 
 /**
- * Modalidades | Hipódromos | Tickets — free modality top navigation.
+ * Modalidades | Hipódromos | Tickets — top navigation.
+ * Tickets tab can be a local button (no navigation) when onTicketsClick is passed.
  */
-export default function ModalitySimpleTabs({ modalityId, active = "tracks" }) {
+export default function ModalitySimpleTabs({ modalityId, active = "tracks", onTicketsClick }) {
   const { t } = useLanguage();
   const mod = getModality(modalityId);
   const base = `/modalidades/${modalityId}`;
@@ -28,11 +29,28 @@ export default function ModalitySimpleTabs({ modalityId, active = "tracks" }) {
       {tabs.map((tab) => {
         const Icon = tab.icon;
         const isActive = active === tab.id;
+        const className = `modality-simple-tabs__tab${isActive ? " modality-simple-tabs__tab--active" : ""}`;
+
+        if (tab.id === "tickets" && onTicketsClick) {
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              className={className}
+              aria-current={isActive ? "true" : undefined}
+              onClick={onTicketsClick}
+            >
+              {Icon ? <Icon className="modality-simple-tabs__icon" aria-hidden strokeWidth={2} /> : null}
+              {t(`gameModalities.${tab.labelKey}`)}
+            </button>
+          );
+        }
+
         return (
           <Link
             key={tab.id}
             href={tab.href}
-            className={`modality-simple-tabs__tab${isActive ? " modality-simple-tabs__tab--active" : ""}`}
+            className={className}
             aria-current={isActive ? "page" : undefined}
           >
             {Icon ? <Icon className="modality-simple-tabs__icon" aria-hidden strokeWidth={2} /> : null}

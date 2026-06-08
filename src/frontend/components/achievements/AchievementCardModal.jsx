@@ -1,10 +1,12 @@
 "use client";
 
-import { X, Calendar, Trophy, Crown, Medal } from "lucide-react";
+import { X, Calendar, Trophy, Crown, Medal, Star } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { logoFile } from "@/frontend/lib/config/paths";
+import { hofAsset } from "@/frontend/lib/config/hofAssets";
 import { avatarForPlayer } from "@/frontend/lib/data/hallOfFameData";
 import { CARD_TYPES } from "@/frontend/lib/achievementCards";
+import HofAssetImage from "@/frontend/components/hall-of-fame/HofAssetImage";
 
 export default function AchievementCardModal({ card, onClose, viewOnly = false }) {
   const { t, language } = useLanguage();
@@ -48,6 +50,10 @@ export default function AchievementCardModal({ card, onClose, viewOnly = false }
   const pts = card.points ?? (isThird ? 25 : 50);
   const pointsLine = `${t("achievementCards.wonPointsPrefix")} ${pts} MY POINTS.`;
 
+  const trophyKey = isWinner ? "trophyGoldStar" : isThird ? "trophyBronze3" : "trophySilver2";
+  const bannerKey = isWinner ? "rankBannerGold" : isThird ? "rankBannerBronze" : "rankBannerSilver";
+  const wreathTheme = isWinner ? "gold" : "silver";
+
   return (
     <div className="ach-card-overlay" role="dialog" aria-modal="true">
       <button type="button" className="ach-card-overlay__backdrop" onClick={onClose} aria-label={t("common.close")} />
@@ -61,64 +67,143 @@ export default function AchievementCardModal({ card, onClose, viewOnly = false }
         ) : null}
 
         <div className="ach-card__frame">
+          <HofAssetImage
+            src={hofAsset(isWinner ? "winnerSparkles" : "cardBgDark")}
+            alt=""
+            className="ach-card__bg"
+          />
+
           {isWinner ? (
-            <h2 className="ach-card__title ach-card__title--hero">{title}</h2>
+            <>
+              <h2 className="ach-card__title ach-card__title--hero">{title}</h2>
+              <p className="ach-card__eyebrow">
+                <Star className="w-3 h-3 inline" />
+                {subtitle}
+                <Star className="w-3 h-3 inline" />
+              </p>
+            </>
           ) : (
             <>
               <h2 className="ach-card__title ach-card__title--congrats">{t("achievementCards.congrats")}</h2>
-              <p className="ach-card__subtitle">{subtitle}</p>
+              <p className="ach-card__subtitle">
+                <Star className="w-3 h-3 inline" />
+                {subtitle}
+                <Star className="w-3 h-3 inline" />
+              </p>
             </>
           )}
 
-          {isWinner ? (
-            <p className="ach-card__eyebrow">{subtitle}</p>
-          ) : null}
-
           <div className="ach-card__event">
-            <span>🏇 {card.track}</span>
-            <span><Calendar className="w-3 h-3 inline" /> {card.date}</span>
+            <span>
+              <HofAssetImage
+                src={hofAsset("horseshoeGold")}
+                alt=""
+                className="ach-card__event-icon"
+                fallback={<span>🏇</span>}
+              />
+              {card.track}
+            </span>
+            <span className="ach-card__event-sep" aria-hidden />
+            <span>
+              <HofAssetImage
+                src={hofAsset("calendarGold")}
+                alt=""
+                className="ach-card__event-icon"
+                fallback={<Calendar className="w-3 h-3 inline" />}
+              />
+              {card.date}
+            </span>
           </div>
 
           <div className="ach-card__profile">
             <div className="ach-card__wreaths" aria-hidden>
-              <span className="ach-card__wreath ach-card__wreath--l" />
-              <img src={avatar} alt="" className="ach-card__avatar" />
-              <span className="ach-card__wreath ach-card__wreath--r" />
+              <HofAssetImage
+                src={hofAsset(wreathTheme === "gold" ? "laurelGoldLeft" : "laurelSilverLeft")}
+                alt=""
+                className="ach-card__wreath-img ach-card__wreath-img--l"
+                fallback={<span className="ach-card__wreath ach-card__wreath--l" />}
+              />
+              <div className="ach-card__avatar-wrap">
+                <HofAssetImage src={hofAsset("profileSilhouette")} alt="" className="ach-card__avatar-glow" />
+                <img src={avatar} alt="" className="ach-card__avatar" />
+              </div>
+              <HofAssetImage
+                src={hofAsset(wreathTheme === "gold" ? "laurelGoldRight" : "laurelSilverRight")}
+                alt=""
+                className="ach-card__wreath-img ach-card__wreath-img--r"
+                fallback={<span className="ach-card__wreath ach-card__wreath--r" />}
+              />
             </div>
             <p className="ach-card__player">{card.playerName}</p>
           </div>
 
           {!isWinner ? (
-            <div className={`ach-card__rank-banner ach-card__rank-banner--${theme}`}>
-              <span className="ach-card__rank-num">{card.place}°</span>
-              <span>{rankBanner}</span>
+            <div className={`ach-card__rank-banner-wrap ach-card__rank-banner-wrap--${theme}`}>
+              <HofAssetImage src={hofAsset(bannerKey)} alt="" className="ach-card__rank-banner-bg" />
+              <div className={`ach-card__rank-banner ach-card__rank-banner--${theme}`}>
+                <span className="ach-card__rank-num">{card.place}°</span>
+                <span>{rankBanner}</span>
+              </div>
             </div>
           ) : (
-            <p className="ach-card__winner-label">{rankBanner}</p>
+            <p className="ach-card__winner-label">
+              <Star className="w-3 h-3 inline" />
+              {rankBanner}
+              <Star className="w-3 h-3 inline" />
+            </p>
           )}
 
           <p className="ach-card__body">
-            {isWinner ? t("achievementCards.winnerBody") : isThird ? t("achievementCards.thirdBody") : card.type === CARD_TYPES.RECORD_EQUAL ? t("achievementCards.recordBody") : t("achievementCards.secondBody")}
+            {isWinner
+              ? t("achievementCards.winnerBody")
+              : isThird
+                ? t("achievementCards.thirdBody")
+                : card.type === CARD_TYPES.RECORD_EQUAL
+                  ? t("achievementCards.recordBody")
+                  : t("achievementCards.secondBody")}
           </p>
           <p className="ach-card__body ach-card__body--accent">{pointsLine}</p>
           <p className="ach-card__body">{t("achievementCards.archivedForever")}</p>
 
           <div className="ach-card__footer-box">
-            <div className="ach-card__footer-icon">
-              {isWinner ? <Trophy className="w-8 h-8 text-amber-400" /> : isThird ? <Medal className="w-8 h-8 text-orange-400" /> : <Crown className="w-8 h-8 text-zinc-300" />}
-            </div>
-            <div>
-              <p className="ach-card__footer-title">{rankBanner}</p>
-              <p className="ach-card__footer-track">{card.track}</p>
-              <p className="ach-card__footer-points">50 MY POINTS</p>
-            </div>
-            <div className="ach-card__footer-date">
-              <Calendar className="w-4 h-4" />
-              {card.date?.split(' ').slice(-3).join(' ') || card.date}
+            <p className="ach-card__footer-tab">{t("achievementCards.officialResult")}</p>
+            <div className="ach-card__footer-row">
+              <HofAssetImage
+                src={hofAsset(trophyKey)}
+                alt=""
+                className="ach-card__footer-trophy"
+                fallback={
+                  isWinner ? (
+                    <Trophy className="w-8 h-8 text-amber-400" />
+                  ) : isThird ? (
+                    <Medal className="w-8 h-8 text-orange-400" />
+                  ) : (
+                    <Crown className="w-8 h-8 text-zinc-300" />
+                  )
+                }
+              />
+              <div className="ach-card__footer-copy">
+                <p className="ach-card__footer-title">{rankBanner}</p>
+                <p className="ach-card__footer-track">{card.track}</p>
+                <p className="ach-card__footer-points">{pts} MY POINTS</p>
+              </div>
+              <HofAssetImage
+                src={hofAsset("pointsTicketBadge")}
+                alt=""
+                className="ach-card__footer-badge"
+                fallback={<img src={logoFile()} alt="" className="ach-card__footer-badge" />}
+              />
+              <div className="ach-card__footer-date">
+                <HofAssetImage
+                  src={hofAsset("calendarGold")}
+                  alt=""
+                  className="ach-card__footer-cal"
+                  fallback={<Calendar className="w-4 h-4" />}
+                />
+                {card.date?.split(" ").slice(-3).join(" ") || card.date}
+              </div>
             </div>
           </div>
-
-          <img src={logoFile()} alt="" className="ach-card__logo" />
 
           <p className="ach-card__tagline">
             {isWinner
@@ -127,6 +212,13 @@ export default function AchievementCardModal({ card, onClose, viewOnly = false }
                 ? t("achievementCards.keepGoing")
                 : t("achievementCards.victoryCloser")}
           </p>
+
+          <HofAssetImage
+            src={hofAsset("shieldGoldStar")}
+            alt=""
+            className="ach-card__shield"
+            fallback={<span className="ach-card__shield-fallback" aria-hidden />}
+          />
         </div>
 
         <button type="button" className="ach-card__btn" onClick={onClose}>
