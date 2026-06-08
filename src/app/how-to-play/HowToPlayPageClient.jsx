@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
 import {
   Trophy,
   Target,
@@ -10,36 +10,30 @@ import {
   Crosshair,
   Users,
   HelpCircle,
-  ArrowLeft,
   ChevronRight,
+  ChevronDown,
   Zap,
   Shield,
   Flame,
-  CheckCircle,
+  Star,
 } from "lucide-react";
-import Link from "next/link";
-import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
+import AnimateInView from "@/frontend/components/ui/AnimateInView";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
+import { howToPlayAsset, howToPlayStepAsset } from "@/frontend/lib/config/howToPlayAssets";
+import { ticketWorkflowAsset } from "@/frontend/lib/config/ticketWorkflowAssets";
 
-const stepIcons = [Users, Target, Crosshair, Zap, TrendingUp];
-const stepColors = ["#7c3aed", "#a855f7", "#06b6d4", "#f59e0b", "#10b981"];
-const strategyIcons = [Flame, Crosshair, Shield];
-const strategyRiskColors = ["#ef4444", "#f59e0b", "#10b981"];
-
-const stagger = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.12 } },
-};
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
+const stepIcons = [Users, Target, Crosshair, Star, Trophy];
+const strategyOrbs = [
+  { key: "full", icon: Flame, color: "#ff3131", label: "Full" },
+  { key: "dual", icon: Target, color: "#ffd700", label: "Dual" },
+  { key: "smart", icon: Shield, color: "#39ff14", label: "Smart" },
+];
 
 export default function HowToPlayPageClient() {
   const { t } = useLanguage();
   const searchParams = useSearchParams();
   const section = searchParams.get("section");
+  const [openFaq, setOpenFaq] = useState(null);
 
   useEffect(() => {
     if (section !== "modes" && section !== "faq") return undefined;
@@ -50,214 +44,229 @@ export default function HowToPlayPageClient() {
     return () => window.clearTimeout(timer);
   }, [section]);
 
+  const heroBg = howToPlayAsset("heroBg");
+  const noise = ticketWorkflowAsset("noiseOverlayTile");
+  const ctaIcon = howToPlayAsset("ctaIcon");
+
   const steps = [
     {
       number: 1,
       title: t("howToPlay.step1Title"),
       icon: stepIcons[0],
-      color: stepColors[0],
       description: t("howToPlay.step1Desc"),
-      details: t("howToPlay.step1Details"),
+      visual: howToPlayStepAsset(1),
     },
     {
       number: 2,
       title: t("howToPlay.step2Title"),
       icon: stepIcons[1],
-      color: stepColors[1],
       description: t("howToPlay.step2Desc"),
-      strategies: t("howToPlay.step2Strats").map((s, i) => ({
-        ...s,
-        riskColor: strategyRiskColors[i],
-        icon: strategyIcons[i],
-      })),
+      visual: howToPlayStepAsset(2),
+      strategies: t("howToPlay.step2Strats"),
     },
     {
       number: 3,
       title: t("howToPlay.step3Title"),
       icon: stepIcons[2],
-      color: stepColors[2],
       description: t("howToPlay.step3Desc"),
-      details: t("howToPlay.step3Details"),
+      visual: howToPlayStepAsset(3),
     },
     {
       number: 4,
       title: t("howToPlay.step4Title"),
       icon: stepIcons[3],
-      color: stepColors[3],
       description: t("howToPlay.step4Desc"),
-      formula: {
-        label: t("howToPlay.formulaLabel"),
-        example: t("howToPlay.formulaExample"),
-      },
+      visual: howToPlayStepAsset(4),
     },
     {
       number: 5,
       title: t("howToPlay.step5Title"),
       icon: stepIcons[4],
-      color: stepColors[4],
       description: t("howToPlay.step5Desc"),
-      details: t("howToPlay.step5Details"),
+      visual: howToPlayStepAsset(5),
     },
   ];
 
   const faqs = t("howToPlay.faqs");
 
   return (
-    <>
-        <AppPageHeader title={t("howToPlay.title")} subtitle={t("howToPlay.pageDesc")} />
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          animate="show"
-          className="space-y-8 mb-20"
-        >
-          {steps.map((step) => (
-            <motion.div
-              key={step.number}
-              id={step.number === 2 ? "modes" : undefined}
-              variants={fadeUp}
-            >
-              <StepCard step={step} t={t} />
-            </motion.div>
-          ))}
-        </motion.div>
+    <div className="how-to-play-surface">
+      <div className="how-to-play-surface__ambient" aria-hidden>
+        <div className="how-to-play-surface__fog" />
+        <div className="how-to-play-surface__glow" />
+        {noise ? (
+          <div
+            className="how-to-play-surface__noise"
+            style={{ backgroundImage: `url(${noise})` }}
+          />
+        ) : null}
+      </div>
 
-        {/* FAQ Section */}
-        <motion.div
-          id="faq"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="mb-16"
-        >
-          <div className="text-center mb-10">
-            <h2 className="text-2xl font-bold mb-2">{t("howToPlay.faqTitle")}</h2>
-            <p className="text-sm text-zinc-500">{t("howToPlay.faqSubtitle")}</p>
-          </div>
+      <div className="how-to-play__inner">
+        <AnimateInView>
+          <header className="how-to-play__hero">
+            {heroBg ? (
+              <img src={heroBg} alt="" className="how-to-play__hero-bg" />
+            ) : null}
+            <div className="how-to-play__hero-scrim" aria-hidden />
+            <div className="how-to-play__hero-horses" aria-hidden />
+            <div className="how-to-play__hero-content">
+              <p className="how-to-play__eyebrow">
+                <span className="how-to-play__diamond" aria-hidden />
+                {t("howToPlay.badge")}
+                <span className="how-to-play__diamond" aria-hidden />
+              </p>
+              <h1 className="how-to-play__title">{t("howToPlay.title")}</h1>
+              <p className="how-to-play__lead">{t("howToPlay.pageDesc")}</p>
+            </div>
+          </header>
+        </AnimateInView>
 
-          <div className="space-y-4">
-            {faqs.map((faq, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.7 + 0.1 * i }}
-                className="glass-card rounded-xl p-5"
-              >
-                <h3 className="font-semibold text-white mb-2 flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4 text-purple-light flex-shrink-0" />
-                  {faq.question}
-                </h3>
-                <p className="text-sm text-zinc-400 leading-relaxed pl-6">
-                  {faq.answer}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+        <AnimateInView delay={0.06}>
+          <section className="how-to-play__steps" aria-label={t("howToPlay.stepsAria")}>
+            <ol className="how-to-play__steps-list">
+              {steps.map((step, index) => (
+                <li
+                  key={step.number}
+                  id={step.number === 2 ? "modes" : undefined}
+                  className="how-to-play__steps-item"
+                >
+                  <span className="how-to-play__timeline-node" aria-hidden>
+                    {step.number}
+                  </span>
+                  <StepCard step={step} t={t} delay={0.04 * index} />
+                </li>
+              ))}
+            </ol>
+          </section>
+        </AnimateInView>
 
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.9 }}
-          className="text-center rounded-2xl p-10 bg-gradient-to-br from-purple/15 to-cyan/5 border border-purple/20"
-        >
-          <img src="/images/icons/icon-controller.png" alt="" className="w-14 h-14 object-contain mx-auto mb-4" />
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3">{t("howToPlay.ctaTitle")}</h2>
-          <p className="text-zinc-400 mb-6 max-w-md mx-auto">
-            {t("howToPlay.ctaDesc")}
-          </p>
-          <Link
-            href="/register"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-purple to-purple-light text-white font-semibold text-sm btn-glow transition-all hover:shadow-[0_0_30px_rgba(124,58,237,0.5)]"
-          >
-            {t("howToPlay.ctaButton")}
-            <ChevronRight className="w-4 h-4" />
-          </Link>
-        </motion.div>
-    </>
+        <AnimateInView delay={0.1}>
+          <section id="faq" className="how-to-play__faq" aria-label={t("howToPlay.faqAria")}>
+            <header className="how-to-play__faq-head">
+              <h2 className="how-to-play__faq-title">{t("howToPlay.faqTitle")}</h2>
+              <p className="how-to-play__faq-sub">{t("howToPlay.faqSubtitle")}</p>
+            </header>
+            <div className="how-to-play__faq-grid">
+              {faqs.map((faq, i) => {
+                const isOpen = openFaq === i;
+                return (
+                  <article
+                    key={faq.question}
+                    className={`how-to-play__faq-card${isOpen ? " how-to-play__faq-card--open" : ""}`}
+                  >
+                    <button
+                      type="button"
+                      className="how-to-play__faq-trigger"
+                      aria-expanded={isOpen}
+                      onClick={() => setOpenFaq(isOpen ? null : i)}
+                    >
+                      <span className="how-to-play__faq-badge" aria-hidden>
+                        <HelpCircle className="how-to-play__faq-badge-icon" />
+                      </span>
+                      <span className="how-to-play__faq-trigger-copy">
+                        <span className="how-to-play__faq-q">{faq.question}</span>
+                        {isOpen ? (
+                          <span className="how-to-play__faq-a">{faq.answer}</span>
+                        ) : null}
+                      </span>
+                      <ChevronDown
+                        className={`how-to-play__faq-chevron${isOpen ? " how-to-play__faq-chevron--open" : ""}`}
+                        aria-hidden
+                      />
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        </AnimateInView>
+
+        <AnimateInView delay={0.14}>
+          <section className="how-to-play__cta-bar" aria-label={t("howToPlay.ctaAria")}>
+            <div className="how-to-play__cta-art">
+              {ctaIcon ? (
+                <img src={ctaIcon} alt="" className="how-to-play__cta-art-img" />
+              ) : (
+                <Trophy className="how-to-play__cta-art-fallback" aria-hidden />
+              )}
+            </div>
+            <div className="how-to-play__cta-copy">
+              <h2 className="how-to-play__cta-title">{t("howToPlay.ctaTitle")}</h2>
+              <p className="how-to-play__cta-desc">{t("howToPlay.ctaDesc")}</p>
+            </div>
+            <Link href="/register" className="how-to-play__cta-btn">
+              <span className="how-to-play__cta-btn-shine" aria-hidden />
+              {t("howToPlay.ctaButton")}
+              <ChevronRight className="how-to-play__cta-btn-icon" aria-hidden />
+            </Link>
+          </section>
+        </AnimateInView>
+      </div>
+    </div>
   );
 }
 
-function StepCard({ step, t }) {
+function StepCard({ step, t, delay = 0 }) {
   const Icon = step.icon;
+  const hasBg = Boolean(step.visual);
 
   return (
-    <div className="mis-stats-panel p-6 sm:p-8 relative overflow-hidden">
-      <div className="absolute -top-4 -right-4 text-[120px] font-black text-white/[0.02] select-none leading-none pointer-events-none">
-        {step.number}
-      </div>
-
-      <div className="relative z-10">
-        <div className="flex items-center gap-4 mb-4">
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ backgroundColor: step.color + "18" }}
-          >
-            <Icon className="w-6 h-6" style={{ color: step.color }} />
+    <AnimateInView delay={delay}>
+      <article className={`how-to-play-step${hasBg ? " how-to-play-step--has-bg" : ""}`}>
+        {hasBg ? (
+          <div className="how-to-play-step__bg-wrap" aria-hidden>
+            <img src={step.visual} alt="" className="how-to-play-step__bg how-to-play-step__bg--blur" />
+            <img src={step.visual} alt="" className="how-to-play-step__bg how-to-play-step__bg--sharp" />
           </div>
-          <div>
-            <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-0.5">
-              {t("howToPlay.step")} {step.number}
-            </p>
-            <h3 className="text-xl font-bold text-white">{step.title}</h3>
-          </div>
-        </div>
+        ) : null}
+        <div className="how-to-play-step__scrim" aria-hidden />
+        <div className="how-to-play-step__edge-vignette" aria-hidden />
 
-        <p className="text-sm text-zinc-400 leading-relaxed mb-5">
-          {step.description}
-        </p>
-
-        {step.details && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {step.details.map((detail, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm text-zinc-300">
-                <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                {detail}
+        <div className="how-to-play-step__body">
+          <div className="how-to-play-step__copy">
+            <div className="how-to-play-step__head">
+              <div className="how-to-play-step__icon-stage">
+                <Icon className="how-to-play-step__icon" strokeWidth={1.35} aria-hidden />
               </div>
-            ))}
+              <div className="how-to-play-step__titles">
+                <p className="how-to-play-step__label">
+                  {t("howToPlay.step")} {step.number}
+                </p>
+                <h3 className="how-to-play-step__title">{step.title}</h3>
+              </div>
+            </div>
+            <p className="how-to-play-step__desc">{step.description}</p>
           </div>
-        )}
 
-        {step.strategies && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {step.strategies.map((strategy) => {
-              const SIcon = strategy.icon;
-              return (
-                <div
-                  key={strategy.name}
-                  className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.05] hover:border-purple/20 transition-all"
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <SIcon className="w-5 h-5" style={{ color: strategy.riskColor }} />
-                    <h4 className="font-semibold text-sm text-white">{strategy.name}</h4>
-                  </div>
-                  <p className="text-xs text-zinc-500 mb-3">{strategy.description}</p>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-xs text-zinc-400">{strategy.points}</span>
-                    <span className="text-xs font-medium" style={{ color: strategy.riskColor }}>
-                      {strategy.risk}
-                    </span>
-                    <span className="text-xs text-purple-light">{strategy.multiplier}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {step.formula && (
-          <div className="rounded-xl bg-gradient-to-r from-yellow-500/5 to-yellow-600/[0.02] border border-yellow-500/15 p-5 text-center">
-            <p className="text-sm font-semibold text-yellow-400 mb-2">
-              {step.formula.label}
-            </p>
-            <p className="text-lg font-bold text-white">
-              {step.formula.example}
-            </p>
-          </div>
-        )}
-      </div>
-    </div>
+          {step.number === 2 && step.strategies ? (
+            <div className="how-to-play-step__overlay">
+              <div className="how-to-play-step__orbs">
+                {strategyOrbs.map((orb, i) => {
+                  const strat = step.strategies[i];
+                  const OrbIcon = orb.icon;
+                  return (
+                    <div
+                      key={orb.key}
+                      className={`how-to-play-step__orb how-to-play-step__orb--${orb.key}`}
+                      style={{ "--orb-color": orb.color }}
+                    >
+                      <span className="how-to-play-step__orb-ring" aria-hidden />
+                      <OrbIcon className="how-to-play-step__orb-icon" aria-hidden />
+                      <span className="how-to-play-step__orb-label">{orb.label}</span>
+                      {strat ? (
+                        <span className="how-to-play-step__orb-risk">{strat.risk}</span>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="how-to-play-step__overlay how-to-play-step__overlay--scene" aria-hidden />
+          )}
+        </div>
+      </article>
+    </AnimateInView>
   );
 }

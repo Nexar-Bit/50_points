@@ -770,6 +770,10 @@ export const translations = {
       ctaTitle: "Listo para competir?",
       ctaDesc: "Unete a miles de jugadores y demuestra tu conocimiento en carreras de caballos. Gratis para jugar, siempre.",
       ctaButton: "Crear Cuenta Gratis",
+      ctaExplore: "Explorar sin registro",
+      stepsAria: "Cinco pasos para jugar",
+      faqAria: "Preguntas frecuentes",
+      ctaAria: "Empezar a jugar",
     },
     login: {
       title: "Iniciar Sesion",
@@ -1789,6 +1793,10 @@ export const translations = {
       ctaTitle: "Ready to compete?",
       ctaDesc: "Join thousands of players and prove your horse racing knowledge. Free to play, always.",
       ctaButton: "Create Free Account",
+      ctaExplore: "Explore without signing up",
+      stepsAria: "Five steps to play",
+      faqAria: "Frequently asked questions",
+      ctaAria: "Get started",
     },
     login: {
       title: "Sign In",

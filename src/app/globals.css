@@ -13875,3 +13875,766 @@ body:has(.ticket-landing-surface) {
   font-size: 0.68rem;
   color: #f87171;
 }
+
+/* ——— How to Play — mockup layout (horizontal steps + accordion FAQ + CTA bar) ——— */
+.app-main--how-to-play {
+  width: 100%;
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  overflow-x: clip;
+  background: #05000a;
+}
+
+body:has(.how-to-play-surface) {
+  background-color: #05000a;
+}
+
+.app-main--how-to-play.app-main--immersive .how-to-play__inner {
+  padding-left: max(
+    calc(var(--app-menu-tab-width) + 0.5rem),
+    env(safe-area-inset-left, 0px)
+  );
+  padding-right: max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-right, 0px));
+}
+
+body:has(.floating-menu--expanded) .app-main--how-to-play.app-main--immersive .how-to-play__inner {
+  padding-left: max(clamp(1rem, 3vw, 2rem), env(safe-area-inset-left, 0px));
+}
+
+.how-to-play-surface {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-height: calc(100dvh - 4rem);
+  overflow-x: clip;
+  color: #fafafa;
+  --htp-accent: #bc13fe;
+  --htp-accent-soft: rgba(188, 19, 254, 0.35);
+}
+
+@media (max-width: 767px) {
+  .how-to-play-surface {
+    min-height: calc(100dvh - 4rem - 4rem);
+  }
+}
+
+.how-to-play-surface__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.how-to-play-surface__fog {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(188, 19, 254, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 0% 50%, rgba(188, 19, 254, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 100% 60%, rgba(188, 19, 254, 0.06) 0%, transparent 50%);
+}
+
+.how-to-play-surface__glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(5, 0, 10, 0.4) 45%, #05000a 100%);
+}
+
+.how-to-play-surface__noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-size: 256px 256px;
+  mix-blend-mode: overlay;
+}
+
+.how-to-play__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 96rem;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2.5rem) clamp(2.5rem, 5vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vw, 3rem);
+  box-sizing: border-box;
+}
+
+/* —— Cinematic hero —— */
+.how-to-play__hero {
+  position: relative;
+  width: 100%;
+  min-height: clamp(14rem, 32vw, 22rem);
+  margin: 0 calc(-1 * clamp(1rem, 3vw, 2.5rem));
+  width: calc(100% + 2 * clamp(1rem, 3vw, 2.5rem));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(188, 19, 254, 0.2);
+}
+
+.how-to-play__hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.how-to-play__hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 0, 10, 0.35) 0%,
+    rgba(5, 0, 10, 0.55) 50%,
+    rgba(5, 0, 10, 0.85) 100%
+  );
+}
+
+.how-to-play__hero-horses {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(5, 0, 10, 0.7) 0%, transparent 18%),
+    linear-gradient(270deg, rgba(5, 0, 10, 0.7) 0%, transparent 18%);
+  pointer-events: none;
+}
+
+.how-to-play__hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2rem);
+  max-width: 40rem;
+}
+
+.how-to-play__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  margin: 0 0 0.85rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fafafa;
+  text-shadow: 0 0 20px var(--htp-accent-soft);
+}
+
+.how-to-play__diamond {
+  width: 0.4rem;
+  height: 0.4rem;
+  background: var(--htp-accent);
+  transform: rotate(45deg);
+  box-shadow: 0 0 10px var(--htp-accent);
+  flex-shrink: 0;
+}
+
+.how-to-play__title {
+  margin: 0 0 0.85rem;
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 0 40px rgba(188, 19, 254, 0.35), 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+.how-to-play__lead {
+  margin: 0 auto;
+  max-width: 32rem;
+  font-size: clamp(0.88rem, 1.6vw, 1rem);
+  line-height: 1.65;
+  color: rgba(228, 228, 231, 0.82);
+}
+
+/* —— Steps + timeline —— */
+.how-to-play__steps {
+  width: 100%;
+}
+
+.how-to-play__steps-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.25rem);
+  position: relative;
+}
+
+.how-to-play__steps-list::before {
+  content: "";
+  position: absolute;
+  left: 1.125rem;
+  top: 1.5rem;
+  bottom: 1.5rem;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    var(--htp-accent) 0%,
+    rgba(188, 19, 254, 0.35) 50%,
+    rgba(57, 255, 20, 0.45) 100%
+  );
+  box-shadow: 0 0 14px var(--htp-accent-soft);
+  border-radius: 2px;
+}
+
+.how-to-play__steps-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+.how-to-play__timeline-node {
+  position: relative;
+  z-index: 2;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-top: 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: #fff;
+  background: linear-gradient(135deg, #bc13fe 0%, #7c3aed 100%);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 18px rgba(188, 19, 254, 0.55);
+  flex-shrink: 0;
+}
+
+/* —— Step card — full-bleed bg + edge blur —— */
+.how-to-play-step {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(10rem, 22vw, 13.5rem);
+  border-radius: 16px;
+  border: 1px solid rgba(188, 19, 254, 0.35);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 12px 36px rgba(0, 0, 0, 0.35);
+}
+
+.how-to-play-step--has-bg {
+  background: #05000a;
+}
+
+.how-to-play-step__bg-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.how-to-play-step__bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+.how-to-play-step__bg--blur {
+  left: -5%;
+  top: -5%;
+  width: 110%;
+  height: 110%;
+  filter: blur(12px);
+  opacity: 0.92;
+}
+
+.how-to-play-step__bg--sharp {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: radial-gradient(
+    ellipse 92% 88% at 62% 50%,
+    #000 48%,
+    rgba(0, 0, 0, 0.55) 72%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 92% 88% at 62% 50%,
+    #000 48%,
+    rgba(0, 0, 0, 0.55) 72%,
+    transparent 100%
+  );
+}
+
+.how-to-play-step__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(5, 0, 10, 0.94) 0%,
+    rgba(5, 0, 10, 0.82) 38%,
+    rgba(5, 0, 10, 0.45) 58%,
+    rgba(5, 0, 10, 0.12) 78%,
+    transparent 100%
+  );
+}
+
+.how-to-play-step:not(.how-to-play-step--has-bg) .how-to-play-step__scrim {
+  display: none;
+}
+
+.how-to-play-step__edge-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 28px 8px rgba(5, 0, 10, 0.55),
+    inset 0 0 48px 16px rgba(5, 0, 10, 0.35);
+}
+
+.how-to-play-step:not(.how-to-play-step--has-bg) .how-to-play-step__edge-vignette {
+  display: none;
+}
+
+.how-to-play-step__body {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: center;
+  min-height: inherit;
+  padding: clamp(1rem, 2vw, 1.35rem) clamp(1rem, 2vw, 1.25rem);
+}
+
+@media (min-width: 768px) {
+  .how-to-play-step {
+    min-height: clamp(11rem, 16vw, 14rem);
+  }
+
+  .how-to-play-step__body {
+    grid-template-columns: minmax(0, 1fr) minmax(9rem, 42%);
+    gap: 1.25rem;
+    padding: 1.2rem 1.35rem;
+  }
+}
+
+.how-to-play-step__copy {
+  min-width: 0;
+  max-width: 36rem;
+}
+
+.how-to-play-step__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.how-to-play-step__icon-stage {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(188, 19, 254, 0.15);
+  border: 1px solid rgba(188, 19, 254, 0.35);
+  box-shadow: 0 0 16px rgba(188, 19, 254, 0.2);
+  flex-shrink: 0;
+}
+
+.how-to-play-step__icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #d8b4fe;
+}
+
+.how-to-play-step__label {
+  margin: 0 0 0.15rem;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(188, 19, 254, 0.9);
+}
+
+.how-to-play-step__title {
+  margin: 0;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fafafa;
+  line-height: 1.25;
+}
+
+.how-to-play-step__desc {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.58;
+  color: rgba(212, 212, 216, 0.9);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
+}
+
+.how-to-play-step__title,
+.how-to-play-step__label {
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
+}
+
+.how-to-play-step__overlay {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 6.5rem;
+}
+
+.how-to-play-step__overlay--scene {
+  min-height: 5rem;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .how-to-play-step__overlay--scene {
+    min-height: 8rem;
+  }
+}
+
+/* Step 2 — strategy orbs */
+.how-to-play-step__orbs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  padding: 0.35rem;
+}
+
+.how-to-play-step__orb {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  width: clamp(4.5rem, 12vw, 5.5rem);
+  height: clamp(4.5rem, 12vw, 5.5rem);
+  border-radius: 50%;
+  border: 2px solid var(--orb-color, #bc13fe);
+  background: rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--orb-color) 40%, transparent);
+}
+
+.how-to-play-step__orb-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--orb-color) 50%, transparent);
+  opacity: 0.6;
+}
+
+.how-to-play-step__orb-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--orb-color);
+}
+
+.how-to-play-step__orb-label {
+  font-size: 0.55rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fafafa;
+}
+
+.how-to-play-step__orb-risk {
+  font-size: 0.48rem;
+  font-weight: 600;
+  color: rgba(212, 212, 216, 0.75);
+  text-align: center;
+  line-height: 1.2;
+  max-width: 90%;
+}
+
+/* —— FAQ accordion grid —— */
+.how-to-play__faq {
+  width: 100%;
+}
+
+.how-to-play__faq-head {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.how-to-play__faq-title {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fafafa;
+}
+
+.how-to-play__faq-sub {
+  margin: 0;
+  font-size: 0.82rem;
+  color: rgba(161, 161, 170, 0.95);
+}
+
+.how-to-play__faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+
+@media (min-width: 768px) {
+  .how-to-play__faq-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+.how-to-play__faq-card {
+  border-radius: 14px;
+  border: 1px solid rgba(188, 19, 254, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.how-to-play__faq-card--open {
+  border-color: rgba(188, 19, 254, 0.5);
+  box-shadow: 0 0 24px rgba(188, 19, 254, 0.12);
+}
+
+.how-to-play__faq-trigger {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.65rem;
+  align-items: start;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+}
+
+.how-to-play__faq-badge {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(188, 19, 254, 0.2);
+  border: 1px solid rgba(188, 19, 254, 0.45);
+  flex-shrink: 0;
+}
+
+.how-to-play__faq-badge-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  color: #d8b4fe;
+}
+
+.how-to-play__faq-trigger-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.how-to-play__faq-q {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #f4f4f5;
+  line-height: 1.35;
+}
+
+.how-to-play__faq-a {
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: rgba(161, 161, 170, 0.95);
+}
+
+.how-to-play__faq-chevron {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--htp-accent);
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  transition: transform 0.22s ease;
+}
+
+.how-to-play__faq-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* —— Horizontal CTA bar —— */
+.how-to-play__cta-bar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.25rem, 3vw, 1.75rem);
+  align-items: center;
+  width: 100%;
+  min-height: clamp(8rem, 18vw, 10.5rem);
+  padding: clamp(1.75rem, 4vw, 2.75rem) clamp(1.5rem, 4vw, 3rem);
+  border-radius: 22px;
+  border: 1px solid rgba(188, 19, 254, 0.4);
+  background: linear-gradient(
+    135deg,
+    rgba(188, 19, 254, 0.14) 0%,
+    rgba(0, 0, 0, 0.48) 55%,
+    rgba(0, 0, 0, 0.58) 100%
+  );
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 0 48px rgba(188, 19, 254, 0.18),
+    0 20px 48px rgba(0, 0, 0, 0.35);
+}
+
+@media (min-width: 900px) {
+  .how-to-play__cta-bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: clamp(1.75rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3rem);
+    min-height: 9.5rem;
+  }
+}
+
+.how-to-play__cta-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.how-to-play__cta-art-img {
+  width: clamp(5.5rem, 14vw, 8rem);
+  height: clamp(5.5rem, 14vw, 8rem);
+  object-fit: contain;
+  filter: drop-shadow(0 0 28px rgba(188, 19, 254, 0.55));
+}
+
+.how-to-play__cta-art-fallback {
+  width: clamp(4.5rem, 12vw, 6.5rem);
+  height: clamp(4.5rem, 12vw, 6.5rem);
+  color: #d8b4fe;
+  filter: drop-shadow(0 0 24px rgba(188, 19, 254, 0.5));
+}
+
+.how-to-play__cta-copy {
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .how-to-play__cta-copy {
+    text-align: left;
+  }
+}
+
+.how-to-play__cta-title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.35rem, 3.5vw, 2rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.15;
+  color: #fafafa;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
+}
+
+.how-to-play__cta-desc {
+  margin: 0;
+  font-size: clamp(0.9rem, 1.8vw, 1.08rem);
+  line-height: 1.6;
+  color: rgba(212, 212, 216, 0.9);
+  max-width: 34rem;
+}
+
+.how-to-play__cta-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: clamp(1.05rem, 2vw, 1.25rem) clamp(1.85rem, 3.5vw, 2.5rem);
+  border-radius: 14px;
+  font-size: clamp(0.72rem, 1.4vw, 0.82rem);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #bc13fe 0%, #8b2cff 50%, #6d28d9 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+    0 0 48px rgba(188, 19, 254, 0.5),
+    0 14px 36px rgba(109, 40, 217, 0.4);
+  overflow: hidden;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  flex-shrink: 0;
+}
+
+.how-to-play__cta-btn svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.how-to-play__cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14) inset,
+    0 0 48px rgba(188, 19, 254, 0.55),
+    0 14px 36px rgba(109, 40, 217, 0.4);
+}
+
+.how-to-play__cta-btn-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.2) 48%,
+    transparent 58%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.55s ease;
+  pointer-events: none;
+}
+
+.how-to-play__cta-btn:hover .how-to-play__cta-btn-shine {
+  transform: translateX(120%);
+}
+
+@media (max-width: 767px) {
+  .how-to-play__steps-list::before {
+    left: 1.125rem;
+  }
+
+  .how-to-play-step__orbs {
+    flex-wrap: wrap;
+  }
+}

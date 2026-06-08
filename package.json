@@ -7,7 +7,8 @@
     "build": "node scripts/next-cli.mjs build",
     "start": "node scripts/next-cli.mjs start",
     "lint": "node scripts/next-cli.mjs lint",
-    "verify:ticket-workflow-assets": "node scripts/verify-ticket-workflow-assets.mjs"
+    "verify:ticket-workflow-assets": "node scripts/verify-ticket-workflow-assets.mjs",
+    "verify:how-to-play-assets": "node scripts/verify-how-to-play-assets.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.40.0",
