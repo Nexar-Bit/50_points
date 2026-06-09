@@ -42,14 +42,11 @@ function getStepBullets(step, t) {
 function LiveTournamentCardSkeleton() {
   return (
     <div
-      className="live-tournament-card live-tournament-card--upcoming live-tournament-card--cover animate-pulse pointer-events-none"
+      className="live-tournament-card live-tournament-card--upcoming live-tournament-card--cover live-tournament-card--preview animate-pulse pointer-events-none"
       aria-hidden
     >
       <div className="live-tournament-card__shell">
-        <div className="h-40 bg-white/5" />
-        <div className="p-4">
-          <div className="h-10 w-full bg-white/5 rounded-full" />
-        </div>
+        <div className="h-full min-h-[12rem] bg-white/5" />
       </div>
     </div>
   );
@@ -185,19 +182,6 @@ export default function HomePageClient({ initialTournaments = [] }) {
                 </AnimateInView>
               ))
             )}
-          </div>
-
-          <p className="mt-6 text-center text-sm text-zinc-500 max-w-xl mx-auto">
-            {t("tournamentsSection.homeAccessHint")}
-          </p>
-          <div className="mt-4 flex justify-center">
-            <Link
-              href="/comenzar"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-purple to-purple-light btn-glow"
-            >
-              {isAuthenticated ? t("tournamentsSection.goToGameModes") : t("tournamentsSection.chooseHowToPlay")}
-              <ChevronRight className="w-4 h-4" aria-hidden />
-            </Link>
           </div>
         </div>
       </section>

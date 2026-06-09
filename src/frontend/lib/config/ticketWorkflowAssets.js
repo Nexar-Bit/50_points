@@ -88,11 +88,12 @@ export function overviewSlotAsset(state) {
 export const COMENZAR_STEP_VISUAL_KEYS = [
   "comenzarStep1Mode",
   "comenzarStep2Track",
+  "onboardBenefitTickets",
   "comenzarStep3Tickets",
   "comenzarStep4Finish",
 ];
 
-/** Full-bleed journey card background (1–4) for /comenzar. */
+/** Full-bleed journey card background (1–5) for /comenzar and /inicio. */
 export function comenzarStepVisualAsset(stepNum) {
   const key = COMENZAR_STEP_VISUAL_KEYS[stepNum - 1];
   return key ? ticketWorkflowAsset(key) : "";

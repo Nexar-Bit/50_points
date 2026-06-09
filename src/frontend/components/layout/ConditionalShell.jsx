@@ -21,6 +21,10 @@ function isComenzarPath(pathname) {
   return pathname === "/comenzar";
 }
 
+function isInicioPath(pathname) {
+  return pathname === "/inicio";
+}
+
 function isWorkflowTracksPath(pathname) {
   return /^\/modalidades\/(guest|free)\/?$/.test(pathname);
 }
@@ -49,11 +53,12 @@ export default function ConditionalShell({ children }) {
   const onHome = isHomePath(pathname);
   const onAuth = isAuthPath(pathname);
   const onComenzar = isComenzarPath(pathname);
+  const onInicio = isInicioPath(pathname);
   const onWorkflowTracks = isWorkflowTracksPath(pathname);
   const onHowToPlay = isHowToPlayPath(pathname);
   const hideChrome = isChromelessPath(pathname);
   const immersiveBg = isImmersiveBgPath(pathname);
-  const skipSurface = hideChrome || onAuth || onComenzar || onHowToPlay;
+  const skipSurface = hideChrome || onAuth || onComenzar || onHowToPlay || onInicio;
 
   if (loading) {
     return <main className="min-h-screen">{children}</main>;
@@ -76,8 +81,10 @@ export default function ConditionalShell({ children }) {
               ? "min-h-screen"
               : onAuth
                 ? "app-main app-main--auth min-h-screen"
-                : onComenzar
-                  ? "app-main app-main--with-menu app-main--immersive app-main--comenzar min-h-screen"
+                : onComenzar || onInicio
+                  ? `app-main app-main--with-menu app-main--immersive ${
+                      onInicio ? "app-main--inicio" : "app-main--comenzar"
+                    } min-h-screen`
                   : onWorkflowTracks
                     ? "app-main app-main--with-menu app-main--immersive app-main--workflow-tracks min-h-screen"
                     : onHowToPlay

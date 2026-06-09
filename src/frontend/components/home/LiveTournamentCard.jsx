@@ -23,10 +23,6 @@ export default function LiveTournamentCard({
     .filter(Boolean)
     .join(" ");
 
-  const ctaLabel = previewOnly
-    ? t("tournamentsSection.chooseGameMode")
-    : t("tournamentsSection.enterTournament");
-
   const shell = (
     <div className="live-tournament-card__shell">
       <div className="live-tournament-card__gloss" aria-hidden />
@@ -45,14 +41,14 @@ export default function LiveTournamentCard({
         </div>
       </div>
 
-      <div className="live-tournament-card__body live-tournament-card__body--cover">
-        <span className="live-tournament-card__cta">
-          {ctaLabel}
-          {!previewOnly ? (
+      {!previewOnly ? (
+        <div className="live-tournament-card__body live-tournament-card__body--cover">
+          <span className="live-tournament-card__cta">
+            {t("tournamentsSection.enterTournament")}
             <ChevronRight className="live-tournament-card__cta-icon" aria-hidden />
-          ) : null}
-        </span>
-      </div>
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 

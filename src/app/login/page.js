@@ -24,7 +24,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(identifier.trim(), password);
-      router.push("/modalidades/paid");
+      router.push("/inicio");
     } catch (err) {
       setError(err.message || t("auth.loginFailed"));
     } finally {
@@ -37,7 +37,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await playAsGuest();
-      router.push("/modalidades/guest");
+      router.push("/inicio");
     } catch (err) {
       setError(err.message);
     } finally {

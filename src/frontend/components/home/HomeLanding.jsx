@@ -2,7 +2,6 @@
 
 import { useId } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Caveat } from "next/font/google";
 import { UserPlus, Play, LogIn, Trophy } from "lucide-react";
 import { persistModality } from "@/frontend/lib/gameModalities";
@@ -173,23 +172,12 @@ function MyFiftyPointsBrand({ tagline }) {
   );
 }
 
-function HeroCtaPanel({ t, onGuestEnter }) {
+function HeroCtaPanel({ t }) {
   return (
     <div className="hero-cta-panel">
       <div className="hero-cta-panel__buttons">
         <Link
-          href="/comenzar"
-          className="hero-cta-btn hero-cta-btn--primary group"
-        >
-          <span className="hero-cta-btn__main">
-            <Play className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
-            <span className="hero-cta-btn__label">{t("ticketWorkflow.landingCtaModes")}</span>
-          </span>
-          <span className="hero-cta-btn__sub">{t("ticketWorkflow.landingLead")}</span>
-        </Link>
-
-        <Link
-          href="/login"
+          href="/modalidades#hub-paid"
           className="hero-cta-btn hero-cta-btn--purple group"
           onClick={() => persistModality("paid")}
         >
@@ -201,7 +189,7 @@ function HeroCtaPanel({ t, onGuestEnter }) {
         </Link>
 
         <Link
-          href="/register"
+          href="/modalidades#hub-free"
           className="hero-cta-btn hero-cta-btn--cyan group"
           onClick={() => persistModality("free")}
         >
@@ -213,7 +201,7 @@ function HeroCtaPanel({ t, onGuestEnter }) {
         </Link>
 
         <Link
-          href="/modalidades/special"
+          href="/modalidades#hub-paid"
           className="hero-cta-btn hero-cta-btn--gold group"
           onClick={() => persistModality("special")}
         >
@@ -224,17 +212,17 @@ function HeroCtaPanel({ t, onGuestEnter }) {
           <span className="hero-cta-btn__sub">{t("hero.specialTournamentSub")}</span>
         </Link>
 
-        <button
-          type="button"
-          onClick={onGuestEnter}
+        <Link
+          href="/modalidades#hub-free"
           className="hero-cta-btn hero-cta-btn--guest group"
+          onClick={() => persistModality("guest")}
         >
           <span className="hero-cta-btn__main">
             <Play className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
             <span className="hero-cta-btn__label">{t("hero.enter")}</span>
           </span>
           <span className="hero-cta-btn__sub">{t("hero.enterSub")}</span>
-        </button>
+        </Link>
       </div>
 
       <p className="hero-cta-panel__slogan">
@@ -380,11 +368,6 @@ function HeroStatsNav() {
 
 export default function HomeLanding() {
   const { t } = useLanguage();
-  const router = useRouter();
-
-  const handleGuestEnter = () => {
-    router.push("/comenzar");
-  };
 
   const mainBg = staticFile("/Img/Main_bg.png");
 
@@ -445,7 +428,7 @@ export default function HomeLanding() {
         {/* REGISTER / ENTER + slogan — horizontal center, same vertical band */}
         <AnimateInView delay={0.2}>
           <div id="hero-cta" className="hero-cta-panel-wrap">
-            <HeroCtaPanel t={t} onGuestEnter={handleGuestEnter} />
+            <HeroCtaPanel t={t} />
           </div>
         </AnimateInView>
 

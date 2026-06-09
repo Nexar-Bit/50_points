@@ -11,7 +11,7 @@ import ModalityPageShell from "@/frontend/components/modalities/ModalityPageShel
 import TracksWorkflowList from "@/frontend/components/modalities/TracksWorkflowList";
 import { getTournamentImageUrl } from "@/frontend/lib/tournamentImages";
 
-function buildTracks(tournaments) {
+export function buildTracksFromTournaments(tournaments) {
   const map = new Map();
   for (const tourn of tournaments) {
     const track =
@@ -54,7 +54,7 @@ export default function ModalityTracksList({ modalityId }) {
     onLoadingChange: setLoading,
   });
 
-  const tracks = useMemo(() => buildTracks(tournaments), [tournaments]);
+  const tracks = useMemo(() => buildTracksFromTournaments(tournaments), [tournaments]);
 
   if (!mod.available) {
     return (

@@ -20,16 +20,19 @@ export default function TrackTicketsPanel({
   activeNum = 1,
   onActiveNumChange,
   onPlayTicket,
+  inline = false,
+  onOpenRaces,
 }) {
   const { t } = useLanguage();
   const mod = getModality(modalityId);
   const returnPath = buildModalityReturnPath(modalityId, trackSlug);
 
-  const activeUsed = isTrackTicketUsed(trackSlug, activeNum);
+  const displayNum = activeNum > 0 ? activeNum : 1;
+  const activeUsed = isTrackTicketUsed(trackSlug, displayNum);
   const viewHref = buildTournamentEntryHref({
     tournamentSlug,
     modalityId,
-    ticketNum: activeNum,
+    ticketNum: displayNum,
     trackSlug,
     returnPath,
     playFirst: false,
@@ -37,15 +40,31 @@ export default function TrackTicketsPanel({
   const playHref = buildTournamentEntryHref({
     tournamentSlug,
     modalityId,
-    ticketNum: activeNum,
+    ticketNum: displayNum,
     trackSlug,
     returnPath,
     playFirst: true,
   });
 
+  const openRaces = () => {
+    if (inline) {
+      onOpenRaces?.();
+      return;
+    }
+    onPlayTicket?.(displayNum, false);
+  };
+
+  const playFirstRace = () => {
+    if (inline) {
+      onOpenRaces?.();
+      return;
+    }
+    onPlayTicket?.(displayNum, true);
+  };
+
   return (
     <div
-      className="track-tickets-panel"
+      className={`track-tickets-panel${inline ? " track-tickets-panel--inline" : ""}`}
       style={{ "--modality-accent": mod.accent }}
       key={`${usageVersion}-${trackSlug}`}
     >
@@ -60,7 +79,7 @@ export default function TrackTicketsPanel({
       <div className="track-tickets-tabs" role="tablist" aria-label={t("gameModalities.yourTickets")}>
         {TICKET_NUMS.map((num) => {
           const used = isTrackTicketUsed(trackSlug, num);
-          const isActive = activeNum === num;
+          const isActive = activeNum > 0 && activeNum === num;
           return (
             <button
               key={num}
@@ -93,21 +112,23 @@ export default function TrackTicketsPanel({
         })}
       </div>
 
-      <div
-        id={`track-ticket-panel-${trackSlug}-${activeNum}`}
-        role="tabpanel"
-        aria-labelledby={`track-ticket-tab-${trackSlug}-${activeNum}`}
-        className="track-tickets-panel__active"
-      >
-        <FreeTicketCard
-          num={activeNum}
-          used={activeUsed}
-          playHref={playHref}
-          staticStub
-          onViewTicket={() => onPlayTicket?.(activeNum, false)}
-          onPlay={() => onPlayTicket?.(activeNum, true)}
-        />
-      </div>
+      {activeNum > 0 ? (
+        <div
+          id={`track-ticket-panel-${trackSlug}-${activeNum}`}
+          role="tabpanel"
+          aria-labelledby={`track-ticket-tab-${trackSlug}-${activeNum}`}
+          className="track-tickets-panel__active"
+        >
+          <FreeTicketCard
+            num={activeNum}
+            used={activeUsed}
+            playHref={inline ? undefined : playHref}
+            staticStub
+            onViewTicket={openRaces}
+            onPlay={playFirstRace}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
