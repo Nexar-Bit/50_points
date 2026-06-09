@@ -159,9 +159,8 @@ export default function FloatingMenuBar() {
   const isActive = (item) => {
     switch (item.id) {
       case "home":
-        return pathname === "/" || pathname === "";
       case "mainPage":
-        return pathname === "/inicio";
+        return pathname === "/inicio" || pathname === "/" || pathname === "";
       case "profile":
         return isProfilePath(pathname) && !section;
       case "tickets":

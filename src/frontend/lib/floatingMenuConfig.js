@@ -8,7 +8,7 @@ export const FLOATING_MENU_BLOCKS = [
     id: "player",
     labelKey: "floatingMenu.blockPlayer",
     items: [
-      { id: "home", href: "/", labelKey: "floatingMenu.home", skipModality: true },
+      { id: "home", href: "/inicio", labelKey: "floatingMenu.home", skipModality: true },
       { id: "profile", href: "/profile", labelKey: "floatingMenu.profile" },
       { id: "mainPage", href: "/inicio", labelKey: "floatingMenu.mainPage" },
     ],
