@@ -172,6 +172,18 @@ function MyFiftyPointsBrand({ tagline }) {
   );
 }
 
+function HeroModeHeader({ t }) {
+  return (
+    <header className="hero-mode-header" aria-label={t("ticketWorkflow.landingCtaModes")}>
+      <div className="hero-mode-header__main">
+        <Play className="hero-mode-header__icon" strokeWidth={2} aria-hidden />
+        <span className="hero-mode-header__label">{t("ticketWorkflow.landingCtaModes")}</span>
+      </div>
+      <p className="hero-mode-header__lead">{t("ticketWorkflow.landingLead")}</p>
+    </header>
+  );
+}
+
 function HeroCtaPanel({ t }) {
   return (
     <div className="hero-cta-panel">
@@ -390,6 +402,10 @@ export default function HomeLanding() {
             </div>
             <LanguageToggle className="justify-self-end" />
           </div>
+        </AnimateInView>
+
+        <AnimateInView delay={0.05}>
+          <HeroModeHeader t={t} />
         </AnimateInView>
 
         {/* Strategy points — FULL / DUAL / SMART (image left, text right) */}

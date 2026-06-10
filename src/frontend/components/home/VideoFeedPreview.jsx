@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { ChevronDown, ChevronUp, Play } from "lucide-react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { ChevronDown, ChevronUp, Play, Pause } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
+import { getFeedVideos } from "@/frontend/lib/config/feedVideos";
 
 const SEGMENTS = [
   { id: "hot", labelEs: "Jugadores Hot", labelEn: "Hot Players" },
@@ -11,25 +11,88 @@ const SEGMENTS = [
   { id: "trending", labelEs: "Tendencias", labelEn: "Trending" },
 ];
 
-const PLACEHOLDER_CLIPS = [
-  { id: 1, title: "Remontada +12", track: "Gulfstream" },
-  { id: 2, title: "Full Point ganador", track: "Santa Anita" },
-  { id: 3, title: "Nuevo lider HOT", track: "Churchill Downs" },
-];
+function FeedVideoCard({ clip, isEn, isPlaying, onTogglePlay }) {
+  const videoRef = useRef(null);
+
+  const handleToggle = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      onTogglePlay(clip.id, video);
+    } else {
+      video.pause();
+      onTogglePlay(null, null);
+    }
+  };
+
+  return (
+    <article className="feed-video-card snap-start shrink-0 w-36 sm:w-44">
+      <button
+        type="button"
+        className="feed-video-card__frame"
+        onClick={handleToggle}
+        aria-label={isEn ? `Play ${clip.titleEn}` : `Reproducir ${clip.titleEs}`}
+      >
+        <video
+          ref={videoRef}
+          className="feed-video-card__video"
+          src={clip.src}
+          muted
+          playsInline
+          loop
+          preload="metadata"
+        />
+        <span className="feed-video-card__shade" aria-hidden />
+        <span className="feed-video-card__play" aria-hidden>
+          {isPlaying ? (
+            <Pause className="w-7 h-7 text-white" strokeWidth={2} />
+          ) : (
+            <Play className="w-7 h-7 text-white" strokeWidth={2} />
+          )}
+        </span>
+      </button>
+      <p className="feed-video-card__title">{isEn ? clip.titleEn : clip.titleEs}</p>
+      <p className="feed-video-card__track">{clip.track}</p>
+    </article>
+  );
+}
 
 export default function VideoFeedPreview() {
   const { language } = useLanguage();
   const isEn = language === "en";
   const [expanded, setExpanded] = useState(false);
   const [closedSegments, setClosedSegments] = useState([]);
+  const [playingId, setPlayingId] = useState(null);
+  const activeVideoRef = useRef(null);
+
+  const allClips = useMemo(() => getFeedVideos(), []);
 
   const activeSegment = SEGMENTS.find((s) => !closedSegments.includes(s.id)) || SEGMENTS[0];
-  const label = isEn
-    ? activeSegment.labelEn
-    : activeSegment.labelEs;
+  const label = isEn ? activeSegment.labelEn : activeSegment.labelEs;
+
+  const visibleClips = useMemo(() => {
+    const openSegmentIds = SEGMENTS.map((s) => s.id).filter((id) => !closedSegments.includes(id));
+    const segments = openSegmentIds.length ? openSegmentIds : [SEGMENTS[0].id];
+    return allClips.filter((clip) => segments.includes(clip.segment));
+  }, [allClips, closedSegments]);
+
+  const handleTogglePlay = useCallback((id, videoEl) => {
+    if (activeVideoRef.current && activeVideoRef.current !== videoEl) {
+      activeVideoRef.current.pause();
+      activeVideoRef.current.currentTime = 0;
+    }
+    if (id && videoEl) {
+      videoEl.play().catch(() => {});
+      activeVideoRef.current = videoEl;
+      setPlayingId(id);
+    } else {
+      activeVideoRef.current = null;
+      setPlayingId(null);
+    }
+  }, []);
 
   return (
-    <section className="mt-12 sm:mt-16">
+    <section className="mt-12 sm:mt-16 feed-preview">
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
@@ -56,13 +119,14 @@ export default function VideoFeedPreview() {
             {SEGMENTS.map((seg) => {
               const closed = closedSegments.includes(seg.id);
               const segLabel = isEn ? seg.labelEn : seg.labelEs;
+              const count = allClips.filter((c) => c.segment === seg.id).length;
               return (
                 <button
                   key={seg.id}
                   type="button"
                   onClick={() =>
                     setClosedSegments((prev) =>
-                      closed ? prev.filter((id) => id !== seg.id) : [...prev, seg.id]
+                      closed ? prev.filter((id) => id !== seg.id) : [...prev, seg.id],
                     )
                   }
                   className={`px-3 py-1 rounded-full text-xs font-semibold border ${
@@ -71,31 +135,35 @@ export default function VideoFeedPreview() {
                       : "border-purple/40 text-purple-light bg-purple/10"
                   }`}
                 >
-                  {segLabel} {closed ? "×" : ""}
+                  {segLabel} ({count}) {closed ? "×" : ""}
                 </button>
               );
             })}
           </div>
 
           <p className="text-xs text-zinc-500 mb-3">{label}</p>
-          <div className="flex gap-3 overflow-x-auto pb-2 snap-x">
-            {PLACEHOLDER_CLIPS.map((clip) => (
-              <div
-                key={clip.id}
-                className="snap-start shrink-0 w-36 sm:w-44 aspect-[9/16] rounded-xl border border-white/10 bg-gradient-to-b from-purple/20 to-brand-dark flex flex-col items-center justify-center p-3 text-center"
-              >
-                <Play className="w-8 h-8 text-white/50 mb-2" />
-                <p className="text-xs font-bold text-white">{clip.title}</p>
-                <p className="text-[10px] text-zinc-500 mt-1">{clip.track}</p>
-              </div>
-            ))}
-          </div>
-          <Link
-            href="/leaderboard"
-            className="inline-block mt-3 text-xs text-purple-light hover:underline"
-          >
-            {isEn ? "See full feed soon" : "Ver feed completo pronto"}
-          </Link>
+          {visibleClips.length === 0 ? (
+            <p className="text-sm text-zinc-500 py-6 text-center">
+              {isEn ? "Enable a category to see clips." : "Activa una categoria para ver clips."}
+            </p>
+          ) : (
+            <div className="feed-preview__rail">
+              {visibleClips.map((clip) => (
+                <FeedVideoCard
+                  key={clip.id}
+                  clip={clip}
+                  isEn={isEn}
+                  isPlaying={playingId === clip.id}
+                  onTogglePlay={handleTogglePlay}
+                />
+              ))}
+            </div>
+          )}
+          <p className="mt-3 text-[11px] text-zinc-600">
+            {isEn
+              ? `${allClips.length} clips from the community feed`
+              : `${allClips.length} clips del feed de la comunidad`}
+          </p>
         </div>
       ) : null}
     </section>

@@ -1,11 +1,11 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronRight, Newspaper, Trophy, Activity, MessageCircle, Ticket, Flag } from "lucide-react";
 import AnimateInView from "@/frontend/components/ui/AnimateInView";
 import TicketWorkflowJourney from "@/frontend/components/onboarding/TicketWorkflowJourney";
-import ComenzarTracksAccess from "@/frontend/components/onboarding/ComenzarTracksAccess";
+import ModalityHubBoard from "@/frontend/components/modalities/ModalityHubBoard";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import { withModalityQuery } from "@/frontend/lib/gameModalities";
@@ -95,9 +95,11 @@ export default function PlayerHubPageClient() {
           <TicketWorkflowJourney />
 
           <AnimateInView delay={0.1}>
-            <Suspense fallback={null}>
-              <ComenzarTracksAccess />
-            </Suspense>
+            <ModalityHubBoard
+              showHow={false}
+              titleAs="h2"
+              className="modality-hub-board--player-hub"
+            />
           </AnimateInView>
         </div>
       </div>

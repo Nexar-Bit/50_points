@@ -1,6 +1,33 @@
-import { redirect } from "next/navigation";
+import HomePageClient from "./HomePageClient";
+import { mapTournamentForHomeCard } from "@/frontend/lib/api/mappers";
 
-/** Homepage always lands on the main player hub (journey + modes + tracks). */
-export default function Home() {
-  redirect("/inicio");
+export const revalidate = 30;
+
+const PRODUCTION_API = "https://five0-points-backend.onrender.com";
+
+async function fetchHomeTournaments() {
+  const base = (
+    process.env.API_BACKEND_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    PRODUCTION_API
+  ).replace(/\/$/, "");
+
+  try {
+    const res = await fetch(`${base}/api/tournaments?for_home=1`, {
+      next: { revalidate: 30 },
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data.tournaments) ? data.tournaments : [];
+  } catch {
+    return [];
+  }
+}
+
+export default async function Home() {
+  const raw = await fetchHomeTournaments();
+  const initialTournaments = raw.map(mapTournamentForHomeCard);
+
+  return <HomePageClient initialTournaments={initialTournaments} />;
 }
