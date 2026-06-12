@@ -4,6 +4,8 @@ import { useSearchParams } from "next/navigation";
 import ModalityPageShell from "@/frontend/components/modalities/ModalityPageShell";
 import ModalitySimpleTabs from "@/frontend/components/modalities/ModalitySimpleTabs";
 import TracksWorkflowAccordion from "@/frontend/components/modalities/TracksWorkflowAccordion";
+import TracksWorkflowTicketsBridge from "@/frontend/components/modalities/TracksWorkflowTicketsBridge";
+import { useTracksWorkflowState } from "@/frontend/lib/hooks/useTracksWorkflowState";
 import { ticketWorkflowAsset } from "@/frontend/lib/config/ticketWorkflowAssets";
 
 export default function TracksWorkflowList({ modalityId, mod, tracks, loading, t, embedded = false }) {
@@ -14,6 +16,8 @@ export default function TracksWorkflowList({ modalityId, mod, tracks, loading, t
   const noise = ticketWorkflowAsset("noiseOverlayTile");
   const pageBg = ticketWorkflowAsset("tracksWorkflowBg");
   const mainPanelBg = ticketWorkflowAsset("tracksWorkflowMainPanelBg");
+  const bannerBg = ticketWorkflowAsset("workflowBannerBg");
+  const workflow = useTracksWorkflowState(expandFromUrl, ticketFromUrl);
 
   const surfaceClass = `tracks-workflow-surface${
     embedded ? " tracks-workflow-surface--embedded" : ""
@@ -24,7 +28,7 @@ export default function TracksWorkflowList({ modalityId, mod, tracks, loading, t
 
   return (
     <ModalityPageShell modalityId={modalityId} className={shellClass}>
-      <div className={surfaceClass}>
+      <div className={surfaceClass} data-modality={modalityId}>
         <div className="tracks-workflow-surface__ambient" aria-hidden>
           {pageBg ? (
             <img src={pageBg} alt="" className="tracks-workflow-surface__hero-bg" />
@@ -41,7 +45,10 @@ export default function TracksWorkflowList({ modalityId, mod, tracks, loading, t
         </div>
 
         <div className="tracks-workflow__inner">
-          <header className="tracks-workflow-banner">
+          <header
+            className="tracks-workflow-banner"
+            style={bannerBg ? { "--workflow-banner-bg": `url(${bannerBg})` } : undefined}
+          >
             <div className="tracks-workflow-banner__badge" aria-hidden>
               <img
                 src={ticketWorkflowAsset("workflowBannerIcon")}
@@ -55,6 +62,12 @@ export default function TracksWorkflowList({ modalityId, mod, tracks, loading, t
               <p className="tracks-workflow-banner__body">{t("ticketWorkflow.bannerBody")}</p>
             </div>
           </header>
+
+          <TracksWorkflowTicketsBridge
+            tracks={tracks}
+            workflow={workflow}
+            loading={loading}
+          />
 
           <div className="tracks-workflow__grid tracks-workflow__grid--stacked">
             <div className="tracks-workflow__main tracks-workflow__main--full">
@@ -79,8 +92,7 @@ export default function TracksWorkflowList({ modalityId, mod, tracks, loading, t
                   modalityId={modalityId}
                   loading={loading}
                   t={t}
-                  initialTrackSlug={expandFromUrl}
-                  initialTicketNum={ticketFromUrl}
+                  workflow={workflow}
                 />
               </div>
             </div>

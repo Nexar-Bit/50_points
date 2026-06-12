@@ -6,6 +6,7 @@ const TICKET_WORKFLOW = "/Img/ticket-workflow";
 export const TICKET_WORKFLOW_ASSET_KEYS = {
   landingHeroBg: "landing-hero-bg.png",
   workflowBannerIcon: "workflow-banner-icon.png",
+  workflowBannerBg: "workflow-banner-bg.png",
   tracksWorkflowBg: "tracks-workflow-bg.png",
   tracksWorkflowSidebarBg: "tracks-workflow-sidebar-bg.png",
   tracksWorkflowMainPanelBg: "tracks-workflow-main-panel-bg.png",
@@ -14,6 +15,7 @@ export const TICKET_WORKFLOW_ASSET_KEYS = {
   comenzarStep2Track: "comenzar-step-2-track.png",
   comenzarStep3Tickets: "comenzar-step-3-tickets.png",
   comenzarStep4Finish: "comenzar-step-4-finish.png",
+  overviewBarTicketIcon: "overview-bar-ticket-icon.png",
   overviewTrackTileBg: "overview-track-tile-bg.png",
   overviewSlotUsed: "overview-slot-used.png",
   overviewSlotOpen: "overview-slot-open.png",

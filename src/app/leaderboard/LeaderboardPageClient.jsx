@@ -12,7 +12,6 @@ import {
   Flame,
   Medal,
   Crown,
-  ArrowLeft,
   MessageCircle,
   Activity,
 } from "lucide-react";
@@ -25,6 +24,10 @@ import { useAuth } from "@/frontend/contexts/AuthContext";
 import { useRankingUpdates } from "@/frontend/contexts/RankingUpdatesContext";
 import { fetchJson } from "@/frontend/lib/api/client";
 import { getModality, getModalityBadgeClasses, gameModeToModalityId } from "@/frontend/lib/gameModalities";
+import {
+  leaderboardAsset,
+  leaderboardPodiumAsset,
+} from "@/frontend/lib/config/leaderboardAssets";
 
 function getModeFilterMeta(gameMode) {
   const mod = getModality(gameModeToModalityId(gameMode));
@@ -134,10 +137,14 @@ export default function LeaderboardPageClient() {
   }, [searchParams]);
 
   const viewTabs = [
-    { key: "ranking", label: "Ranking", icon: Trophy },
-    { key: "live", label: t("leaderboard.live") || "En Vivo", icon: Activity },
-    { key: "chat", label: "Chat", icon: MessageCircle },
+    { key: "ranking", label: t("leaderboard.rankingTab"), icon: Trophy },
+    { key: "live", label: t("leaderboard.live"), icon: Activity },
+    { key: "chat", label: t("leaderboard.chatTab"), icon: MessageCircle },
   ];
+
+  const heroBg = leaderboardAsset("heroBg");
+  const tableHeaderBg = leaderboardAsset("tableHeaderBg");
+  const emptyArt = leaderboardAsset("emptyState");
   const [tournamentFilter, setTournamentFilter] = useState("all");
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -278,29 +285,46 @@ export default function LeaderboardPageClient() {
   };
 
   return (
-    <>
-        <AppPageHeader title={t("leaderboard.title")} subtitle={t("leaderboard.subtitle")} />
+    <div className="leaderboard-page">
+        <section
+          className="leaderboard-page__hero"
+          style={heroBg ? { backgroundImage: `url(${heroBg})` } : undefined}
+        >
+          <div className="leaderboard-page__hero-inner">
+            <AppPageHeader title={t("leaderboard.title")} subtitle={t("leaderboard.subtitle")} />
+            <div className="leaderboard-page__stats">
+              <span className="leaderboard-page__stat">
+                <Trophy className="w-3.5 h-3.5 text-yellow-400" aria-hidden />
+                <strong>{loading ? "—" : totalPlayers.toLocaleString()}</strong> {t("leaderboard.players")}
+              </span>
+              <span className="leaderboard-page__stat">
+                <Medal className="w-3.5 h-3.5 text-purple-400" aria-hidden />
+                {getSelectedTournamentLabel()}
+              </span>
+            </div>
+          </div>
+        </section>
+
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10"
+          className="leaderboard-page__toolbar"
         >
-          <div className="flex gap-1 p-1 rounded-xl bg-white/5 border border-white/5">
+          <div className="leaderboard-page__time-filters">
             {timeFilters.map((filter) => (
               <button
                 key={filter.key}
+                type="button"
                 onClick={() => { setActiveFilter(filter.key); setCurrentPage(1); }}
-                className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
-                  activeFilter === filter.key
-                    ? "text-white"
-                    : "text-zinc-400 hover:text-zinc-200"
+                className={`leaderboard-page__time-btn ${
+                  activeFilter === filter.key ? "leaderboard-page__time-btn--active" : ""
                 }`}
               >
                 {activeFilter === filter.key && (
                   <motion.div
                     layoutId="activeTimeFilter"
-                    className="absolute inset-0 bg-gradient-to-r from-purple to-purple-light rounded-lg"
+                    className="leaderboard-page__time-btn-pill"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                   />
                 )}
@@ -311,8 +335,9 @@ export default function LeaderboardPageClient() {
 
           <div className="relative">
             <button
+              type="button"
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-zinc-300 hover:border-purple/30 transition-colors"
+              className="leaderboard-page__tournament-btn"
             >
               {getSelectedTournamentLabel()}
               <ChevronDown className={`w-4 h-4 transition-transform ${showDropdown ? "rotate-180" : ""}`} />
@@ -355,14 +380,13 @@ export default function LeaderboardPageClient() {
           </div>
         </motion.div>
 
-        {/* Mode Filters */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.25 }}
-          className="flex flex-wrap items-center gap-3 mb-8"
+          className="leaderboard-page__modes"
         >
-          <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Modo:</span>
+          <span className="leaderboard-page__modes-label">{t("leaderboard.modeLabel")}</span>
           {[1, 2, 3, 4].map((mode) => {
             const cfg = getModeFilterMeta(mode);
             const isChecked = selectedModes.includes(mode);
@@ -370,13 +394,9 @@ export default function LeaderboardPageClient() {
             return (
               <label
                 key={mode}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all cursor-pointer select-none ${
-                  !isAvailable
-                    ? "opacity-40 cursor-not-allowed border-white/5 bg-white/[0.02]"
-                    : isChecked
-                    ? cfg.className
-                    : "border-white/10 bg-white/[0.02] hover:border-white/20"
-                }`}
+                className={`leaderboard-page__mode-chip ${
+                  !isAvailable ? "leaderboard-page__mode-chip--disabled" : ""
+                } ${isChecked && isAvailable ? `leaderboard-page__mode-chip--active border ${cfg.className}` : ""}`}
               >
                 <input
                   type="checkbox"
@@ -395,34 +415,34 @@ export default function LeaderboardPageClient() {
                 />
                 <span
                   className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center flex-shrink-0 ${
-                    isChecked ? `${cfg.border} ${cfg.bg}` : "border-white/20"
+                    isChecked && isAvailable ? "border-current bg-current/20" : "border-white/20"
                   }`}
                 >
-                  {isChecked && (
-                    <svg className={`w-2.5 h-2.5 ${cfg.text}`} fill="none" viewBox="0 0 10 10">
+                  {isChecked && isAvailable && (
+                    <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 10 10">
                       <path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   )}
                 </span>
-                <span className={`text-xs font-bold tracking-wide ${isAvailable ? cfg.text : "text-zinc-600"}`}>
+                <span className={`text-xs font-bold tracking-wide ${isAvailable ? "" : "text-zinc-600"}`}>
                   {cfg.label}
                 </span>
                 {!isAvailable && (
-                  <span className="text-[10px] text-zinc-600 font-medium">Coming Soon</span>
+                  <span className="text-[10px] text-zinc-600 font-medium">{t("leaderboard.comingSoon")}</span>
                 )}
               </label>
             );
           })}
         </motion.div>
 
-        <div className="flex gap-1 p-1 rounded-xl bg-white/5 border border-white/5 mb-8 max-w-md">
+        <div className="leaderboard-page__view-tabs">
           {viewTabs.map((tab) => (
             <button
               key={tab.key}
               type="button"
               onClick={() => setActiveViewTab(tab.key)}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all ${
-                activeViewTab === tab.key ? "bg-purple text-white" : "text-zinc-400 hover:text-zinc-200"
+              className={`leaderboard-page__view-tab ${
+                activeViewTab === tab.key ? "leaderboard-page__view-tab--active" : ""
               }`}
             >
               <tab.icon className="w-3.5 h-3.5" />
@@ -462,8 +482,7 @@ export default function LeaderboardPageClient() {
 
         {activeViewTab === "ranking" ? (
         <>
-        {/* TOP 3 Podium */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
+        <div className="leaderboard-page__podium">
           {loading ? (
             <>
               <div className="order-2 sm:order-1 sm:mt-8">
@@ -519,20 +538,25 @@ export default function LeaderboardPageClient() {
               </motion.div>
             ))
           ) : (
-            <div className="col-span-3 text-center py-12 text-zinc-500">
-              No leaderboard data available yet.
+            <div className="leaderboard-page__empty sm:col-span-3">
+              {emptyArt ? (
+                <img src={emptyArt} alt="" className="leaderboard-page__empty-art" />
+              ) : null}
+              {t("leaderboard.empty")}
             </div>
           )}
         </div>
 
-        {/* Rankings Table */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="rounded-2xl overflow-hidden border border-white/5 bg-white/[0.02] backdrop-blur-xl"
+          className="leaderboard-page__table"
         >
-          <div className="hidden sm:grid grid-cols-12 gap-4 px-6 py-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider border-b border-white/5 bg-white/[0.02]">
+          <div
+            className="leaderboard-page__table-head"
+            style={tableHeaderBg ? { backgroundImage: `url(${tableHeaderBg})` } : undefined}
+          >
             <div className="col-span-1">{t("leaderboard.rank")}</div>
             <div className="col-span-4">{t("leaderboard.player")}</div>
             <div className="col-span-2 text-right">{t("leaderboard.points")}</div>
@@ -546,20 +570,20 @@ export default function LeaderboardPageClient() {
               <SkeletonRow key={i} index={i} />
             ))
           ) : paginatedPlayers.length === 0 ? (
-            <div className="px-6 py-12 text-center text-zinc-500">
-              No players to display.
-            </div>
+            <div className="leaderboard-page__empty">{t("leaderboard.noPlayers")}</div>
           ) : (
             paginatedPlayers.map((player, index) => (
               <Link
                 key={player.userId || player.rank}
                 href={player.userId ? `/profile/${player.userId}` : "#"}
-                className={`grid grid-cols-2 sm:grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-4 items-center border-b border-white/[0.03] transition-all duration-300 hover:bg-purple/[0.04] hover:shadow-[inset_0_0_30px_rgba(124,58,237,0.05)] cursor-pointer group ${
-                  index % 2 === 0 ? "bg-white/[0.01]" : "bg-transparent"
+                className={`leaderboard-page__row group ${
+                  index % 2 === 0 ? "leaderboard-page__row--alt" : ""
                 }`}
               >
                 <div className="col-span-1 flex items-center gap-2 sm:gap-0">
-                  <RankBadge rank={player.rank} />
+                  <span className={player.rank <= 3 ? "leaderboard-page__row-rank--top" : ""}>
+                    <RankBadge rank={player.rank} />
+                  </span>
                 </div>
 
                 <div className="col-span-1 sm:col-span-4 flex items-center gap-3">
@@ -578,7 +602,7 @@ export default function LeaderboardPageClient() {
                 </div>
 
                 <div className="col-span-1 sm:col-span-2 text-right">
-                  <span className="font-bold text-sm sm:text-base text-gradient-purple">
+                  <span className="text-sm sm:text-base leaderboard-page__points">
                     {player.points.toLocaleString()}
                   </span>
                   <span className="text-xs text-zinc-600 ml-1 hidden sm:inline">{t("common.pts")}</span>
@@ -591,7 +615,7 @@ export default function LeaderboardPageClient() {
                 <div className="hidden sm:flex col-span-2 justify-end items-center gap-1">
                   {player.streak > 0 ? (
                     <>
-                      <img src="/images/icons/icon-fire.png" alt="" className="w-5 h-5 object-contain" />
+                      <StreakIcon />
                       <span className="text-sm font-medium text-orange-400">{player.streak}</span>
                     </>
                   ) : (
@@ -616,7 +640,7 @@ export default function LeaderboardPageClient() {
             ))
           )}
 
-          <div className="flex items-center justify-between px-6 py-4 bg-white/[0.02] border-t border-white/5">
+          <div className="leaderboard-page__footer">
             <p className="text-xs text-zinc-500">
               {loading ? (
                 <span className="inline-block w-32 h-3 rounded bg-white/5 animate-pulse" />
@@ -630,31 +654,32 @@ export default function LeaderboardPageClient() {
                 </>
               )}
             </p>
-            <div className="flex items-center gap-2">
+            <div className="leaderboard-page__pagination">
               <button
+                type="button"
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((p) => p - 1)}
-                className="p-2 rounded-lg bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:border-purple/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                className="leaderboard-page__page-btn"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                   key={page}
+                  type="button"
                   onClick={() => setCurrentPage(page)}
-                  className={`w-8 h-8 rounded-lg text-sm font-medium transition-all ${
-                    currentPage === page
-                      ? "bg-purple text-white"
-                      : "bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10"
+                  className={`leaderboard-page__page-btn ${
+                    currentPage === page ? "leaderboard-page__page-btn--active" : ""
                   }`}
                 >
                   {page}
                 </button>
               ))}
               <button
+                type="button"
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((p) => p + 1)}
-                className="p-2 rounded-lg bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:border-purple/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                className="leaderboard-page__page-btn"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -663,67 +688,82 @@ export default function LeaderboardPageClient() {
         </motion.div>
         </>
         ) : null}
-    </>
+    </div>
   );
+}
+
+function StreakIcon() {
+  const src = leaderboardAsset("streakFlame");
+  if (src) {
+    return <img src={src} alt="" className="w-5 h-5 object-contain" />;
+  }
+  return <Flame className="w-4 h-4 text-orange-400" aria-hidden />;
 }
 
 function PodiumCard({ player, position, t }) {
   const colors = getRankColor(position);
+  const podiumBg = leaderboardPodiumAsset(position);
+  const crownSrc = leaderboardAsset("crownGlow");
   const isFirst = position === 1;
 
   return (
-    <div
-      className={`relative rounded-2xl border ${colors.border} ${colors.glow} p-6 text-center bg-gradient-to-b ${colors.bg} backdrop-blur-xl transition-all duration-500 hover:scale-[1.02] ${
-        isFirst ? "sm:py-10" : ""
-      }`}
-    >
+    <div className={`leaderboard-podium-card leaderboard-podium-card--${position}`}>
+      {podiumBg ? (
+        <div
+          className="leaderboard-podium-card__bg"
+          style={{ backgroundImage: `url(${podiumBg})` }}
+          aria-hidden
+        />
+      ) : null}
+      <div className="leaderboard-podium-card__scrim" aria-hidden />
+
       {isFirst && (
         <motion.div
           animate={{ y: [0, -6, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-5 left-1/2 -translate-x-1/2"
+          className="absolute top-2 left-1/2 -translate-x-1/2 z-10"
         >
-          <Crown className="w-8 h-8 text-yellow-400 drop-shadow-[0_0_10px_rgba(245,158,11,0.6)]" />
+          {crownSrc ? (
+            <img src={crownSrc} alt="" className="leaderboard-podium-card__crown" />
+          ) : (
+            <Crown className="w-8 h-8 text-yellow-400 drop-shadow-[0_0_10px_rgba(245,158,11,0.6)]" />
+          )}
         </motion.div>
       )}
 
-      <div className={`text-5xl font-black mb-3 ${colors.text} opacity-20`}>
-        {position}
-      </div>
+      <div className="leaderboard-podium-card__content">
+        <div className={`leaderboard-podium-card__rank ${colors.text}`}>{position}</div>
 
-      <div className="flex justify-center mb-3">
         <div
-          className={`w-16 h-16 rounded-full flex items-center justify-center text-lg font-bold ring-4 ${
-            position === 1 ? "ring-yellow-500/40" : position === 2 ? "ring-slate-400/40" : "ring-amber-700/40"
-          }`}
+          className="leaderboard-podium-card__avatar"
           style={{ backgroundColor: player.color + "30", color: player.color }}
         >
           {player.initials}
         </div>
-      </div>
 
-      <h3 className="font-bold text-lg text-white mb-1">{player.displayName || player.username}</h3>
-      <div className="flex justify-center mb-2">
-        <ModeBadge gameMode={player.gameMode} />
-      </div>
+        <h3 className="font-bold text-lg text-white mb-1">{player.displayName || player.username}</h3>
+        <div className="flex justify-center mb-2">
+          <ModeBadge gameMode={player.gameMode} />
+        </div>
 
-      <p className="text-2xl font-black text-gradient-purple mb-2">
-        {player.points.toLocaleString()}
-      </p>
-      <p className="text-xs text-zinc-500 mb-3">{t("leaderboard.totalPoints")}</p>
+        <p className="text-2xl font-black leaderboard-page__points mb-2">
+          {player.points.toLocaleString()}
+        </p>
+        <p className="text-xs text-zinc-500 mb-3">{t("leaderboard.totalPoints")}</p>
 
-      <div className="flex items-center justify-center gap-1">
-        {player.trend === "up" ? (
-          <div className="flex items-center gap-1 text-emerald-400 text-xs font-medium px-2 py-1 rounded-full bg-emerald-400/10">
-            <TrendingUp className="w-3 h-3" />
-            {t("leaderboard.rising")}
-          </div>
-        ) : (
-          <div className="flex items-center gap-1 text-red-400 text-xs font-medium px-2 py-1 rounded-full bg-red-400/10">
-            <TrendingDown className="w-3 h-3" />
-            {t("leaderboard.falling")}
-          </div>
-        )}
+        <div className="flex items-center justify-center gap-1">
+          {player.trend === "up" ? (
+            <div className="flex items-center gap-1 text-emerald-400 text-xs font-medium px-2 py-1 rounded-full bg-emerald-400/10">
+              <TrendingUp className="w-3 h-3" />
+              {t("leaderboard.rising")}
+            </div>
+          ) : (
+            <div className="flex items-center gap-1 text-red-400 text-xs font-medium px-2 py-1 rounded-full bg-red-400/10">
+              <TrendingDown className="w-3 h-3" />
+              {t("leaderboard.falling")}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

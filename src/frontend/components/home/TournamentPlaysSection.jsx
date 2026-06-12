@@ -1,14 +1,8 @@
 ﻿"use client";
 
 import { Info } from "lucide-react";
-import { staticFile } from "@/frontend/lib/config/paths";
 import SectionHeader from "@/frontend/components/home/SectionHeader";
-
-const TICKET_IMAGES = {
-  full: "/Img/FULL POINT.png",
-  dual: "/Img/DUAL POINT.png",
-  smart: "/Img/SMART POINT.png",
-};
+import StrategyPointLogo from "@/frontend/components/strategies/StrategyPointLogo";
 
 function PlayPoints({ children, theme }) {
   return (
@@ -18,19 +12,24 @@ function PlayPoints({ children, theme }) {
   );
 }
 
-function TournamentPlayCard({ theme, imageSrc, name, risk, riskVariant, children }) {
+function TournamentPlayCard({ theme, variant, name, risk, riskVariant, children }) {
   return (
     <article className={`tournament-play-card tournament-play-card--${theme}`}>
       <div className="tournament-play-card__shell">
         <div className="tournament-play-card__gloss" aria-hidden />
         <div className="tournament-play-card__inner">
-          <div className="tournament-play-card__media">
-            <img src={imageSrc} alt="" className="tournament-play-card__ticket" />
+          <div className={`tournament-play-card__media tournament-play-card__media--${variant}`}>
+            <div className="tournament-play-card__media-frame">
+              <StrategyPointLogo
+                variant={variant}
+                alt={name}
+                className="tournament-play-card__ticket"
+              />
+            </div>
           </div>
           <div className="tournament-play-card__divider" aria-hidden />
           <div className="tournament-play-card__body">
-            <div className="tournament-play-card__head">
-              <h4 className="tournament-play-card__name">{name}</h4>
+            <div className="tournament-play-card__head tournament-play-card__head--logo">
               <span
                 className={`tournament-play-card__risk tournament-play-card__risk--${riskVariant}`}
               >
@@ -59,7 +58,7 @@ export default function TournamentPlaysSection({ t }) {
       <div className="tournament-plays__list">
         <TournamentPlayCard
           theme="purple"
-          imageSrc={staticFile(TICKET_IMAGES.full)}
+          variant="full"
           name={t("strategies.fullPoint")}
           risk={t("strategies.highRisk")}
           riskVariant="high"
@@ -74,7 +73,7 @@ export default function TournamentPlaysSection({ t }) {
 
         <TournamentPlayCard
           theme="cyan"
-          imageSrc={staticFile(TICKET_IMAGES.dual)}
+          variant="dual"
           name={t("strategies.dualPoint")}
           risk={t("strategies.medRisk")}
           riskVariant="medium"
@@ -89,7 +88,7 @@ export default function TournamentPlaysSection({ t }) {
 
         <TournamentPlayCard
           theme="gold"
-          imageSrc={staticFile(TICKET_IMAGES.smart)}
+          variant="smart"
           name={t("strategies.smartPoint")}
           risk={t("strategies.lowRisk")}
           riskVariant="low"

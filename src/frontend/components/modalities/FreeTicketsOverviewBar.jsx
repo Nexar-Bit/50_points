@@ -17,6 +17,7 @@ export default function FreeTicketsOverviewBar({
   activeTicketNum = null,
   onLogoClick,
   onTicketSlotClick,
+  variant = "workflow",
 }) {
   const { t } = useLanguage();
   const showOfficialLogos = useOfficialTrackLogos();
@@ -26,16 +27,25 @@ export default function FreeTicketsOverviewBar({
   const tileBg = ticketWorkflowAsset("overviewTrackTileBg");
 
   const sidebarBg = ticketWorkflowAsset("tracksWorkflowSidebarBg");
+  const headerIcon = ticketWorkflowAsset("overviewBarTicketIcon");
+  const isBridge = variant === "bridge";
 
   return (
     <section
       id="tickets"
-      className="free-tickets-overview free-tickets-overview--workflow"
+      className={`free-tickets-overview free-tickets-overview--workflow${
+        isBridge ? " free-tickets-overview--bridge" : ""
+      }`}
       aria-label={t("gameModalities.freeTicketsBarTitle")}
       style={sidebarBg ? { "--workflow-sidebar-bg": `url(${sidebarBg})` } : undefined}
       key={usageVersion}
     >
-      <h2 className="free-tickets-overview__title">{t("gameModalities.freeTicketsBarTitle")}</h2>
+      <header className="free-tickets-overview__head">
+        {headerIcon ? (
+          <img src={headerIcon} alt="" className="free-tickets-overview__head-icon" aria-hidden />
+        ) : null}
+        <h2 className="free-tickets-overview__title">{t("gameModalities.freeTicketsBarTitle")}</h2>
+      </header>
       <div className="free-tickets-overview__scroll" role="list">
         {tracks.map((track) => {
           const logoSrc = showOfficialLogos ? getTrackImageUrl(track.name, track.imageUrl) : null;

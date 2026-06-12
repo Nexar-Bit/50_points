@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Eye, EyeOff, CheckSquare, Square } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
+import { markCoverPassed } from "@/frontend/lib/gameModalities";
 import AuthGlassShell, { AuthGlassInput, AuthGlassButton } from "@/frontend/components/auth/AuthGlassShell";
 
 export default function RegisterPage() {
@@ -36,6 +37,7 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(form.username.trim(), form.email.trim() || undefined, form.password);
+      markCoverPassed();
       router.push("/inicio");
     } catch (err) {
       setError(err.message);

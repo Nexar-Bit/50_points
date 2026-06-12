@@ -16,6 +16,9 @@ Recommended: **4K**, **high detail**, **no watermarks**. Text in prompts is only
 ### `workflow-banner-icon.png`
 > Small hexagonal badge icon with bold number "3" inside, emerald green metallic shield, tiny ticket stub silhouette, premium mobile game UI, isolated on transparent background, 512×512, 4K detail.
 
+### `workflow-banner-bg.png` (optional texture)
+> Wide horizontal UI banner texture for horse-racing tournament app, **vibrant emerald green** gradient bar (#14532d → #22c55e → #34d399), subtle glass shine across top edge, soft bokeh light particles, very light diagonal energy streaks, premium esports HUD feel, **no text, no logos, no icons**, seamless left-to-right, 16:4 aspect ratio (e.g. 1920×480), PNG, 4K. Used as optional overlay on the “3 free tickets” benefit bar — CSS provides the base green if this file is missing.
+
 ### `comenzar-step-illustration.png`
 > Vertical infographic strip showing 4 minimal icons in a column: game mode card, racetrack thumbnail, three tickets, checkered flag — connected by thin purple neon line, dark background, flat-modern style, no long text, 9:16, 4K. **Equal-height rows** (4 × 25% slices) for side-by-side alignment with step text.
 
@@ -118,7 +121,11 @@ Full-screen responsive ticket workflow: info banner → ticket sidebar → glass
 
 ---
 
-## Track overview bar
+## Track overview bar (MIS TICKETS DISPONIBLES)
+
+### `overview-bar-ticket-icon.png` → `overviewBarTicketIcon`
+
+> Small **gold ticket icon** for the MIS TICKETS DISPONIBLES header — stylized perforated ticket stub with subtle V-notch, metallic gold (#FBBF24) outline on dark transparent background, premium esports HUD icon, no text, 256×256 PNG transparent, 4K detail.
 
 ### `overview-track-tile-bg.png`
 > **Dark glass** rounded square tile plate for racetrack logo overlay — frosted charcoal with soft white inner highlight, subtle gold rim, modern 2026 app icon holder, 256×256 PNG (also works on white monogram fallback).
@@ -206,14 +213,16 @@ Full-screen responsive ticket workflow: info banner → ticket sidebar → glass
 
 ## Strategy pick buttons (under each horse)
 
+**Full plasma-style prompts and hero/splash assets:** see `docs/POINT_MODALITY_ASSET_PROMPTS.md`.
+
 ### `strategy-full-point-btn.png`
-> Horizontal game button, purple gradient, trophy icon left, two-line label area (icon only, no text), Full Point / 50 pts style, 600×100 transparent PNG.
+> [50 Points master style] Horizontal game button texture, purple plasma gradient with lightning, trophy icon silhouette left, empty label area center-right (no baked text), 2400×400 transparent PNG.
 
 ### `strategy-dual-point-btn.png`
-> Horizontal game button, teal/cyan gradient, balance scale icon, Dual Point style, 600×100 transparent PNG.
+> [50 Points master style] Horizontal game button texture, cyan plasma gradient with lightning, balance-scale icon silhouette left, empty label area (no baked text), 2400×400 transparent PNG.
 
 ### `strategy-smart-point-btn.png`
-> Horizontal game button, gold-orange gradient, target icon, Smart Point style, 600×100 transparent PNG.
+> [50 Points master style] Horizontal game button texture, gold-orange plasma gradient with lightning, target icon silhouette left, empty label area (no baked text), 2400×400 transparent PNG.
 
 ---
 

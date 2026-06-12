@@ -6,10 +6,9 @@
 /** Allow slow racing sync on Vercel (requires Pro for >10s on some plans). */
 export const maxDuration = 60;
 
-const BACKEND =
-  process.env.API_BACKEND_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  'http://localhost:8000';
+import { getServerBackendUrl } from '@/frontend/lib/config/api';
+
+const BACKEND = getServerBackendUrl();
 
 function targetUrl(pathSegments, search) {
   const base = BACKEND.replace(/\/$/, '');

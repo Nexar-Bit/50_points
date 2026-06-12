@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
+import { markCoverPassed } from "@/frontend/lib/gameModalities";
 import AuthGlassShell, { AuthGlassInput, AuthGlassButton } from "@/frontend/components/auth/AuthGlassShell";
 
 export default function LoginPage() {
@@ -24,6 +25,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(identifier.trim(), password);
+      markCoverPassed();
       router.push("/inicio");
     } catch (err) {
       setError(err.message || t("auth.loginFailed"));
@@ -37,6 +39,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await playAsGuest();
+      markCoverPassed();
       router.push("/inicio");
     } catch (err) {
       setError(err.message);

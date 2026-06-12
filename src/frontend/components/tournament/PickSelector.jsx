@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Target, Layers, Zap } from 'lucide-react';
+import { strategyPickButtonAsset } from '@/frontend/lib/config/pointStrategyAssets';
 
 const strategies = [
   {
@@ -10,7 +10,6 @@ const strategies = [
     description: '50 puntos en 1 caballo',
     maxPicks: 1,
     allocation: [50],
-    icon: Target,
     gradient: 'from-purple to-purple-light',
     borderColor: 'border-purple',
     glowColor: 'shadow-[0_0_30px_rgba(124,58,237,0.5)]',
@@ -23,7 +22,6 @@ const strategies = [
     description: '25 puntos en 2 caballos',
     maxPicks: 2,
     allocation: [25, 25],
-    icon: Layers,
     gradient: 'from-purple to-cyan',
     borderColor: 'border-purple',
     glowColor: 'shadow-[0_0_30px_rgba(124,58,237,0.3),0_0_30px_rgba(6,182,212,0.3)]',
@@ -36,7 +34,6 @@ const strategies = [
     description: '30 / 15 / 5 en 3 caballos',
     maxPicks: 3,
     allocation: [30, 15, 5],
-    icon: Zap,
     gradient: 'from-purple via-cyan to-gold',
     borderColor: 'border-cyan',
     glowColor: 'shadow-[0_0_20px_rgba(124,58,237,0.3),0_0_20px_rgba(6,182,212,0.3),0_0_20px_rgba(245,158,11,0.3)]',
@@ -70,7 +67,7 @@ export default function PickSelector({ activeStrategy, onStrategyChange, picksCo
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {strategies.map((strategy) => {
           const isActive = activeStrategy === strategy.id;
-          const Icon = strategy.icon;
+          const btnArt = strategyPickButtonAsset(strategy.id);
 
           return (
             <motion.button
@@ -79,70 +76,51 @@ export default function PickSelector({ activeStrategy, onStrategyChange, picksCo
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
               className={`
-                relative rounded-xl border p-4 text-left transition-all duration-300 overflow-hidden
+                pick-selector-card relative rounded-xl border text-left transition-all duration-300 overflow-hidden
                 ${isActive
                   ? `${strategy.bgActive} ${strategy.borderColor} ${strategy.glowColor} border-opacity-60`
-                  : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20'
+                  : 'bg-black/40 border-white/10 hover:bg-white/[0.06] hover:border-white/20'
                 }
               `}
             >
-              {/* Active indicator bar */}
               <AnimatePresence>
                 {isActive && (
                   <motion.div
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
                     exit={{ scaleX: 0 }}
-                    className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${strategy.gradient}`}
+                    className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${strategy.gradient} z-10`}
                   />
                 )}
               </AnimatePresence>
 
-              <div className="flex items-start gap-3">
-                <div className={`
-                  p-2 rounded-lg
-                  ${isActive
-                    ? `bg-gradient-to-br ${strategy.gradient} text-white`
-                    : 'bg-white/5 text-white/40'
-                  }
-                `}>
-                  <Icon size={18} />
-                </div>
+              {btnArt ? (
+                <img
+                  src={btnArt}
+                  alt={strategy.name}
+                  className="pick-selector-card__art w-full h-auto block"
+                />
+              ) : null}
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-xs font-bold tracking-wider ${isActive ? 'text-white' : 'text-white/60'}`}>
-                      {strategy.name}
+              <div className="pick-selector-card__meta px-3 pb-3 pt-1">
+                <p className={`text-[11px] ${isActive ? 'text-white/75' : 'text-white/35'}`}>
+                  {strategy.description}
+                </p>
+                <div className="flex gap-1 mt-2 flex-wrap">
+                  {strategy.allocation.map((pts, idx) => (
+                    <span
+                      key={idx}
+                      className={`
+                        text-[10px] font-bold px-1.5 py-0.5 rounded
+                        ${isActive
+                          ? `${strategy.tagColors[idx]} text-white`
+                          : 'bg-white/5 text-white/30'
+                        }
+                      `}
+                    >
+                      {pts}pts
                     </span>
-                    {isActive && (
-                      <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="w-1.5 h-1.5 rounded-full bg-green-400"
-                      />
-                    )}
-                  </div>
-                  <p className={`text-xs ${isActive ? 'text-white/70' : 'text-white/30'}`}>
-                    {strategy.description}
-                  </p>
-
-                  {/* Point allocation tags */}
-                  <div className="flex gap-1 mt-2">
-                    {strategy.allocation.map((pts, idx) => (
-                      <span
-                        key={idx}
-                        className={`
-                          text-[10px] font-bold px-1.5 py-0.5 rounded
-                          ${isActive
-                            ? `${strategy.tagColors[idx]} text-white`
-                            : 'bg-white/5 text-white/30'
-                          }
-                        `}
-                      >
-                        {pts}pts
-                      </span>
-                    ))}
-                  </div>
+                  ))}
                 </div>
               </div>
             </motion.button>

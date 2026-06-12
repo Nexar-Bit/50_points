@@ -1,9 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ChevronDown, User, Trophy, Calendar, MapPin } from "lucide-react";
 import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
-import { HorseHeadIcon } from "@/frontend/components/statistics/MisTicketsStatsIcons";
+import {
+  MisStatsIcon,
+  MisStatsStepBadge,
+  HorseHeadIcon,
+  MIS_TICKETS_TAB_ICONS,
+  MIS_TICKETS_FILTER_ICONS,
+  MIS_TICKETS_STEP_ICONS,
+  MIS_TICKETS_RESULT_ICONS,
+} from "@/frontend/components/statistics/MisTicketsStatsIcons";
+import { ChevronDown } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import { fetchAuthJson, fetchJson } from "@/frontend/lib/api/client";
@@ -27,9 +35,9 @@ import {
 } from "@/frontend/lib/statistics/misTicketsMappers";
 
 const TABS = [
-  { id: "personal", icon: User },
-  { id: "race", icon: HorseHeadIcon },
-  { id: "tournament", icon: Trophy },
+  { id: "personal", icon: MIS_TICKETS_TAB_ICONS.personal },
+  { id: "race", icon: MIS_TICKETS_TAB_ICONS.race },
+  { id: "tournament", icon: MIS_TICKETS_TAB_ICONS.tournament },
 ];
 
 const DEFAULT_TOURNAMENT_RACES = 7;
@@ -139,7 +147,7 @@ function PersonalMetrics({ t, data }) {
         label={t("misTicketsStats.bestPosition")}
         value={
           <span className="mis-stats-metric__trophy-row">
-            <span>🏆</span>
+            <MisStatsIcon icon={MIS_TICKETS_RESULT_ICONS.bestPosition} variant="inline" />
             {data.bestPosition}
           </span>
         }
@@ -247,6 +255,7 @@ function FinishTable({ rows, t, avgHeader }) {
             <td>
               <span className="mis-stats-table__horse">
                 <span className="mis-stats-table__dot" style={{ background: row.color }} />
+                <HorseHeadIcon className="mis-stats-icon mis-stats-icon--horse mis-stats-icon--table" />
                 {row.horse}
               </span>
             </td>
@@ -510,7 +519,7 @@ export default function MisTicketsStatistics() {
         filters={
           <>
             <label className="mis-stats-filter mis-stats-filter--tournament">
-              <Trophy className="mis-stats-filter__icon" aria-hidden />
+              <MisStatsIcon icon={MIS_TICKETS_FILTER_ICONS.tournament} variant="filter" />
               <span className="mis-stats-filter__label" title={tournamentLabel}>
                 {tournamentLabel}
               </span>
@@ -542,8 +551,8 @@ export default function MisTicketsStatistics() {
               </select>
               <ChevronDown className="mis-stats-filter__chevron" aria-hidden />
             </label>
-            <label className="mis-stats-filter">
-              <Calendar className="mis-stats-filter__icon" aria-hidden />
+            <label className="mis-stats-filter mis-stats-filter--date">
+              <MisStatsIcon icon={MIS_TICKETS_FILTER_ICONS.date} variant="filter" />
               <span className="mis-stats-filter__label">{dateSelectLabel}</span>
               <select
                 className="mis-stats-filter__control"
@@ -561,8 +570,8 @@ export default function MisTicketsStatistics() {
               </select>
               <ChevronDown className="mis-stats-filter__chevron" aria-hidden />
             </label>
-            <label className="mis-stats-filter">
-              <MapPin className="mis-stats-filter__icon" aria-hidden />
+            <label className="mis-stats-filter mis-stats-filter--track">
+              <MisStatsIcon icon={MIS_TICKETS_FILTER_ICONS.track} variant="filter" />
               <span className="mis-stats-filter__label">{trackSelectLabel}</span>
               <select
                 className="mis-stats-filter__control"
@@ -592,7 +601,10 @@ export default function MisTicketsStatistics() {
             className={`mis-stats-tab mis-stats-tab--${id}${activeTab === id ? " mis-stats-tab--active" : ""}`}
             onClick={() => setActiveTab(id)}
           >
-            <Icon className="w-5 h-5 shrink-0" strokeWidth={2} />
+            <MisStatsIcon
+              icon={Icon}
+              variant={activeTab === id ? "tabActive" : "tab"}
+            />
             <span>{t(`misTicketsStats.tab${id.charAt(0).toUpperCase() + id.slice(1)}`)}</span>
           </button>
         ))}
@@ -608,7 +620,7 @@ export default function MisTicketsStatistics() {
           <div className="mis-stats-deep">
             <section className="mis-stats-section">
               <h2 className="mis-stats-section__title">
-                <span className="mis-stats-section__num">1</span>
+                <MisStatsStepBadge icon={MIS_TICKETS_STEP_ICONS.selectRace}>1</MisStatsStepBadge>
                 {t("misTicketsStats.selectRace")}
               </h2>
               <div className="mis-stats-race-pills" role="tablist" aria-label={t("misTicketsStats.selectRace")}>
@@ -638,7 +650,7 @@ export default function MisTicketsStatistics() {
               <div className="mis-stats-donut-grid">
                 <article className="mis-stats-panel mis-stats-panel--donut">
                   <h3 className="mis-stats-panel__head">
-                    <span className="mis-stats-panel__num">2</span>
+                    <MisStatsStepBadge icon={MIS_TICKETS_STEP_ICONS.distribution}>2</MisStatsStepBadge>
                     <span className="mis-stats-panel__head-text">{t("misTicketsStats.donutPersonal")}</span>
                   </h3>
                   <p className="mis-stats-panel__desc">
@@ -661,6 +673,7 @@ export default function MisTicketsStatistics() {
                 </article>
                 <article className="mis-stats-panel mis-stats-panel--donut">
                   <h3 className="mis-stats-panel__head">
+                    <MisStatsStepBadge icon={MIS_TICKETS_STEP_ICONS.distribution} />
                     <span className="mis-stats-panel__head-text">{t("misTicketsStats.donutGeneral")}</span>
                   </h3>
                   <p className="mis-stats-panel__desc">{t("misTicketsStats.donutGeneralSub")}</p>
@@ -685,13 +698,13 @@ export default function MisTicketsStatistics() {
 
             <section className="mis-stats-section">
               <h2 className="mis-stats-section__title">
-                <span className="mis-stats-section__num">3</span>
+                <MisStatsStepBadge icon={MIS_TICKETS_STEP_ICONS.raceResult}>3</MisStatsStepBadge>
                 {t("misTicketsStats.raceResult")} {raceNum}
               </h2>
               <div className="mis-stats-result-grid">
                 <div className="mis-stats-panel mis-stats-panel--result">
                   <p className="mis-stats-result__eyebrow">
-                    <span className="mis-stats-result__icon">🏆</span>
+                    <MisStatsIcon icon={MIS_TICKETS_RESULT_ICONS.personal} variant="result" />
                     {t("misTicketsStats.yourResult")}
                   </p>
                   {outcomes.personal ? (
@@ -713,7 +726,7 @@ export default function MisTicketsStatistics() {
                 </div>
                 <div className="mis-stats-panel mis-stats-panel--result">
                   <p className="mis-stats-result__eyebrow">
-                    <span className="mis-stats-result__icon">👥</span>
+                    <MisStatsIcon icon={MIS_TICKETS_RESULT_ICONS.general} variant="result" />
                     {t("misTicketsStats.generalResult")}
                   </p>
                   {outcomes.general ? (
@@ -738,7 +751,7 @@ export default function MisTicketsStatistics() {
 
             <section className="mis-stats-section mis-stats-section--last">
               <h2 className="mis-stats-section__title">
-                <span className="mis-stats-section__num">4</span>
+                <MisStatsStepBadge icon={MIS_TICKETS_STEP_ICONS.tournamentPerf}>4</MisStatsStepBadge>
                 {t("misTicketsStats.tournamentPerf")} ({raceNum} {t("misTicketsStats.of")} {totalRaces})
               </h2>
               <div className="mis-stats-perf-grid">

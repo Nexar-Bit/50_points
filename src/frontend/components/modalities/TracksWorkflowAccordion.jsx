@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
 import { MapPin, ChevronDown, ChevronUp } from "lucide-react";
 import TrackTicketsPanel from "@/frontend/components/modalities/TrackTicketsPanel";
 import EmbeddedTicketRaces from "@/frontend/components/onboarding/EmbeddedTicketRaces";
+import { useTracksWorkflowState } from "@/frontend/lib/hooks/useTracksWorkflowState";
 import { ticketWorkflowAsset } from "@/frontend/lib/config/ticketWorkflowAssets";
 
 /**
@@ -16,46 +16,25 @@ export default function TracksWorkflowAccordion({
   t,
   initialTrackSlug = null,
   initialTicketNum = null,
+  workflow: workflowProp = null,
 }) {
-  const [expandedSlug, setExpandedSlug] = useState(initialTrackSlug);
-  const [activeTicketNum, setActiveTicketNum] = useState(
-    initialTicketNum >= 1 && initialTicketNum <= 3 ? initialTicketNum : null,
-  );
-  const [racesOpen, setRacesOpen] = useState(
-    Boolean(initialTrackSlug && initialTicketNum >= 1 && initialTicketNum <= 3),
-  );
-  const [usageVersion, setUsageVersion] = useState(0);
+  const internalWorkflow = useTracksWorkflowState(initialTrackSlug, initialTicketNum);
+  const workflow = workflowProp ?? internalWorkflow;
 
-  useEffect(() => {
-    if (initialTrackSlug) setExpandedSlug(initialTrackSlug);
-    if (initialTicketNum >= 1 && initialTicketNum <= 3) {
-      setActiveTicketNum(initialTicketNum);
-      setRacesOpen(true);
-    }
-  }, [initialTrackSlug, initialTicketNum]);
+  const {
+    expandedSlug,
+    activeTicketNum,
+    racesOpen,
+    usageVersion,
+    toggleTrack,
+    handleTicketSelect,
+    openRaces,
+    bumpUsage,
+  } = workflow;
 
   const thumbFallback = ticketWorkflowAsset("trackRowThumbDefault");
   const livePillBg = ticketWorkflowAsset("trackLivePill");
   const chevronGlow = ticketWorkflowAsset("accordionChevronGlow");
-
-  const toggleTrack = useCallback((slug) => {
-    setExpandedSlug((prev) => (prev === slug ? null : slug));
-    setActiveTicketNum(null);
-    setRacesOpen(false);
-  }, []);
-
-  const handleTicketSelect = useCallback((num) => {
-    setActiveTicketNum((prev) => {
-      if (prev === num) {
-        setRacesOpen((open) => !open);
-        return prev;
-      }
-      setRacesOpen(true);
-      return num;
-    });
-  }, []);
-
-  const bumpUsage = useCallback(() => setUsageVersion((v) => v + 1), []);
 
   if (loading) {
     return <p className="tracks-workflow__status">{t("gameModalities.loading")}</p>;
@@ -146,10 +125,7 @@ export default function TracksWorkflowAccordion({
                   usageVersion={usageVersion}
                   activeNum={activeTicketNum ?? 0}
                   onActiveNumChange={handleTicketSelect}
-                  onOpenRaces={() => {
-                    setActiveTicketNum((prev) => prev || 1);
-                    setRacesOpen(true);
-                  }}
+                  onOpenRaces={openRaces}
                 />
 
                 {showRaces ? (

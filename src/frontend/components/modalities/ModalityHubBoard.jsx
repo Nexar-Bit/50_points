@@ -74,7 +74,7 @@ export default function ModalityHubBoard({
   showHow = true,
   className = "",
   titleAs = "h1",
-  layout = "grouped",
+  layout = "flat",
   selectable = false,
   activeModeId = null,
   onModeSelect,

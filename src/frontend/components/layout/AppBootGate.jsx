@@ -1,21 +1,32 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import AppSplashScreen from "@/frontend/components/layout/AppSplashScreen";
+import {
+  clearCoverPassed,
+  hasCoverPassed,
+} from "@/frontend/lib/gameModalities";
 
-/** Hide splash as soon as auth bootstrap completes (no artificial delay). */
-const MIN_SPLASH_MS = 0;
-const EXIT_MS = 320;
+/** Match CSS loader animation (--splash-loader-duration: 2.4s). */
+const MIN_SPLASH_MS = 2400;
+const EXIT_MS = 520;
 
 /**
- * Full-screen TORNEO splash on cold load while auth/bootstrap finishes.
+ * Full-screen TORNEO splash on cold load, then cover (/) before /inicio.
  */
 export default function AppBootGate({ children }) {
   const { loading } = useAuth();
+  const pathname = usePathname() || "";
+  const router = useRouter();
   const mountAt = useRef(performance.now());
   const [showSplash, setShowSplash] = useState(true);
   const [exiting, setExiting] = useState(false);
+
+  useEffect(() => {
+    clearCoverPassed();
+  }, []);
 
   useEffect(() => {
     if (loading) return undefined;
@@ -28,6 +39,14 @@ export default function AppBootGate({ children }) {
 
     return () => window.clearTimeout(hideTimer);
   }, [loading]);
+
+  useEffect(() => {
+    if (loading || showSplash) return undefined;
+    if (pathname === "/inicio" && !hasCoverPassed()) {
+      router.replace("/");
+    }
+    return undefined;
+  }, [loading, showSplash, pathname, router]);
 
   useEffect(() => {
     if (!showSplash) {

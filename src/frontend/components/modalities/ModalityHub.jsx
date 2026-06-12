@@ -19,7 +19,7 @@ export default function ModalityHub() {
   return (
     <ModalityPageShell className="modality-page--hub">
       <div className="modality-hub-surface">
-        <ModalityHubBoard />
+        <ModalityHubBoard layout="flat" />
       </div>
     </ModalityPageShell>
   );

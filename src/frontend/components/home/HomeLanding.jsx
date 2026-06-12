@@ -4,7 +4,7 @@ import { useId } from "react";
 import Link from "next/link";
 import { Caveat } from "next/font/google";
 import { UserPlus, Play, LogIn, Trophy } from "lucide-react";
-import { persistModality } from "@/frontend/lib/gameModalities";
+import { markCoverPassed, persistModality } from "@/frontend/lib/gameModalities";
 import LanguageToggle from "@/frontend/components/layout/LanguageToggle";
 
 const caveat = Caveat({
@@ -189,7 +189,7 @@ function HeroCtaPanel({ t }) {
     <div className="hero-cta-panel">
       <div className="hero-cta-panel__buttons">
         <Link
-          href="/modalidades#hub-paid"
+          href="/login"
           className="hero-cta-btn hero-cta-btn--purple group"
           onClick={() => persistModality("paid")}
         >
@@ -201,7 +201,7 @@ function HeroCtaPanel({ t }) {
         </Link>
 
         <Link
-          href="/modalidades#hub-free"
+          href="/register"
           className="hero-cta-btn hero-cta-btn--cyan group"
           onClick={() => persistModality("free")}
         >
@@ -213,9 +213,12 @@ function HeroCtaPanel({ t }) {
         </Link>
 
         <Link
-          href="/modalidades#hub-paid"
+          href="/inicio"
           className="hero-cta-btn hero-cta-btn--gold group"
-          onClick={() => persistModality("special")}
+          onClick={() => {
+            persistModality("special");
+            markCoverPassed();
+          }}
         >
           <span className="hero-cta-btn__main">
             <Trophy className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
@@ -225,9 +228,12 @@ function HeroCtaPanel({ t }) {
         </Link>
 
         <Link
-          href="/modalidades#hub-free"
+          href="/inicio"
           className="hero-cta-btn hero-cta-btn--guest group"
-          onClick={() => persistModality("guest")}
+          onClick={() => {
+            persistModality("guest");
+            markCoverPassed();
+          }}
         >
           <span className="hero-cta-btn__main">
             <Play className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />

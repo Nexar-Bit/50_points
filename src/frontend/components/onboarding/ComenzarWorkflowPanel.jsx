@@ -10,6 +10,9 @@ import { buildTracksFromTournaments } from "@/frontend/components/modalities/Mod
 import ModalityPageShell from "@/frontend/components/modalities/ModalityPageShell";
 import ModalityHubBoard from "@/frontend/components/modalities/ModalityHubBoard";
 import TracksWorkflowAccordion from "@/frontend/components/modalities/TracksWorkflowAccordion";
+import TracksWorkflowTicketsBridge from "@/frontend/components/modalities/TracksWorkflowTicketsBridge";
+import WorkflowMediaBars from "@/frontend/components/onboarding/WorkflowMediaBars";
+import { useTracksWorkflowState } from "@/frontend/lib/hooks/useTracksWorkflowState";
 import { ticketWorkflowAsset } from "@/frontend/lib/config/ticketWorkflowAssets";
 
 function resolveDefaultModality(activeModalityId, user) {
@@ -53,12 +56,17 @@ export default function ComenzarWorkflowPanel() {
   const noise = ticketWorkflowAsset("noiseOverlayTile");
   const pageBg = ticketWorkflowAsset("tracksWorkflowBg");
   const mainPanelBg = ticketWorkflowAsset("tracksWorkflowMainPanelBg");
+  const bannerBg = ticketWorkflowAsset("workflowBannerBg");
 
   const workflowAvailable = selectedModalityId === "guest" || selectedModalityId === "free";
+  const workflow = useTracksWorkflowState();
 
   return (
     <ModalityPageShell modalityId={selectedModalityId} className="modality-page--workflow-embedded">
-      <div className="tracks-workflow-surface tracks-workflow-surface--embedded comenzar-workflow-panel">
+      <div
+        className="tracks-workflow-surface tracks-workflow-surface--embedded comenzar-workflow-panel"
+        data-modality={selectedModalityId}
+      >
         <div className="tracks-workflow-surface__ambient" aria-hidden>
           {pageBg ? (
             <img src={pageBg} alt="" className="tracks-workflow-surface__hero-bg" />
@@ -85,11 +93,16 @@ export default function ComenzarWorkflowPanel() {
             className="modality-hub-board--comenzar-access"
           />
 
+          <WorkflowMediaBars />
+
           {!workflowAvailable ? (
             <p className="tracks-workflow__status">{t("gameModalities.comingSoon")}</p>
           ) : (
             <>
-              <header className="tracks-workflow-banner">
+              <header
+                className="tracks-workflow-banner"
+                style={bannerBg ? { "--workflow-banner-bg": `url(${bannerBg})` } : undefined}
+              >
                 <div className="tracks-workflow-banner__badge" aria-hidden>
                   <img
                     src={ticketWorkflowAsset("workflowBannerIcon")}
@@ -103,6 +116,12 @@ export default function ComenzarWorkflowPanel() {
                   <p className="tracks-workflow-banner__body">{t("ticketWorkflow.bannerBody")}</p>
                 </div>
               </header>
+
+              <TracksWorkflowTicketsBridge
+                tracks={tracks}
+                workflow={workflow}
+                loading={loading}
+              />
 
               <div className="tracks-workflow__grid tracks-workflow__grid--stacked">
                 <div className="tracks-workflow__main tracks-workflow__main--full">
@@ -125,6 +144,7 @@ export default function ComenzarWorkflowPanel() {
                       modalityId={selectedModalityId}
                       loading={loading}
                       t={t}
+                      workflow={workflow}
                     />
                   </div>
                 </div>

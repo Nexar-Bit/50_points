@@ -1,16 +1,11 @@
 import HomePageClient from "./HomePageClient";
 import { mapTournamentForHomeCard } from "@/frontend/lib/api/mappers";
+import { getServerBackendUrl } from "@/frontend/lib/config/api";
 
 export const revalidate = 30;
 
-const PRODUCTION_API = "https://five0-points-backend.onrender.com";
-
 async function fetchHomeTournaments() {
-  const base = (
-    process.env.API_BACKEND_URL ||
-    process.env.NEXT_PUBLIC_API_URL ||
-    PRODUCTION_API
-  ).replace(/\/$/, "");
+  const base = getServerBackendUrl();
 
   try {
     const res = await fetch(`${base}/api/tournaments?for_home=1`, {

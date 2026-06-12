@@ -8,6 +8,8 @@
     "start": "node scripts/next-cli.mjs start",
     "lint": "node scripts/next-cli.mjs lint",
     "verify:ticket-workflow-assets": "node scripts/verify-ticket-workflow-assets.mjs",
+    "verify:point-modality-assets": "node scripts/verify-point-modality-assets.mjs",
+    "verify:leaderboard-assets": "node scripts/verify-leaderboard-assets.mjs",
     "verify:how-to-play-assets": "node scripts/verify-how-to-play-assets.mjs"
   },
   "dependencies": {

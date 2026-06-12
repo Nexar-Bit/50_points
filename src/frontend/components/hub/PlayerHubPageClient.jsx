@@ -10,8 +10,6 @@ import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import { withModalityQuery } from "@/frontend/lib/gameModalities";
 import { useModality } from "@/frontend/contexts/ModalityContext";
-import { useLiveTournamentsPoll } from "@/frontend/lib/hooks/useLiveTournamentsPoll";
-import LiveTournamentCard from "@/frontend/components/home/LiveTournamentCard";
 import VideoFeedPreview from "@/frontend/components/home/VideoFeedPreview";
 import { fetchJson } from "@/frontend/lib/api/client";
 import { mapLegendForHome } from "@/frontend/lib/api/mappers";
@@ -35,21 +33,13 @@ function HubCard({ href, title, description, icon: Icon }) {
 export default function PlayerHubPageClient() {
   const { t } = useLanguage();
   const { user } = useAuth();
-  const { activeModalityId } = useModality();
-  const [liveTournaments, setLiveTournaments] = useState([]);
+  const { activeModalityId, setActiveModality } = useModality();
   const [topPlayers, setTopPlayers] = useState([]);
-  const [loadingTournaments, setLoadingTournaments] = useState(true);
 
   const q = (href) => withModalityQuery(href, activeModalityId);
 
   const heroBg = ticketWorkflowAsset("landingHeroBg");
   const noise = ticketWorkflowAsset("noiseOverlayTile");
-
-  useLiveTournamentsPoll({
-    forHome: true,
-    onData: (mapped) => setLiveTournaments(mapped.slice(0, 3)),
-    onLoadingChange: setLoadingTournaments,
-  });
 
   useEffect(() => {
     let cancelled = false;
@@ -79,7 +69,10 @@ export default function PlayerHubPageClient() {
 
   return (
     <div className="player-hub-page">
-      <div className="ticket-landing-surface player-hub-page__onboard">
+      <div
+        className="ticket-landing-surface player-hub-page__onboard"
+        data-modality={activeModalityId}
+      >
         <div className="ticket-landing__bg-layer" aria-hidden>
           {heroBg ? <img src={heroBg} alt="" className="ticket-landing__hero-bg" /> : null}
           <div className="ticket-landing__shade" />
@@ -96,8 +89,12 @@ export default function PlayerHubPageClient() {
 
           <AnimateInView delay={0.1}>
             <ModalityHubBoard
+              layout="flat"
+              selectable
               showHow={false}
               titleAs="h2"
+              activeModeId={activeModalityId}
+              onModeSelect={setActiveModality}
               className="modality-hub-board--player-hub"
             />
           </AnimateInView>
@@ -172,27 +169,6 @@ export default function PlayerHubPageClient() {
               ))
             )}
           </ul>
-        </section>
-
-        <section className="player-hub-section">
-          <div className="player-hub-section__head">
-            <h2 className="player-hub-section__title">{t("playerHub.activeTournaments")}</h2>
-            <Link href={q("/tournaments")} className="player-hub-section__link">
-              {t("playerHub.seeAll")}
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-          <div className="player-hub-tournaments">
-            {loadingTournaments ? (
-              <p className="text-zinc-500 text-sm">{t("gameModalities.loading")}</p>
-            ) : liveTournaments.length === 0 ? (
-              <p className="text-zinc-500 text-sm">{t("tournamentsSection.empty")}</p>
-            ) : (
-              liveTournaments.map((tournament, i) => (
-                <LiveTournamentCard key={tournament.slug} tournament={tournament} t={t} featured={i === 0} />
-              ))
-            )}
-          </div>
         </section>
 
         <section id="feed" className="player-hub-section player-hub-section--feed">
