@@ -2644,7 +2644,7 @@ body:has(.modality-hub-surface) .app-lang-toggle .hero-lang__trigger {
   transform: translateX(-50%);
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 0 14px rgba(251, 191, 36, 0.3);
+  box-shadow: 0 0 18px rgba(217, 70, 239, 0.42);
 }
 
 .hof-winner-frame__avatar {
@@ -2674,13 +2674,13 @@ body:has(.modality-hub-surface) .app-lang-toggle .hero-lang__trigger {
   width: max-content;
   margin: 0;
   transform: translateX(-50%);
-  padding: 0.45rem 0.6rem 0.5rem;
-  background: rgba(0, 0, 0, 0.9);
-  border: 1px solid rgba(251, 191, 36, 0.55);
-  border-radius: 0.5rem;
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.55),
-    0 0 16px rgba(251, 191, 36, 0.12);
+  padding: 0.4rem 0.7rem 0.45rem;
+  background: rgba(0, 0, 0, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
 
 .hof-nameplate--gold-winner .hof-nameplate__name {
@@ -2714,17 +2714,17 @@ body:has(.modality-hub-surface) .app-lang-toggle .hero-lang__trigger {
 }
 
 .hof-avatar-ring--silver {
-  background: linear-gradient(135deg, #fafafa, #d4d4d8 45%, #a1a1aa);
+  background: linear-gradient(135deg, #e9d5ff, #a855f7 45%, #7c3aed);
   box-shadow:
-    0 0 16px rgba(255, 255, 255, 0.35),
-    0 0 24px rgba(168, 85, 247, 0.2);
+    0 0 16px rgba(168, 85, 247, 0.45),
+    0 0 24px rgba(124, 58, 237, 0.2);
 }
 
 .hof-avatar-ring--bronze {
-  background: linear-gradient(135deg, #fed7aa, #fb923c 45%, #ea580c);
+  background: linear-gradient(135deg, #a5f3fc, #22d3ee 45%, #06b6d4);
   box-shadow:
-    0 0 16px rgba(251, 146, 60, 0.45),
-    0 0 24px rgba(6, 182, 212, 0.15);
+    0 0 16px rgba(6, 182, 212, 0.45),
+    0 0 24px rgba(34, 211, 238, 0.2);
 }
 
 .hof-avatar-img {
@@ -2771,11 +2771,11 @@ body:has(.modality-hub-surface) .app-lang-toggle .hero-lang__trigger {
 }
 
 .hof-nameplate__points--silver {
-  color: #d4d4d8;
+  color: #c4b5fd;
 }
 
 .hof-nameplate__points--bronze {
-  color: #fb923c;
+  color: #67e8f9;
 }
 
 .hof-podium-img {
@@ -14578,6 +14578,280 @@ body:has(.ticket-landing-surface) {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-decoration: none;
+}
+
+/* Tournament chat — leaderboard tab + live chat page */
+.leaderboard-chat-panel {
+  max-width: 36rem;
+  margin: 0 auto 3rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(168, 85, 247, 0.22);
+  background:
+    linear-gradient(165deg, rgba(88, 28, 135, 0.14) 0%, rgba(9, 9, 11, 0.72) 48%),
+    rgba(0, 0, 0, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.tournament-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+  min-height: 0;
+}
+
+.chat-page__feed-body .tournament-chat {
+  height: 100%;
+}
+
+.tournament-chat__feed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: min(50vh, 22rem);
+  overflow-y: auto;
+  padding: 0.35rem 0.15rem 0.35rem 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(168, 85, 247, 0.45) transparent;
+}
+
+.tournament-chat__feed::-webkit-scrollbar {
+  width: 0.35rem;
+}
+
+.tournament-chat__feed::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(168, 85, 247, 0.45);
+}
+
+.tournament-chat--leaderboard .tournament-chat__feed {
+  max-height: min(52vh, 26rem);
+}
+
+@media (min-width: 1024px) {
+  .chat-page__feed-body .tournament-chat__feed {
+    max-height: none;
+    flex: 1;
+  }
+
+  .tournament-chat--leaderboard .tournament-chat__feed {
+    max-height: 26rem;
+  }
+}
+
+.tournament-chat__message {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: start;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.65rem;
+  border: 1px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.tournament-chat__message:hover {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.tournament-chat__message--admin {
+  border-color: rgba(251, 191, 36, 0.28);
+  background: linear-gradient(
+    90deg,
+    rgba(180, 83, 9, 0.28) 0%,
+    rgba(120, 53, 15, 0.18) 55%,
+    rgba(9, 9, 11, 0.15) 100%
+  );
+}
+
+.tournament-chat__message--admin:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(180, 83, 9, 0.34) 0%,
+    rgba(120, 53, 15, 0.22) 55%,
+    rgba(9, 9, 11, 0.18) 100%
+  );
+}
+
+.tournament-chat__message--hot {
+  border-left: 2px solid rgba(251, 146, 60, 0.75);
+  padding-left: calc(0.65rem - 1px);
+}
+
+.tournament-chat__avatar {
+  --chat-avatar-hue: 260;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.55rem;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #fafafa;
+  background: linear-gradient(
+    145deg,
+    hsl(var(--chat-avatar-hue) 72% 48%) 0%,
+    hsl(calc(var(--chat-avatar-hue) + 24) 68% 34%) 100%
+  );
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+    0 4px 12px hsla(var(--chat-avatar-hue), 72%, 42%, 0.35);
+}
+
+.tournament-chat__message--admin .tournament-chat__avatar {
+  background: linear-gradient(145deg, #fbbf24 0%, #b45309 100%);
+  color: #1c1917;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 4px 14px rgba(251, 191, 36, 0.35);
+}
+
+.tournament-chat__body {
+  min-width: 0;
+}
+
+.tournament-chat__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
+.tournament-chat__identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.tournament-chat__username {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #f4f4f5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tournament-chat__username--admin {
+  color: #fcd34d;
+}
+
+.tournament-chat__badge {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
+}
+
+.tournament-chat__badge--admin {
+  color: #fbbf24;
+}
+
+.tournament-chat__badge--hot {
+  color: #fb923c;
+}
+
+.tournament-chat__badge--star {
+  color: #facc15;
+}
+
+.tournament-chat__badge--bolt {
+  color: #60a5fa;
+}
+
+.tournament-chat__badge--gem {
+  color: #38bdf8;
+}
+
+.tournament-chat__time {
+  font-size: 0.62rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: rgba(161, 161, 170, 0.85);
+  flex-shrink: 0;
+}
+
+.tournament-chat__text {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: rgba(228, 228, 231, 0.88);
+  word-break: break-word;
+}
+
+.tournament-chat__message--admin .tournament-chat__text {
+  color: rgba(253, 230, 138, 0.95);
+  font-weight: 600;
+}
+
+.tournament-chat__composer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.45rem 0.45rem 0.85rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(9, 9, 11, 0.72);
+  box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.08) inset;
+}
+
+.tournament-chat__input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: #fafafa;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  outline: none;
+}
+
+.tournament-chat__input::placeholder {
+  color: rgba(161, 161, 170, 0.55);
+}
+
+.tournament-chat__send {
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border: none;
+  border-radius: 0.6rem;
+  background: linear-gradient(145deg, #a855f7 0%, #7c3aed 100%);
+  color: #fafafa;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.tournament-chat__send svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.tournament-chat__send:hover {
+  filter: brightness(1.08);
+}
+
+.tournament-chat__send:active {
+  transform: scale(0.96);
+}
+
+.tournament-chat__disclaimer {
+  margin: 0;
+  text-align: center;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(161, 161, 170, 0.65);
 }
 
 /* Narrow viewports: floating menu overlay — keep flow pages usable */

@@ -1,5 +1,15 @@
 import { Crown, Star, Flame, Trophy, Target, TrendingUp, Shield } from "lucide-react";
 
+/** 1st-place winner avatar fill — magenta per podium mockup. */
+export const HOF_GOLD_WINNER_AVATAR_COLOR = "#d946ef";
+
+/** Default podium avatar colors by rank (mockup: magenta / purple / cyan). */
+export const HOF_PODIUM_RANK_COLORS = {
+  1: HOF_GOLD_WINNER_AVATAR_COLOR,
+  2: "#a855f7",
+  3: "#06b6d4",
+};
+
 /** Unlocked Hall of Fame feats (first achievers). */
 export const HOF_FEATS = [
   {

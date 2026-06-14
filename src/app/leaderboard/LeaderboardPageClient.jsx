@@ -452,8 +452,8 @@ export default function LeaderboardPageClient() {
         </div>
 
         {activeViewTab === "chat" ? (
-          <div className="max-w-lg mx-auto mb-12">
-            <GlobalLeaderboardChat />
+          <div className="leaderboard-chat-panel">
+            <GlobalLeaderboardChat variant="leaderboard" />
           </div>
         ) : null}
 

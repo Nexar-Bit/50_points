@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { staticFile } from "@/frontend/lib/config/paths";
+import { HOF_GOLD_WINNER_AVATAR_COLOR } from "@/frontend/lib/data/hallOfFameData";
 
 const PEDESTAL_IMAGES = {
   gold: staticFile("/Img/hall-of-fame-gold.png"),
@@ -21,12 +22,12 @@ function avatarUrl(name, color) {
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${hex}&color=fff&size=256&bold=true`;
 }
 
-function GoldWinnerFrame({ name, color, pointsLabel }) {
+function GoldWinnerFrame({ name, pointsLabel }) {
   return (
     <div className="hof-winner-frame">
       <div className="hof-winner-frame__avatar-wrap">
         <img
-          src={avatarUrl(name, color)}
+          src={avatarUrl(name, HOF_GOLD_WINNER_AVATAR_COLOR)}
           alt=""
           className="hof-winner-frame__avatar"
         />
@@ -61,7 +62,6 @@ function PodiumSlot({ player, variant, pointsWord, locale, delay }) {
         {isGold ? (
           <GoldWinnerFrame
             name={player.name}
-            color={player.color}
             pointsLabel={formatPoints(player.points, locale, pointsWord)}
           />
         ) : (

@@ -206,6 +206,9 @@ export const translations = {
       live: "Conectado",
       feedTitle: "Mensajes",
       filterAll: "Todos",
+      inputPlaceholder: "Escribe un mensaje...",
+      send: "Enviar mensaje",
+      disclaimer: "Chat del torneo - Respeta a los demas jugadores",
       nextTournament: "Proximo torneo",
       viewTournament: "VER TORNEO",
       record: {
@@ -1266,6 +1269,9 @@ export const translations = {
       live: "Connected",
       feedTitle: "Messages",
       filterAll: "All",
+      inputPlaceholder: "Write a message...",
+      send: "Send message",
+      disclaimer: "Tournament chat - Respect other players",
       nextTournament: "Next tournament",
       viewTournament: "VIEW TOURNAMENT",
       record: {

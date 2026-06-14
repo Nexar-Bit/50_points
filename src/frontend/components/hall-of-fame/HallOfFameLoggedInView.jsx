@@ -8,15 +8,13 @@ import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 import HallOfFamePodium from "@/frontend/components/hall-of-fame/HallOfFamePodium";
 import HallOfFameAchievementGrid from "@/frontend/components/hall-of-fame/HallOfFameAchievementGrid";
 import HallOfFameNewsTicker from "@/frontend/components/hall-of-fame/HallOfFameNewsTicker";
-import { HOF_FEATS } from "@/frontend/lib/data/hallOfFameData";
+import { HOF_FEATS, HOF_PODIUM_RANK_COLORS } from "@/frontend/lib/data/hallOfFameData";
 
 const FALLBACK_PODIUM = [
-  { rank: 1, name: "María López", points: 7650, color: "#fbbf24" },
-  { rank: 2, name: "Alex Martin", points: 4250, color: "#a1a1aa" },
-  { rank: 3, name: "David Ruiz", points: 2150, color: "#ea580c" },
+  { rank: 1, name: "StarPicker", points: 608, color: HOF_PODIUM_RANK_COLORS[1] },
+  { rank: 2, name: "DiamondEdge", points: 608, color: HOF_PODIUM_RANK_COLORS[2] },
+  { rank: 3, name: "IronRider", points: 608, color: HOF_PODIUM_RANK_COLORS[3] },
 ];
-
-const rankColors = { 1: "#fbbf24", 2: "#a1a1aa", 3: "#ea580c" };
 
 const LEGENDARY_HORSES = [
   { name: "Thunder Strike", track: "Gulfstream" },
@@ -30,7 +28,7 @@ function mapPodiumPlayer(entry) {
     rank: entry.rank,
     name: entry.username,
     points: entry.totalPoints ?? 0,
-    color: entry.avatarColor || rankColors[entry.rank] || "#7c3aed",
+    color: entry.avatarColor || HOF_PODIUM_RANK_COLORS[entry.rank] || "#7c3aed",
   };
 }
 

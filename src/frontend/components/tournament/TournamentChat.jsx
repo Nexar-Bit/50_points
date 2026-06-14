@@ -1,78 +1,194 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Send, Flame, Crown, Shield } from 'lucide-react';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Send, Flame, Crown, Star, Zap, Gem } from "lucide-react";
+import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
+
+const TIER_ICONS = {
+  star: Star,
+  bolt: Zap,
+  gem: Gem,
+};
 
 const mockMessages = [
-  { id: 1, user: 'TurfMaster_BR', avatar: '🏇', message: 'Full Point en la carrera 5, vamos a ver!', time: '14:32', isAdmin: false, isHot: true },
-  { id: 2, user: 'Jinete_Oscuro', avatar: '🎯', message: 'Smart Pick es la estrategia segura hoy', time: '14:33', isAdmin: false },
-  { id: 3, user: 'ADMIN', avatar: '👑', message: 'Carrera 4 comienza en 5 minutos! Confirmen sus picks!', time: '14:34', isAdmin: true },
-  { id: 4, user: 'Golden_Track', avatar: '🌟', message: 'Thunder Strike tiene las mejores odds', time: '14:35', isHot: false },
-  { id: 5, user: 'FullPoint_King', avatar: '⚡', message: 'Subí 12 posiciones con un Full Point! 🔥', time: '14:36', isHot: true },
-  { id: 6, user: 'DualForce_99', avatar: '💎', message: 'Alguien más usando Dual en la 6?', time: '14:37' },
-  { id: 7, user: 'ADMIN', avatar: '👑', message: 'Resultado Carrera 3: Thunder Strike ganó pagando 4.20!', time: '14:38', isAdmin: true },
-  { id: 8, user: 'SmartPick_Pro', avatar: '🧠', message: 'Mi ticket 2 está en el top 15, vamos!', time: '14:39' },
+  {
+    id: 1,
+    user: "TurfMaster_BR",
+    message: "Full Point en la carrera 5, vamos a ver!",
+    time: "14:32",
+    isHot: true,
+    tier: "star",
+  },
+  {
+    id: 2,
+    user: "Jinete_Oscuro",
+    message: "Smart Pick es la estrategia segura hoy",
+    time: "14:33",
+  },
+  {
+    id: 3,
+    user: "ADMIN",
+    message: "Carrera 4 comienza en 5 minutos! Confirmen sus picks!",
+    time: "14:34",
+    isAdmin: true,
+  },
+  {
+    id: 4,
+    user: "Golden_Track",
+    message: "Thunder Strike tiene las mejores odds",
+    time: "14:35",
+    tier: "gem",
+  },
+  {
+    id: 5,
+    user: "FullPoint_King",
+    message: "Subí 12 posiciones con un Full Point!",
+    time: "14:36",
+    isHot: true,
+    tier: "bolt",
+  },
+  {
+    id: 6,
+    user: "DualForce_99",
+    message: "Alguien más usando Dual en la 6?",
+    time: "14:37",
+  },
+  {
+    id: 7,
+    user: "ADMIN",
+    message: "Resultado Carrera 3: Thunder Strike ganó pagando 4.20!",
+    time: "14:38",
+    isAdmin: true,
+  },
+  {
+    id: 8,
+    user: "SmartPick_Pro",
+    message: "Mi ticket 2 está en el top 15, vamos!",
+    time: "14:39",
+  },
 ];
 
+function avatarHue(username) {
+  let hash = 0;
+  for (let i = 0; i < username.length; i += 1) {
+    hash = username.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return Math.abs(hash) % 360;
+}
+
+function avatarInitials(username) {
+  if (username === "ADMIN") return "AD";
+  const parts = username.split(/[_\s-]+/).filter(Boolean);
+  const first = parts[0]?.[0] ?? "?";
+  const second = parts[1]?.[0] ?? parts[0]?.[1] ?? "";
+  return `${first}${second}`.toUpperCase();
+}
+
 function ChatMessage({ msg }) {
+  const TierIcon = msg.tier ? TIER_ICONS[msg.tier] : null;
+  const hue = avatarHue(msg.user);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 5 }}
+    <motion.article
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`px-3 py-2 rounded-lg ${
-        msg.isAdmin
-          ? 'bg-gradient-to-r from-gold/10 to-gold/5 border border-gold/20'
-          : 'hover:bg-white/[0.02]'
-      }`}
+      className={[
+        "tournament-chat__message",
+        msg.isAdmin ? "tournament-chat__message--admin" : "",
+        msg.isHot && !msg.isAdmin ? "tournament-chat__message--hot" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
-      <div className="flex items-start gap-2">
-        <span className="text-sm flex-shrink-0">{msg.avatar}</span>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5">
-            <span className={`text-xs font-bold ${msg.isAdmin ? 'text-gold' : 'text-white/70'}`}>
+      <div
+        className="tournament-chat__avatar"
+        style={{ "--chat-avatar-hue": hue }}
+        aria-hidden
+      >
+        <span>{avatarInitials(msg.user)}</span>
+      </div>
+
+      <div className="tournament-chat__body">
+        <header className="tournament-chat__meta">
+          <div className="tournament-chat__identity">
+            <span
+              className={[
+                "tournament-chat__username",
+                msg.isAdmin ? "tournament-chat__username--admin" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            >
               {msg.user}
             </span>
-            {msg.isAdmin && <Crown size={10} className="text-gold" />}
-            {msg.isHot && <Flame size={10} className="text-orange-400" />}
-            <span className="text-white/20 text-[10px] ml-auto">{msg.time}</span>
+            {msg.isAdmin ? (
+              <Crown className="tournament-chat__badge tournament-chat__badge--admin" aria-hidden />
+            ) : null}
+            {TierIcon ? (
+              <TierIcon
+                className={`tournament-chat__badge tournament-chat__badge--${msg.tier}`}
+                aria-hidden
+              />
+            ) : null}
+            {msg.isHot && !msg.isAdmin ? (
+              <Flame className="tournament-chat__badge tournament-chat__badge--hot" aria-hidden />
+            ) : null}
           </div>
-          <p className={`text-xs mt-0.5 ${msg.isAdmin ? 'text-gold/80 font-medium' : 'text-white/60'}`}>
-            {msg.message}
-          </p>
-        </div>
+          <time className="tournament-chat__time" dateTime={msg.time}>
+            {msg.time}
+          </time>
+        </header>
+        <p className="tournament-chat__text">{msg.message}</p>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }
 
-export default function TournamentChat() {
-  const [message, setMessage] = useState('');
+export default function TournamentChat({ variant = "embedded" }) {
+  const { t } = useLanguage();
+  const [message, setMessage] = useState("");
 
   return (
-    <div className="flex flex-col">
-      <div className="space-y-1 mb-3 max-h-[400px] overflow-y-auto">
-        {mockMessages.map(msg => (
+    <div
+      className={[
+        "tournament-chat",
+        variant === "leaderboard" ? "tournament-chat--leaderboard" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <div className="tournament-chat__feed" role="log" aria-live="polite">
+        {mockMessages.map((msg) => (
           <ChatMessage key={msg.id} msg={msg} />
         ))}
       </div>
 
-      <div className="flex items-center gap-2 p-2 rounded-xl border border-white/10 bg-white/[0.03]">
+      <form
+        className="tournament-chat__composer"
+        onSubmit={(event) => {
+          event.preventDefault();
+          setMessage("");
+        }}
+      >
+        <label className="sr-only" htmlFor="tournament-chat-input">
+          {t("chatPage.inputPlaceholder")}
+        </label>
         <input
+          id="tournament-chat-input"
           type="text"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Escribe un mensaje..."
-          className="flex-1 bg-transparent text-white text-sm placeholder:text-white/20 outline-none px-2"
+          onChange={(event) => setMessage(event.target.value)}
+          placeholder={t("chatPage.inputPlaceholder")}
+          className="tournament-chat__input"
+          autoComplete="off"
         />
-        <button className="p-2 rounded-lg bg-purple/20 hover:bg-purple/30 transition-colors">
-          <Send size={14} className="text-purple-light" />
+        <button type="submit" className="tournament-chat__send" aria-label={t("chatPage.send")}>
+          <Send aria-hidden />
         </button>
-      </div>
+      </form>
 
-      <p className="text-white/15 text-[10px] text-center mt-2">
-        Chat del torneo - Respeta a los demas jugadores
-      </p>
+      <p className="tournament-chat__disclaimer">{t("chatPage.disclaimer")}</p>
     </div>
   );
 }
