@@ -189,9 +189,9 @@ function HeroCtaPanel({ t }) {
     <div className="hero-cta-panel">
       <div className="hero-cta-panel__buttons">
         <Link
-          href="/login"
+          href="/login?modality=paid"
           className="hero-cta-btn hero-cta-btn--purple group"
-          onClick={() => persistModality("paid")}
+          onClick={() => { persistModality("paid"); markCoverPassed(); }}
         >
           <span className="hero-cta-btn__main">
             <LogIn className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
@@ -201,9 +201,9 @@ function HeroCtaPanel({ t }) {
         </Link>
 
         <Link
-          href="/register"
+          href="/register?modality=free"
           className="hero-cta-btn hero-cta-btn--cyan group"
-          onClick={() => persistModality("free")}
+          onClick={() => { persistModality("free"); markCoverPassed(); }}
         >
           <span className="hero-cta-btn__main">
             <UserPlus className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
@@ -213,7 +213,7 @@ function HeroCtaPanel({ t }) {
         </Link>
 
         <Link
-          href="/inicio"
+          href="/inicio?modality=special"
           className="hero-cta-btn hero-cta-btn--gold group"
           onClick={() => {
             persistModality("special");
@@ -228,7 +228,7 @@ function HeroCtaPanel({ t }) {
         </Link>
 
         <Link
-          href="/inicio"
+          href="/inicio?modality=guest"
           className="hero-cta-btn hero-cta-btn--guest group"
           onClick={() => {
             persistModality("guest");

@@ -7,6 +7,8 @@ import AppSplashScreen from "@/frontend/components/layout/AppSplashScreen";
 import {
   clearCoverPassed,
   hasCoverPassed,
+  persistModality,
+  isValidModalityId,
 } from "@/frontend/lib/gameModalities";
 
 /** Match CSS loader animation (--splash-loader-duration: 2.4s). */
@@ -37,9 +39,16 @@ export default function AppBootGate({ children }) {
   const [showSplash, setShowSplash] = useState(true);
   const [exiting, setExiting] = useState(false);
 
-  // Always reset cover-passed on fresh page load so splash always shows
+  // Always reset cover-passed on fresh page load so splash always shows.
+  // If a ?modality=X param is in the URL, persist it so the blue card is
+  // highlighted when the user arrives at /inicio after the cover.
   useEffect(() => {
     clearCoverPassed();
+    const params = new URLSearchParams(window.location.search);
+    const m = params.get("modality");
+    if (m && isValidModalityId(m)) {
+      persistModality(m);
+    }
   }, []);
 
   useEffect(() => {
