@@ -4,7 +4,6 @@ import { useSearchParams } from "next/navigation";
 import ModalityPageShell from "@/frontend/components/modalities/ModalityPageShell";
 import ModalitySimpleTabs from "@/frontend/components/modalities/ModalitySimpleTabs";
 import TracksWorkflowAccordion from "@/frontend/components/modalities/TracksWorkflowAccordion";
-import TracksWorkflowTicketsBridge from "@/frontend/components/modalities/TracksWorkflowTicketsBridge";
 import { useTracksWorkflowState } from "@/frontend/lib/hooks/useTracksWorkflowState";
 import { ticketWorkflowAsset } from "@/frontend/lib/config/ticketWorkflowAssets";
 
@@ -62,12 +61,6 @@ export default function TracksWorkflowList({ modalityId, mod, tracks, loading, t
               <p className="tracks-workflow-banner__body">{t("ticketWorkflow.bannerBody")}</p>
             </div>
           </header>
-
-          <TracksWorkflowTicketsBridge
-            tracks={tracks}
-            workflow={workflow}
-            loading={loading}
-          />
 
           <div className="tracks-workflow__grid tracks-workflow__grid--stacked">
             <div className="tracks-workflow__main tracks-workflow__main--full">
