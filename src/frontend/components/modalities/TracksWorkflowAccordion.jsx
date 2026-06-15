@@ -1,22 +1,40 @@
 "use client";
 
-import Link from "next/link";
-import { MapPin, ChevronRight } from "lucide-react";
+import { MapPin, ChevronDown, ChevronUp } from "lucide-react";
+import TrackTicketsPanel from "@/frontend/components/modalities/TrackTicketsPanel";
+import EmbeddedTicketRaces from "@/frontend/components/onboarding/EmbeddedTicketRaces";
+import { useTracksWorkflowState } from "@/frontend/lib/hooks/useTracksWorkflowState";
 import { ticketWorkflowAsset } from "@/frontend/lib/config/ticketWorkflowAssets";
-import { modalityPath } from "@/frontend/lib/gameModalities";
 
 /**
- * Racetrack list — each row is a direct link to the tournament page.
- * Inline ticket/race expansion removed per client request.
+ * Track list — click a track to expand tickets + races inline on the same page.
  */
 export default function TracksWorkflowAccordion({
   tracks,
   modalityId,
   loading,
   t,
+  initialTrackSlug = null,
+  initialTicketNum = null,
+  workflow: workflowProp = null,
 }) {
+  const internalWorkflow = useTracksWorkflowState(initialTrackSlug, initialTicketNum);
+  const workflow = workflowProp ?? internalWorkflow;
+
+  const {
+    expandedSlug,
+    activeTicketNum,
+    racesOpen,
+    usageVersion,
+    toggleTrack,
+    handleTicketSelect,
+    openRaces,
+    bumpUsage,
+  } = workflow;
+
   const thumbFallback = ticketWorkflowAsset("trackRowThumbDefault");
   const livePillBg = ticketWorkflowAsset("trackLivePill");
+  const chevronGlow = ticketWorkflowAsset("accordionChevronGlow");
 
   if (loading) {
     return <p className="tracks-workflow__status">{t("gameModalities.loading")}</p>;
@@ -29,19 +47,24 @@ export default function TracksWorkflowAccordion({
   return (
     <ul className="modality-tracks-accordion tracks-workflow__accordion track-workflow-accordion">
       {tracks.map((track) => {
-        const href = track.tournamentSlug
-          ? `/tournament/${track.tournamentSlug}`
-          : modalityPath(modalityId, "tickets", { trackSlug: track.slug });
+        const isOpen = expandedSlug === track.slug;
+        const showRaces =
+          isOpen && racesOpen && activeTicketNum && track.tournamentSlug;
 
         return (
           <li
             id={`track-${track.slug}`}
             key={track.slug}
-            className="modality-tracks-accordion__item track-workflow-accordion__item"
+            className={`modality-tracks-accordion__item track-workflow-accordion__item${
+              isOpen ? " modality-tracks-accordion__item--open" : ""
+            }`}
           >
-            <Link
-              href={href}
-              className="modality-track-row modality-track-row--link tracks-workflow__track-row"
+            {/* Track row — click to expand inline */}
+            <button
+              type="button"
+              className="modality-track-row modality-track-row--button tracks-workflow__track-row"
+              onClick={() => toggleTrack(track.slug)}
+              aria-expanded={isOpen}
             >
               <span
                 className="modality-track-row__thumb tracks-workflow__thumb"
@@ -76,8 +99,47 @@ export default function TracksWorkflowAccordion({
                   ) : null}
                 </span>
               </span>
-              <ChevronRight className="modality-track-row__chevron" aria-hidden />
-            </Link>
+              <span className="tracks-workflow__chevron-wrap" aria-hidden>
+                {chevronGlow ? (
+                  <img
+                    src={chevronGlow}
+                    alt=""
+                    className={`tracks-workflow__chevron-img${
+                      isOpen ? " tracks-workflow__chevron-img--up" : ""
+                    }`}
+                  />
+                ) : isOpen ? (
+                  <ChevronUp className="modality-track-row__chevron" />
+                ) : (
+                  <ChevronDown className="modality-track-row__chevron" />
+                )}
+              </span>
+            </button>
+
+            {/* Inline expansion — tickets + races on the same page */}
+            {isOpen && track.tournamentSlug ? (
+              <div className="track-inline-expand">
+                <TrackTicketsPanel
+                  inline
+                  modalityId={modalityId}
+                  trackSlug={track.slug}
+                  tournamentSlug={track.tournamentSlug}
+                  usageVersion={usageVersion}
+                  activeNum={activeTicketNum ?? 0}
+                  onActiveNumChange={handleTicketSelect}
+                  onOpenRaces={openRaces}
+                />
+
+                {showRaces ? (
+                  <EmbeddedTicketRaces
+                    tournamentSlug={track.tournamentSlug}
+                    ticketNum={activeTicketNum}
+                    trackSlug={track.slug}
+                    onUsageChange={bumpUsage}
+                  />
+                ) : null}
+              </div>
+            ) : null}
           </li>
         );
       })}

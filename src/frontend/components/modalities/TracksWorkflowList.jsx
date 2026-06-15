@@ -1,11 +1,17 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import ModalityPageShell from "@/frontend/components/modalities/ModalityPageShell";
 import ModalitySimpleTabs from "@/frontend/components/modalities/ModalitySimpleTabs";
 import TracksWorkflowAccordion from "@/frontend/components/modalities/TracksWorkflowAccordion";
+import { useTracksWorkflowState } from "@/frontend/lib/hooks/useTracksWorkflowState";
 import { ticketWorkflowAsset } from "@/frontend/lib/config/ticketWorkflowAssets";
 
 export default function TracksWorkflowList({ modalityId, mod, tracks, loading, t, embedded = false }) {
+  const searchParams = useSearchParams();
+  const expandFromUrl = searchParams.get("track");
+  const ticketFromUrl = Number.parseInt(searchParams.get("ticket") || "", 10);
+  const workflow = useTracksWorkflowState(expandFromUrl, ticketFromUrl);
   const noise = ticketWorkflowAsset("noiseOverlayTile");
   const pageBg = ticketWorkflowAsset("tracksWorkflowBg");
   const mainPanelBg = ticketWorkflowAsset("tracksWorkflowMainPanelBg");
@@ -78,6 +84,7 @@ export default function TracksWorkflowList({ modalityId, mod, tracks, loading, t
                   modalityId={modalityId}
                   loading={loading}
                   t={t}
+                  workflow={workflow}
                 />
               </div>
             </div>
