@@ -33,7 +33,7 @@ function HubCard({ href, title, description, icon: Icon }) {
 export default function PlayerHubPageClient() {
   const { t } = useLanguage();
   const { user } = useAuth();
-  const { activeModalityId, setActiveModality } = useModality();
+  const { activeModalityId } = useModality();
   const [topPlayers, setTopPlayers] = useState([]);
 
   const q = (href) => withModalityQuery(href, activeModalityId);
@@ -90,11 +90,8 @@ export default function PlayerHubPageClient() {
           <AnimateInView delay={0.1}>
             <ModalityHubBoard
               layout="flat"
-              selectable
               showHow={false}
               titleAs="h2"
-              activeModeId={activeModalityId}
-              onModeSelect={setActiveModality}
               className="modality-hub-board--player-hub"
             />
           </AnimateInView>
