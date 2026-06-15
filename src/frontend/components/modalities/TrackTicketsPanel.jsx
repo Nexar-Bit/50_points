@@ -114,23 +114,7 @@ export default function TrackTicketsPanel({
         })}
       </div>
 
-      {activeNum > 0 ? (
-        <div
-          id={`track-ticket-panel-${trackSlug}-${activeNum}`}
-          role="tabpanel"
-          aria-labelledby={`track-ticket-tab-${trackSlug}-${activeNum}`}
-          className="track-tickets-panel__active"
-        >
-          <FreeTicketCard
-            num={activeNum}
-            used={activeUsed}
-            playHref={inline ? undefined : playHref}
-            staticStub
-            onViewTicket={openRaces}
-            onPlay={playFirstRace}
-          />
-        </div>
-      ) : null}
+      {/* FreeTicketCard removed — ticket tabs above are sufficient */}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, ChevronUp } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { staticFile } from "@/frontend/lib/config/paths";
 import TrackTicketsPanel from "@/frontend/components/modalities/TrackTicketsPanel";
 import EmbeddedTicketRaces from "@/frontend/components/onboarding/EmbeddedTicketRaces";
@@ -81,16 +81,14 @@ export default function TracksWorkflowAccordion({
                   </div>
                 </div>
 
-                <div className="live-tournament-card__body live-tournament-card__body--cover">
-                  <span className="live-tournament-card__cta">
-                    {isOpen
-                      ? t("gameModalities.tracksSubtitle") || "Ver carreras"
-                      : t("tournamentsSection.enterTournament") || "ENTRAR AL TORNEO"}
-                    {isOpen
-                      ? <ChevronUp className="live-tournament-card__cta-icon" aria-hidden />
-                      : <ChevronRight className="live-tournament-card__cta-icon" aria-hidden />}
-                  </span>
-                </div>
+                {!isOpen ? (
+                  <div className="live-tournament-card__body live-tournament-card__body--cover">
+                    <span className="live-tournament-card__cta">
+                      {t("tournamentsSection.enterTournament") || "ENTRAR AL TORNEO"}
+                      <ChevronRight className="live-tournament-card__cta-icon" aria-hidden />
+                    </span>
+                  </div>
+                ) : null}
               </div>
             </button>
 

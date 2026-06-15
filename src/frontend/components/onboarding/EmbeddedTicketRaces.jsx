@@ -200,10 +200,6 @@ export default function EmbeddedTicketRaces({
 
   return (
     <div className="comenzar-inline-races">
-      <p className="comenzar-inline-races__hint">
-        {t("gameModalities.inlineRacesHint").replace("{num}", String(ticketNum))}
-      </p>
-
       <ol className="comenzar-inline-races__list">
         {tournament.races.map((race) => {
           const sub = submittedForRace(race.id);
