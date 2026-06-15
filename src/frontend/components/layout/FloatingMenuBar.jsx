@@ -24,7 +24,7 @@ export default function FloatingMenuBar() {
   const section = searchParams.get("section");
   const router = useRouter();
   const { t } = useLanguage();
-  const { logout } = useAuth();
+  const { logout, isAuthenticated } = useAuth();
   const { activeModalityId } = useModality();
   const [expanded, setExpanded] = useState(false);
   const [peek, setPeek] = useState(false);
@@ -232,14 +232,28 @@ export default function FloatingMenuBar() {
     return (
       <li key={item.id} className="floating-menu__item" style={style}>
         {item.isLogout ? (
-          <button
-            type="button"
-            className={className}
-            onClick={handleLogout}
-            title={showTooltip ? t(item.labelKey) : undefined}
-          >
-            {inner}
-          </button>
+          isAuthenticated ? (
+            <button
+              type="button"
+              className={className}
+              onClick={handleLogout}
+              title={showTooltip ? t(item.labelKey) : undefined}
+            >
+              {inner}
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className={`floating-menu__link floating-menu__link--login`}
+              title={showTooltip ? t("floatingMenu.login") : undefined}
+              onClick={handleClose}
+            >
+              <span className="floating-menu__icon-wrap">
+                {Icon ? <Icon className="floating-menu__icon" /> : null}
+              </span>
+              <span className="floating-menu__label">{t("floatingMenu.login")}</span>
+            </Link>
+          )
         ) : (
           <Link
             href={

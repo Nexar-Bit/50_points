@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Sparkles } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { fetchJson, fetchAuthJson } from "@/frontend/lib/api/client";
 import { staticFile } from "@/frontend/lib/config/paths";
 import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 import HallOfFamePodium from "@/frontend/components/hall-of-fame/HallOfFamePodium";
+import HallOfFameEntryModals from "@/frontend/components/hall-of-fame/HallOfFameEntryModals";
 import HallOfFameAchievementGrid from "@/frontend/components/hall-of-fame/HallOfFameAchievementGrid";
 import HallOfFameNewsTicker from "@/frontend/components/hall-of-fame/HallOfFameNewsTicker";
 import { HOF_FEATS, HOF_PODIUM_RANK_COLORS } from "@/frontend/lib/data/hallOfFameData";
@@ -82,6 +84,18 @@ export default function HallOfFameLoggedInView() {
         />
 
         <HallOfFameNewsTicker className="hof-app__news" />
+
+        {/* Manual trigger — wizard no longer opens automatically */}
+        <div className="hof-entry-trigger-row">
+          <button
+            type="button"
+            className="hof-entry-trigger-btn"
+            onClick={() => HallOfFameEntryModals.open?.()}
+          >
+            <Sparkles className="w-4 h-4" aria-hidden />
+            {t("hallOfFame.viewMyEntry") || "Ver mi presentación oficial"}
+          </button>
+        </div>
 
         <section className="hof-feat-reveal" aria-label={t("hallOfFame.featReveal")}>
           <div className="hof-feat-reveal__intro">

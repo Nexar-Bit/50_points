@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { Info } from "lucide-react";
 import SectionHeader from "@/frontend/components/home/SectionHeader";

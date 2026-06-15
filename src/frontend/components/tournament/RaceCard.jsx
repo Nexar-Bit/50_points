@@ -86,17 +86,20 @@ export default function RaceCard({
   const isNonTournament = !tournamentRace;
 
   const strategyStripConfig = confirmedStrategy ? ({
-    full: { borderColor: 'border-l-purple', bgTint: 'bg-purple/[0.07]', numGradient: 'from-purple to-purple-light' },
-    dual: { borderColor: 'border-l-cyan', bgTint: 'bg-cyan/[0.07]', numGradient: 'from-purple to-cyan' },
-    smart: { borderColor: 'border-l-gold', bgTint: 'bg-gold/[0.07]', numGradient: 'from-cyan to-gold' },
+    full:  { borderColor: 'border-l-purple',      bgTint: 'bg-purple/[0.07]',      numGradient: 'from-purple to-purple-light' },
+    dual:  { borderColor: 'border-l-cyan',         bgTint: 'bg-cyan/[0.07]',         numGradient: 'from-cyan to-cyan' },
+    smart: { borderColor: 'border-l-yellow-400',   bgTint: 'bg-yellow-400/[0.07]',   numGradient: 'from-gold to-gold' },
   })[confirmedStrategy] : null;
 
+  // A confirmed (already-picked) race row should feel "settled": slight opacity, no hover noise
+  const isConfirmed = Boolean(confirmedStrategy);
+
   return (
-    <div className={`rounded-xl overflow-hidden backdrop-blur-lg ${
+    <div className={`rounded-xl overflow-hidden backdrop-blur-lg transition-opacity duration-300 ${
       isNonTournament
         ? 'border border-white/[0.04] bg-white/[0.008] opacity-[0.35]'
         : strategyStripConfig
-          ? `border border-l-[3px] ${strategyStripConfig.borderColor} border-white/10 ${strategyStripConfig.bgTint}`
+          ? `border border-l-[3px] ${strategyStripConfig.borderColor} border-white/10 ${strategyStripConfig.bgTint} opacity-75`
           : 'border border-white/10 bg-white/[0.03]'
     }`}>
       {/* Race header */}
@@ -113,7 +116,11 @@ export default function RaceCard({
                   ? `bg-gradient-to-br ${strategyStripConfig.numGradient} text-white`
                   : 'bg-gradient-to-br from-cyan to-purple text-white'
             }`}>
-              {isNonTournament ? <Lock size={16} /> : `C${race.number}`}
+              {isNonTournament
+                ? <Lock size={16} />
+                : isConfirmed
+                  ? <Check size={16} />
+                  : `C${race.number}`}
             </div>
             <div className="text-left min-w-0">
               <div className="flex items-center gap-2 flex-wrap">

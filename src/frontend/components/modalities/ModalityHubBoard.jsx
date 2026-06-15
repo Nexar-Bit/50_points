@@ -14,6 +14,14 @@ const HUB_GROUPS = [
   { key: "paid", labelKey: "hubCategoryPaid", modes: ["paid", "special"] },
 ];
 
+/** CSS gradients mirrored from globals.css — used as a base layer under the PNG overlay. */
+const CARD_GRADIENTS = {
+  guest:   "linear-gradient(165deg, #60a5fa 0%, #2563eb 48%, #1d4ed8 100%)",
+  free:    "linear-gradient(165deg, #e879f9 0%, #c026d3 50%, #a21caf 100%)",
+  paid:    "linear-gradient(165deg, #fde047 0%, #facc15 52%, #eab308 100%)",
+  special: "linear-gradient(165deg, #52525b 0%, #3f3f46 42%, #27272a 100%)",
+};
+
 function ModalityHubModeCard({ modeId, t, selectable, activeModeId, onModeSelect }) {
   const mod = getModality(modeId);
   const locked = !mod.available;
@@ -23,7 +31,16 @@ function ModalityHubModeCard({ modeId, t, selectable, activeModeId, onModeSelect
   const className = `modality-hub-mode-card modality-hub-mode-card--${modeId}${
     locked ? " modality-hub-mode-card--locked" : ""
   }${isSelected ? " modality-hub-mode-card--selected" : ""}`;
-  const cardStyle = cardBg ? { backgroundImage: `url(${cardBg})` } : undefined;
+
+  // Stack the PNG on top of the gradient so transparent areas show the gradient
+  const cardStyle = cardBg
+    ? {
+        backgroundImage: `url(${cardBg}), ${CARD_GRADIENTS[modeId] || "none"}`,
+        backgroundSize: "cover, cover",
+        backgroundPosition: "center top, center top",
+        backgroundRepeat: "no-repeat, no-repeat",
+      }
+    : undefined;
 
   const content = (
     <>

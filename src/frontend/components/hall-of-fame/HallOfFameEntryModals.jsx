@@ -78,12 +78,8 @@ export default function HallOfFameEntryModals() {
   const [step, setStep] = useState(0);
   const [entry, setEntry] = useState(() => buildHallOfFameEntry({ isEn }));
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (sessionStorage.getItem(HOF_ENTRY_STORAGE_KEY) === "1") return;
-    const timer = setTimeout(() => setOpen(true), 600);
-    return () => clearTimeout(timer);
-  }, []);
+  // Never auto-open — user must click the trigger button.
+  // (Previously used sessionStorage which re-opened on every new tab.)
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -98,9 +94,12 @@ export default function HallOfFameEntryModals() {
   const close = useCallback(() => {
     setOpen(false);
     if (typeof window !== "undefined") {
-      sessionStorage.setItem(HOF_ENTRY_STORAGE_KEY, "1");
+      localStorage.setItem(HOF_ENTRY_STORAGE_KEY, "1");
     }
   }, []);
+
+  /** Public trigger so the HOF page can show a button to open this. */
+  HallOfFameEntryModals.open = () => { setOpen(true); setStep(0); };
 
   const next = () => {
     if (step >= STEP_COUNT - 1) close();

@@ -2,8 +2,6 @@
 
 import { Suspense } from "react";
 import { usePathname } from "next/navigation";
-import Header from "@/frontend/components/layout/Header";
-import Footer from "@/frontend/components/layout/Footer";
 import FloatingMenuBar from "@/frontend/components/layout/FloatingMenuBar";
 import AppSurface from "@/frontend/components/layout/AppSurface";
 import LanguageToggle from "@/frontend/components/layout/LanguageToggle";
@@ -47,6 +45,15 @@ function isImmersiveBgPath(pathname) {
   );
 }
 
+/**
+ * Pages that never show the floating menu or any chrome.
+ * - Cover "/" is chromeless (has its own full-screen layout)
+ * - Auth pages /login /register have their own minimal chrome
+ */
+function hideMenuOnPath(pathname) {
+  return isHomePath(pathname) || isAuthPath(pathname);
+}
+
 export default function ConditionalShell({ children }) {
   const pathname = usePathname() || "";
   const { isAuthenticated, loading } = useAuth();
@@ -57,70 +64,45 @@ export default function ConditionalShell({ children }) {
   const onWorkflowTracks = isWorkflowTracksPath(pathname);
   const onHowToPlay = isHowToPlayPath(pathname);
   const hideChrome = isChromelessPath(pathname);
-  const immersiveBg = isImmersiveBgPath(pathname);
   const skipSurface = hideChrome || onAuth || onComenzar || onHowToPlay || onInicio;
+
+  // Floating menu is visible on ALL pages for ALL users (guests and registered)
+  // except: cover (/), login, and register
+  const showFloatingMenu = !hideMenuOnPath(pathname);
+  const showLanguageToggle = showFloatingMenu;
 
   if (loading) {
     return <main className="min-h-screen">{children}</main>;
   }
 
-  const showFloatingLanguageToggle = isAuthenticated && !hideChrome;
-
-  if (isAuthenticated) {
-    return (
-      <>
-        {!hideChrome ? (
-          <Suspense fallback={null}>
-            <FloatingMenuBar />
-          </Suspense>
-        ) : null}
-        {showFloatingLanguageToggle ? <LanguageToggle className="app-lang-toggle" /> : null}
-        <main
-          className={
-            hideChrome
-              ? "min-h-screen"
-              : onAuth
-                ? "app-main app-main--auth min-h-screen"
-                : onComenzar || onInicio
-                  ? `app-main app-main--with-menu app-main--immersive ${
-                      onInicio ? "app-main--inicio" : "app-main--comenzar"
-                    } min-h-screen`
-                  : onWorkflowTracks
-                    ? "app-main app-main--with-menu app-main--immersive app-main--workflow-tracks min-h-screen"
-                    : onHowToPlay
-                      ? "app-main app-main--with-menu app-main--immersive app-main--how-to-play min-h-screen"
-                      : "app-main app-main--with-menu app-main--immersive min-h-screen"
-          }
-        >
-          {skipSurface ? children : <AppSurface>{children}</AppSurface>}
-        </main>
-      </>
-    );
-  }
+  // Shared main class — same layout regardless of auth state
+  const mainClass = (() => {
+    if (hideChrome) return "min-h-screen";
+    if (onAuth) return "app-main app-main--auth min-h-screen";
+    if (onComenzar || onInicio)
+      return `app-main app-main--with-menu app-main--immersive ${
+        onInicio ? "app-main--inicio" : "app-main--comenzar"
+      } min-h-screen`;
+    if (onWorkflowTracks)
+      return "app-main app-main--with-menu app-main--immersive app-main--workflow-tracks min-h-screen";
+    if (onHowToPlay)
+      return "app-main app-main--with-menu app-main--immersive app-main--how-to-play min-h-screen";
+    return "app-main app-main--with-menu app-main--immersive min-h-screen";
+  })();
 
   return (
     <>
-      {!hideChrome ? <Header /> : null}
-      <main
-        className={
-          hideChrome
-            ? "min-h-screen"
-            : onAuth
-              ? "app-main app-main--auth min-h-screen"
-              : onComenzar
-                ? "app-main app-main--comenzar min-h-screen"
-                : onWorkflowTracks
-                  ? "app-main app-main--workflow-tracks min-h-screen"
-                  : onHowToPlay
-                    ? "app-main app-main--how-to-play min-h-screen"
-                    : immersiveBg
-                      ? "app-main min-h-screen"
-                      : "app-main min-h-screen pt-16 pb-16 md:pb-0"
-        }
-      >
+      {/* Floating menu — shown for everyone (guest + registered) on all app pages */}
+      {showFloatingMenu ? (
+        <Suspense fallback={null}>
+          <FloatingMenuBar />
+        </Suspense>
+      ) : null}
+      {showLanguageToggle ? <LanguageToggle className="app-lang-toggle" /> : null}
+
+      <main className={mainClass}>
         {skipSurface ? children : <AppSurface>{children}</AppSurface>}
       </main>
-      {!hideChrome ? <Footer /> : null}
     </>
   );
 }

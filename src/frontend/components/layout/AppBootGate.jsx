@@ -14,7 +14,20 @@ const MIN_SPLASH_MS = 2400;
 const EXIT_MS = 520;
 
 /**
- * Full-screen TORNEO splash on cold load, then cover (/) before /inicio.
+ * Pages that bypass the cover-page gate.
+ * Auth routes and the cover itself are always accessible directly.
+ */
+const BYPASS_PATHS = ["/", "/login", "/register"];
+function shouldBypassCover(pathname) {
+  return (
+    BYPASS_PATHS.includes(pathname) ||
+    pathname.startsWith("/api/")
+  );
+}
+
+/**
+ * Full-screen TORNEO splash on cold load → always lands on cover (/) first.
+ * After the user interacts with the cover, navigation is unrestricted.
  */
 export default function AppBootGate({ children }) {
   const { loading } = useAuth();
@@ -24,6 +37,7 @@ export default function AppBootGate({ children }) {
   const [showSplash, setShowSplash] = useState(true);
   const [exiting, setExiting] = useState(false);
 
+  // Always reset cover-passed on fresh page load so splash always shows
   useEffect(() => {
     clearCoverPassed();
   }, []);
@@ -40,9 +54,10 @@ export default function AppBootGate({ children }) {
     return () => window.clearTimeout(hideTimer);
   }, [loading]);
 
+  // After splash: if the user hasn't passed the cover yet, redirect to portada (/)
   useEffect(() => {
     if (loading || showSplash) return undefined;
-    if (pathname === "/inicio" && !hasCoverPassed()) {
+    if (!hasCoverPassed() && !shouldBypassCover(pathname)) {
       router.replace("/");
     }
     return undefined;

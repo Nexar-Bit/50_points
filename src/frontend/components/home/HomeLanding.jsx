@@ -410,10 +410,6 @@ export default function HomeLanding() {
           </div>
         </AnimateInView>
 
-        <AnimateInView delay={0.05}>
-          <HeroModeHeader t={t} />
-        </AnimateInView>
-
         {/* Strategy points — FULL / DUAL / SMART (image left, text right) */}
         <AnimateInView delay={0.1}>
           <div className="flex flex-col sm:flex-row items-stretch mb-8 sm:mb-10 bg-transparent">

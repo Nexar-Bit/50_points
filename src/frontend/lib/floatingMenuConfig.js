@@ -28,7 +28,7 @@ export const FLOATING_MENU_BLOCKS = [
     items: [
       { id: "ranking", href: "/leaderboard", labelKey: "floatingMenu.ranking" },
       { id: "chat", href: "/chat", labelKey: "floatingMenu.chat" },
-      { id: "feed", href: "/inicio#feed", labelKey: "floatingMenu.feed" },
+      { id: "feed", href: "/feed", labelKey: "floatingMenu.feed" },
     ],
   },
   {
