@@ -12094,6 +12094,44 @@ button.modality-hub-mode-card {
   flex-direction: column;
 }
 
+/* ── Track accordion grid — matches /tournaments big-card layout ── */
+.tracks-accordion-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: 0.5rem 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .tracks-accordion-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tracks-accordion-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.tracks-accordion-card {
+  min-width: 0;
+}
+
+.tracks-accordion-card--open {
+  grid-column: 1 / -1;
+}
+
+.tracks-accordion-card__trigger {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  background: transparent;
+  padding: 0;
+}
+
 .track-inline-expand {
   display: flex;
   flex-direction: column;

@@ -1,13 +1,14 @@
 "use client";
 
-import { MapPin, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronRight, ChevronUp } from "lucide-react";
+import { staticFile } from "@/frontend/lib/config/paths";
 import TrackTicketsPanel from "@/frontend/components/modalities/TrackTicketsPanel";
 import EmbeddedTicketRaces from "@/frontend/components/onboarding/EmbeddedTicketRaces";
 import { useTracksWorkflowState } from "@/frontend/lib/hooks/useTracksWorkflowState";
-import { ticketWorkflowAsset } from "@/frontend/lib/config/ticketWorkflowAssets";
 
 /**
- * Track list — click a track to expand tickets + races inline on the same page.
+ * Track cards — same big-card design as /tournaments page.
+ * Clicking a card expands tickets + races inline on the same page (no navigation).
  */
 export default function TracksWorkflowAccordion({
   tracks,
@@ -32,10 +33,6 @@ export default function TracksWorkflowAccordion({
     bumpUsage,
   } = workflow;
 
-  const thumbFallback = ticketWorkflowAsset("trackRowThumbDefault");
-  const livePillBg = ticketWorkflowAsset("trackLivePill");
-  const chevronGlow = ticketWorkflowAsset("accordionChevronGlow");
-
   if (loading) {
     return <p className="tracks-workflow__status">{t("gameModalities.loading")}</p>;
   }
@@ -45,75 +42,56 @@ export default function TracksWorkflowAccordion({
   }
 
   return (
-    <ul className="modality-tracks-accordion tracks-workflow__accordion track-workflow-accordion">
+    <div className="tracks-accordion-grid">
       {tracks.map((track) => {
         const isOpen = expandedSlug === track.slug;
-        const showRaces =
-          isOpen && racesOpen && activeTicketNum && track.tournamentSlug;
+        const showRaces = isOpen && racesOpen && activeTicketNum && track.tournamentSlug;
 
         return (
-          <li
+          <div
             id={`track-${track.slug}`}
             key={track.slug}
-            className={`modality-tracks-accordion__item track-workflow-accordion__item${
-              isOpen ? " modality-tracks-accordion__item--open" : ""
-            }`}
+            className={`tracks-accordion-card${isOpen ? " tracks-accordion-card--open" : ""}`}
           >
-            {/* Track row — click to expand inline */}
+            {/* Big photo card — same style as /tournaments */}
             <button
               type="button"
-              className="modality-track-row modality-track-row--button tracks-workflow__track-row"
+              className={`live-tournament-card live-tournament-card--cover${
+                track.live
+                  ? " live-tournament-card--active"
+                  : " live-tournament-card--upcoming"
+              } tracks-accordion-card__trigger`}
               onClick={() => toggleTrack(track.slug)}
               aria-expanded={isOpen}
             >
-              <span
-                className="modality-track-row__thumb tracks-workflow__thumb"
-                style={
-                  track.imageUrl || thumbFallback
-                    ? { backgroundImage: `url(${track.imageUrl || thumbFallback})` }
-                    : undefined
-                }
-              />
-              <span className="modality-track-row__info">
-                <span className="modality-track-row__name">{track.name}</span>
-                {track.location ? (
-                  <span className="modality-track-row__loc">
-                    <MapPin className="w-3 h-3 inline mr-1 opacity-60" aria-hidden />
-                    {track.location}
-                  </span>
-                ) : null}
-                <span className="modality-track-row__meta">
-                  {track.count === 1
-                    ? t("gameModalities.oneTournamentAtTrack")
-                    : `${track.count} ${t("gameModalities.tournamentsAtTrack")}`}
-                  {track.live ? (
-                    <span
-                      className="tracks-workflow__live-pill"
-                      style={
-                        livePillBg ? { backgroundImage: `url(${livePillBg})` } : undefined
-                      }
-                    >
-                      <span className="tracks-workflow__live-dot" aria-hidden />
-                      {t("gameModalities.live")}
-                    </span>
-                  ) : null}
-                </span>
-              </span>
-              <span className="tracks-workflow__chevron-wrap" aria-hidden>
-                {chevronGlow ? (
+              <div className="live-tournament-card__shell">
+                <div className="live-tournament-card__gloss" aria-hidden />
+                <div className="live-tournament-card__gloss-edge" aria-hidden />
+
+                <div className="live-tournament-card__media">
                   <img
-                    src={chevronGlow}
+                    src={track.imageUrl || staticFile("/images/live-feed.jpg")}
                     alt=""
-                    className={`tracks-workflow__chevron-img${
-                      isOpen ? " tracks-workflow__chevron-img--up" : ""
-                    }`}
+                    className="live-tournament-card__image"
                   />
-                ) : isOpen ? (
-                  <ChevronUp className="modality-track-row__chevron" />
-                ) : (
-                  <ChevronDown className="modality-track-row__chevron" />
-                )}
-              </span>
+                  <div className="live-tournament-card__media-shade" aria-hidden />
+                  <div className="live-tournament-card__media-gloss" aria-hidden />
+                  <div className="live-tournament-card__badges">
+                    <span className="live-tournament-card__track-pill">{track.name}</span>
+                  </div>
+                </div>
+
+                <div className="live-tournament-card__body live-tournament-card__body--cover">
+                  <span className="live-tournament-card__cta">
+                    {isOpen
+                      ? t("gameModalities.tracksSubtitle") || "Ver carreras"
+                      : t("tournamentsSection.enterTournament") || "ENTRAR AL TORNEO"}
+                    {isOpen
+                      ? <ChevronUp className="live-tournament-card__cta-icon" aria-hidden />
+                      : <ChevronRight className="live-tournament-card__cta-icon" aria-hidden />}
+                  </span>
+                </div>
+              </div>
             </button>
 
             {/* Inline expansion — tickets + races on the same page */}
@@ -129,7 +107,6 @@ export default function TracksWorkflowAccordion({
                   onActiveNumChange={handleTicketSelect}
                   onOpenRaces={openRaces}
                 />
-
                 {showRaces ? (
                   <EmbeddedTicketRaces
                     tournamentSlug={track.tournamentSlug}
@@ -140,9 +117,9 @@ export default function TracksWorkflowAccordion({
                 ) : null}
               </div>
             ) : null}
-          </li>
+          </div>
         );
       })}
-    </ul>
+    </div>
   );
 }
