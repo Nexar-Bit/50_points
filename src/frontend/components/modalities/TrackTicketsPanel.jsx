@@ -89,7 +89,7 @@ export default function TrackTicketsPanel({
               aria-controls={`track-ticket-panel-${trackSlug}-${num}`}
               id={`track-ticket-tab-${trackSlug}-${num}`}
               className={`track-tickets-tab track-tickets-tab--n${num}${
-                used ? " track-tickets-tab--used" : " track-tickets-tab--open"
+                used ? " track-tickets-tab--used" : ""
               }${isActive ? " track-tickets-tab--active" : ""}`}
               onClick={() => onActiveNumChange?.(num)}
             >
@@ -103,8 +103,10 @@ export default function TrackTicketsPanel({
                     <Check className="track-tickets-tab__status-icon" strokeWidth={3} aria-hidden />
                     {t("gameModalities.ticketUsed")}
                   </>
-                ) : (
+                ) : isActive ? (
                   t("gameModalities.ticketReady")
+                ) : (
+                  t("gameModalities.ticketAvailable")
                 )}
               </span>
             </button>

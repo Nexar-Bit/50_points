@@ -103,7 +103,7 @@ export const translations = {
       freeTicketsBanner: "¡TIENES 3 TICKETS GRATIS PARA JUGAR EN ESTE TORNEO!",
       freeTicketsBannerSub:
         "Cada ticket juega de forma independiente, acumula sus propios puntos y obtiene sus propios resultados.",
-      ticketReady: "Listo para jugar",
+      ticketReady: "EN PROGRESO",
       ticketAvailable: "DISPONIBLE",
       ticketViewButton: "VER TICKET",
       ticketUsed: "USADO",
@@ -1178,7 +1178,7 @@ export const translations = {
       freeTicketsBanner: "YOU HAVE 3 FREE TICKETS FOR THIS TOURNAMENT!",
       freeTicketsBannerSub:
         "Each ticket plays independently, earns its own points, and gets its own results.",
-      ticketReady: "Ready to play",
+      ticketReady: "IN PROGRESS",
       ticketAvailable: "AVAILABLE",
       ticketViewButton: "VIEW TICKET",
       ticketUsed: "USED",
