@@ -12237,8 +12237,16 @@ button.modality-hub-mode-card {
 }
 
 /* ── Track accordion grid — same 3-column grid as /tournaments ── */
+.tracks-accordion-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+}
+
 .tracks-accordion-grid {
   align-items: start;
+  width: 100%;
 }
 
 .tracks-accordion-card {
@@ -12267,12 +12275,57 @@ button.modality-hub-mode-card {
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
-  margin-top: 0.55rem;
+  margin-top: 0;
   padding: 0;
+}
+
+.track-inline-expand--full {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .track-inline-expand .track-tickets-panel {
   margin-top: 0;
+}
+
+.track-inline-expand--full .track-tickets-panel--inline {
+  padding: 0.85rem;
+}
+
+.track-inline-expand--full .track-tickets-panel--inline .track-tickets-tabs {
+  gap: 0.55rem;
+  margin-bottom: 0.75rem;
+}
+
+.track-inline-expand--full .track-tickets-panel--inline .track-tickets-tab {
+  min-height: 5.5rem;
+  padding: 0.65rem 0.45rem;
+}
+
+.track-inline-expand--full .track-tickets-panel--inline .track-tickets-tab__num {
+  font-size: 1.65rem;
+}
+
+.track-inline-expand--full .track-tickets-panel--inline .track-tickets-tab__label,
+.track-inline-expand--full .track-tickets-panel--inline .track-tickets-tab__status {
+  font-size: inherit;
+}
+
+.track-inline-expand--full .comenzar-inline-races {
+  margin-top: 0;
+  padding: 0.55rem 0.35rem 0.25rem;
+}
+
+.track-inline-expand--full .comenzar-inline-races__row {
+  grid-template-columns: auto 1fr auto auto;
+  gap: 0.55rem;
+  padding: 0.65rem 0.75rem;
+}
+
+.track-inline-expand--full .comenzar-inline-races__meta,
+.track-inline-expand--full .comenzar-inline-races__status-pill {
+  display: inline;
 }
 
 .track-inline-expand .comenzar-inline-races {
