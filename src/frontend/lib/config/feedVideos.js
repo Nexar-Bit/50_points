@@ -57,3 +57,29 @@ export function getFeedVideos() {
     };
   });
 }
+
+export const FEED_PAGE_SECTIONS = [
+  { id: "hot-players", segment: "hot", labelKey: "feed.sectionHotPlayers" },
+  { id: "live-races", segment: "live", labelKey: "feed.sectionLiveRaces" },
+  { id: "trending", segment: "trending", labelKey: "feed.sectionTrending" },
+  { id: "featured", segment: "featured", labelKey: "feed.sectionFeatured" },
+];
+
+/** Group clips for /feed page sections. */
+export function getFeedPageSections() {
+  const clips = getFeedVideos();
+  const grouped = { hot: [], live: [], trending: [], featured: [] };
+
+  for (const clip of clips) {
+    if (clip.id.includes("gemini_generated")) {
+      grouped.featured.push(clip);
+    } else if (grouped[clip.segment]) {
+      grouped[clip.segment].push(clip);
+    }
+  }
+
+  return FEED_PAGE_SECTIONS.map((section) => ({
+    ...section,
+    videos: grouped[section.segment] || [],
+  })).filter((section) => section.videos.length > 0);
+}

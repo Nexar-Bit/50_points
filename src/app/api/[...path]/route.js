@@ -38,7 +38,8 @@ async function proxy(request, context) {
   }
 
   const isRacingSync = search.includes('refresh=1');
-  const timeoutMs = isRacingSync ? 120000 : 30000;
+  const isHomeList = search.includes('for_home=1');
+  const timeoutMs = isRacingSync ? 120000 : isHomeList ? 45000 : 30000;
 
   const res = await fetch(url, {
     ...init,

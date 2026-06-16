@@ -6,7 +6,7 @@ import { mapTournamentForHomeCard } from '@/frontend/lib/api/mappers';
 import { ROUTE_CHANGE_EVENT } from '@/frontend/lib/navigationCache';
 
 /** How often the UI pulls latest DB data (backend scrapes every ~8s). */
-export const LIVE_DATA_POLL_MS = 5000;
+export const LIVE_DATA_POLL_MS = 8000;
 
 /**
  * Poll tournaments from the API and push updates to the UI (no page refresh).
@@ -39,7 +39,7 @@ export function useLiveTournamentsPoll({
         const res = await fetchTournamentsList({
           refresh: false,
           forHome,
-          timeoutMs: 15000,
+          timeoutMs: 30000,
         });
         if (cancelled) return;
         const list = Array.isArray(res?.tournaments) ? res.tournaments : [];
