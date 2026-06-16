@@ -13,17 +13,16 @@ import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useLiveTournamentsPoll } from "@/frontend/lib/hooks/useLiveTournamentsPoll";
 import { isValidModalityId, readPersistedModality } from "@/frontend/lib/gameModalities";
 
-function LiveTournamentCardSkeleton() {
+function TrackTabsSkeleton() {
   return (
-    <div
-      className="live-tournament-card live-tournament-card--upcoming live-tournament-card--cover animate-pulse pointer-events-none"
-      aria-hidden
-    >
-      <div className="live-tournament-card__shell">
-        <div className="h-40 bg-white/5" />
-        <div className="p-4">
-          <div className="h-10 w-full bg-white/5 rounded-full" />
-        </div>
+    <div className="browser-tabs browser-tabs--tracks browser-tabs--tracks-primary animate-pulse" aria-hidden>
+      <div className="browser-tabs__bar browser-tabs__bar--tracks">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="browser-tabs__tab browser-tabs__tab--track-rich">
+            <span className="browser-tabs__tab-thumb-wrap bg-white/5" />
+            <span className="browser-tabs__tab-pill bg-white/5 border-white/10 text-transparent">—</span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -66,11 +65,7 @@ export default function TournamentsPageClient() {
       </AnimateInView>
 
       {loading ? (
-        <div className="live-tournaments-section__grid tracks-accordion-grid">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <LiveTournamentCardSkeleton key={i} />
-          ))}
-        </div>
+        <TrackTabsSkeleton />
       ) : (
         <TracksWorkflowAccordion
           tracks={tracks}

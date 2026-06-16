@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { useEffect } from "react";
 import { staticFile } from "@/frontend/lib/config/paths";
 import TrackTicketsPanel from "@/frontend/components/modalities/TrackTicketsPanel";
 import EmbeddedTicketRaces from "@/frontend/components/onboarding/EmbeddedTicketRaces";
@@ -29,11 +29,17 @@ export default function TracksWorkflowAccordion({
     activeTicketNum,
     racesOpen,
     usageVersion,
-    toggleTrack,
+    selectTrackTab,
     handleTicketSelect,
     openRaces,
     bumpUsage,
   } = workflow;
+
+  useEffect(() => {
+    if (expandedSlug || tracks.length === 0) return;
+    const first = tracks.find((track) => track.tournamentSlug) ?? tracks[0];
+    if (first?.slug) selectTrackTab(first.slug);
+  }, [expandedSlug, tracks, selectTrackTab]);
 
   if (loading) {
     return <p className="tracks-workflow__status">{t("gameModalities.loading")}</p>;
@@ -51,90 +57,51 @@ export default function TracksWorkflowAccordion({
     expandedTrack.tournamentSlug;
 
   return (
-    <div className="tracks-accordion-shell">
-      <div className="live-tournaments-section__grid tracks-accordion-grid">
-        {tracks.map((track) => {
-          const isOpen = expandedSlug === track.slug;
-
-          return (
-            <div
-              id={`track-${track.slug}`}
-              key={track.slug}
-              className={`tracks-accordion-card${isOpen ? " tracks-accordion-card--open" : ""}`}
-            >
-              <button
-                type="button"
-                className={`live-tournament-card live-tournament-card--cover${
-                  track.live
-                    ? " live-tournament-card--active"
-                    : " live-tournament-card--upcoming"
-                } tracks-accordion-card__trigger`}
-                onClick={() => toggleTrack(track.slug)}
-                aria-expanded={isOpen}
-                aria-controls={isOpen ? `track-panel-${track.slug}` : undefined}
+    <div className="tracks-accordion-shell" id="tracks-workflow-tabs">
+      <BrowserTabs className="browser-tabs--tracks browser-tabs--tracks-primary">
+        <BrowserTabBar
+          className="browser-tabs__bar--tracks"
+          role="tablist"
+          aria-label={t("tournamentsSection.title")}
+        >
+          {tracks.map((track) => {
+            const isActive = expandedSlug === track.slug;
+            return (
+              <BrowserTab
+                key={track.slug}
+                id={`track-tab-${track.slug}`}
+                active={isActive}
+                className={`browser-tabs__tab--track browser-tabs__tab--track-rich${
+                  track.live ? " browser-tabs__tab--track-live" : ""
+                }`}
+                onClick={() => selectTrackTab(track.slug)}
+                aria-controls={`track-panel-${track.slug}`}
               >
-                <div className="live-tournament-card__shell">
-                  <div className="live-tournament-card__gloss" aria-hidden />
-                  <div className="live-tournament-card__gloss-edge" aria-hidden />
-
-                  <div className="live-tournament-card__media">
-                    <img
-                      src={track.imageUrl || staticFile("/images/live-feed.jpg")}
-                      alt=""
-                      className="live-tournament-card__image"
-                    />
-                    <div className="live-tournament-card__media-shade" aria-hidden />
-                    <div className="live-tournament-card__media-gloss" aria-hidden />
-                    <div className="live-tournament-card__badges">
-                      <span className="live-tournament-card__track-pill">{track.name}</span>
-                    </div>
-                  </div>
-
-                  {!isOpen ? (
-                    <div className="live-tournament-card__body live-tournament-card__body--cover">
-                      <span className="live-tournament-card__cta">
-                        {t("tournamentsSection.enterTournament") || "ENTRAR AL TORNEO"}
-                        <ChevronRight className="live-tournament-card__cta-icon" aria-hidden />
-                      </span>
-                    </div>
-                  ) : null}
-                </div>
-              </button>
-            </div>
-          );
-        })}
-      </div>
-
-      {expandedTrack?.tournamentSlug ? (
-        <BrowserTabs className="browser-tabs--tracks">
-          <BrowserTabBar
-            className="browser-tabs__bar--tracks"
-            role="tablist"
-            aria-label={t("tournamentsSection.title")}
-          >
-            {tracks.map((track) => {
-              const isActive = expandedSlug === track.slug;
-              return (
-                <BrowserTab
-                  key={track.slug}
-                  active={isActive}
-                  className="browser-tabs__tab--track"
-                  onClick={() => toggleTrack(track.slug)}
-                  aria-controls={`track-panel-${track.slug}`}
-                >
+                <span className="browser-tabs__tab-thumb-wrap">
                   <img
                     src={track.imageUrl || staticFile("/images/live-feed.jpg")}
                     alt=""
-                    className="browser-tabs__favicon"
+                    className="browser-tabs__tab-thumb"
                   />
-                  <span className="browser-tabs__label">{track.name}</span>
-                </BrowserTab>
-              );
-            })}
-          </BrowserTabBar>
+                  <span className="browser-tabs__tab-thumb-shade" aria-hidden />
+                  {track.live ? (
+                    <span className="browser-tabs__tab-live-pill">
+                      <span className="browser-tabs__tab-live-dot" aria-hidden />
+                      {t("gameModalities.live")}
+                    </span>
+                  ) : null}
+                </span>
+                <span className="browser-tabs__tab-pill">{track.name}</span>
+              </BrowserTab>
+            );
+          })}
+        </BrowserTabBar>
 
+        {expandedTrack?.tournamentSlug ? (
           <BrowserTabPanel
             id={`track-panel-${expandedTrack.slug}`}
+            role="tabpanel"
+            aria-labelledby={`track-tab-${expandedTrack.slug}`}
             className="track-inline-expand track-inline-expand--full track-inline-expand--tab-panel"
           >
             <BrowserTabs className="browser-tabs--tickets-stack">
@@ -164,8 +131,8 @@ export default function TracksWorkflowAccordion({
               </BrowserTabPanel>
             </BrowserTabs>
           </BrowserTabPanel>
-        </BrowserTabs>
-      ) : null}
+        ) : null}
+      </BrowserTabs>
     </div>
   );
 }

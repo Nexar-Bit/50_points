@@ -23,7 +23,7 @@ export function useTracksWorkflowState(initialTrackSlug = null, initialTicketNum
   const scrollToTrack = useCallback((slug) => {
     if (typeof window === "undefined" || !slug) return;
     window.requestAnimationFrame(() => {
-      document.getElementById(`track-${slug}`)?.scrollIntoView({
+      document.getElementById(`track-panel-${slug}`)?.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
       });
@@ -51,6 +51,18 @@ export function useTracksWorkflowState(initialTrackSlug = null, initialTicketNum
     },
     [scrollToTrack],
   );
+
+  const selectTrackTab = useCallback((slug) => {
+    if (!slug) return;
+    setExpandedSlug((prev) => {
+      if (prev !== slug) {
+        setActiveTicketNum(1);
+        setRacesOpen(true);
+      }
+      return slug;
+    });
+    scrollToTrack(slug);
+  }, [scrollToTrack]);
 
   const toggleTrack = useCallback((slug) => {
     setExpandedSlug((prev) => {
@@ -92,6 +104,7 @@ export function useTracksWorkflowState(initialTrackSlug = null, initialTicketNum
     selectTrack,
     selectTrackTicket,
     toggleTrack,
+    selectTrackTab,
     handleTicketSelect,
     openRaces,
     bumpUsage,
