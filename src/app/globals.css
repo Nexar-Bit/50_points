@@ -12257,9 +12257,23 @@ button.modality-hub-mode-card {
 
 .tracks-accordion-card--open .tracks-accordion-card__trigger {
   border-radius: 1.25rem;
+}
+
+/* Selected track — bottom border accent only (others stay default) */
+.tracks-accordion-card--open .tracks-accordion-card__trigger .live-tournament-card__shell::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  z-index: 12;
+  border-radius: 0 0 calc(1.25rem - 2px) calc(1.25rem - 2px);
+  background: linear-gradient(90deg, #7c3aed 0%, #a855f7 45%, #22d3ee 100%);
   box-shadow:
-    0 0 0 2px rgba(139, 44, 255, 0.55),
-    0 0 28px rgba(139, 44, 255, 0.22);
+    0 0 14px rgba(139, 44, 255, 0.85),
+    0 0 28px rgba(139, 44, 255, 0.45);
+  pointer-events: none;
 }
 
 .tracks-accordion-card__trigger {
@@ -12489,6 +12503,7 @@ button.modality-hub-mode-card {
   padding: 0.45rem 0.75rem;
   border-radius: 0.55rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 3px solid transparent;
   background: rgba(255, 255, 255, 0.04);
   color: rgba(228, 228, 231, 0.85);
   font-size: 0.68rem;
@@ -12500,15 +12515,17 @@ button.modality-hub-mode-card {
 }
 
 .comenzar-inline-races__strip-tab:hover {
-  border-color: rgba(139, 44, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.12);
+  border-bottom-color: rgba(139, 44, 255, 0.45);
   color: #fff;
 }
 
 .comenzar-inline-races__strip-tab--active {
-  border-color: rgba(139, 44, 255, 0.65);
-  background: linear-gradient(135deg, rgba(139, 44, 255, 0.35) 0%, rgba(109, 40, 217, 0.22) 100%);
+  border-color: rgba(255, 255, 255, 0.12);
+  border-bottom: 4px solid #a855f7;
+  background: linear-gradient(180deg, rgba(139, 44, 255, 0.18) 0%, rgba(0, 0, 0, 0.15) 100%);
   color: #fff;
-  box-shadow: 0 0 18px rgba(139, 44, 255, 0.28);
+  box-shadow: 0 6px 18px rgba(139, 44, 255, 0.28);
 }
 
 .comenzar-inline-races__strip-tab--done:not(.comenzar-inline-races__strip-tab--active) {
