@@ -12385,10 +12385,150 @@ button.modality-hub-mode-card {
 }
 
 .comenzar-inline-races {
-  padding: 0.55rem 0.35rem 0.25rem;
-  border-radius: 0.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.comenzar-inline-races__zone {
+  width: 100%;
+  border-radius: 1rem;
+  border: 2px solid rgba(139, 44, 255, 0.55);
+  background:
+    linear-gradient(155deg, rgba(139, 44, 255, 0.14) 0%, rgba(0, 0, 0, 0.55) 42%, rgba(6, 8, 18, 0.92) 100%);
+  box-shadow:
+    0 0 0 1px rgba(168, 85, 247, 0.22) inset,
+    0 0 32px rgba(139, 44, 255, 0.22),
+    0 18px 48px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  animation: race-zone-in 0.28s ease-out;
+}
+
+@keyframes race-zone-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.comenzar-inline-races__zone-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.85rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(139, 44, 255, 0.28);
+  background: linear-gradient(90deg, rgba(139, 44, 255, 0.22) 0%, rgba(0, 0, 0, 0.35) 100%);
+}
+
+.comenzar-inline-races__zone-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(196, 181, 253, 0.45);
+  background: rgba(109, 40, 217, 0.35);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fafafa;
+}
+
+.comenzar-inline-races__zone-meta {
+  font-size: 0.72rem;
+  color: rgba(228, 228, 231, 0.75);
+}
+
+.comenzar-inline-races__zone-status {
+  margin-left: auto;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #c084fc;
+}
+
+.comenzar-inline-races__zone-status--done {
+  color: #34d399;
+}
+
+.comenzar-inline-races__zone-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem 1rem;
+}
+
+.comenzar-inline-races__strip {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.45rem;
+  overflow-x: auto;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.55);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 44, 255, 0.45) transparent;
+}
+
+.comenzar-inline-races__strip-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+  min-height: 2.35rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(228, 228, 231, 0.85);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+.comenzar-inline-races__strip-tab:hover {
+  border-color: rgba(139, 44, 255, 0.35);
+  color: #fff;
+}
+
+.comenzar-inline-races__strip-tab--active {
+  border-color: rgba(139, 44, 255, 0.65);
+  background: linear-gradient(135deg, rgba(139, 44, 255, 0.35) 0%, rgba(109, 40, 217, 0.22) 100%);
+  color: #fff;
+  box-shadow: 0 0 18px rgba(139, 44, 255, 0.28);
+}
+
+.comenzar-inline-races__strip-tab--done:not(.comenzar-inline-races__strip-tab--active) {
+  border-color: rgba(52, 211, 153, 0.35);
+  background: rgba(52, 211, 153, 0.08);
+}
+
+.comenzar-inline-races__strip-icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  color: rgba(255, 255, 255, 0.28);
+  flex-shrink: 0;
+}
+
+.comenzar-inline-races__strip-icon--done {
+  color: #34d399;
+}
+
+.comenzar-inline-races__strip-label {
+  white-space: nowrap;
 }
 
 .comenzar-inline-races__hint {
@@ -12474,6 +12614,11 @@ button.modality-hub-mode-card {
   padding: 0.55rem;
   border-radius: 0.55rem;
   background: rgba(0, 0, 0, 0.28);
+}
+
+.track-inline-expand--full .comenzar-inline-races {
+  margin-top: 0;
+  padding: 0;
 }
 
 .comenzar-inline-races__pick-bar {
