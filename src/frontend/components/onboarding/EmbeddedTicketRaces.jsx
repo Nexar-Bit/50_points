@@ -158,7 +158,13 @@ export default function EmbeddedTicketRaces({
           ticketNumber: ticketNum,
         },
       }));
-      markTrackTicketUsed(trackSlug, ticketNum);
+
+      const allRacesConfirmed = (tournament?.races || []).every(
+        (race) => race.id === expandedRace || Boolean(submittedForRace(race.id)),
+      );
+      if (allRacesConfirmed) {
+        markTrackTicketUsed(trackSlug, ticketNum, tournament?.slug);
+      }
       onUsageChange?.();
       setShowConfirmation(true);
     } catch (err) {

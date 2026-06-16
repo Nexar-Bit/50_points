@@ -12094,33 +12094,22 @@ button.modality-hub-mode-card {
   flex-direction: column;
 }
 
-/* ── Track accordion grid — matches /tournaments big-card layout ── */
+/* ── Track accordion grid — same 3-column grid as /tournaments ── */
 .tracks-accordion-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-  padding: 0.5rem 0 1rem;
-}
-
-@media (min-width: 768px) {
-  .tracks-accordion-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .tracks-accordion-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+  align-items: start;
 }
 
 .tracks-accordion-card {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.tracks-accordion-card--open {
-  grid-column: 1 / -1;
+.tracks-accordion-card--open .tracks-accordion-card__trigger {
+  border-radius: 1.25rem;
+  box-shadow:
+    0 0 0 2px rgba(139, 44, 255, 0.55),
+    0 0 28px rgba(139, 44, 255, 0.22);
 }
 
 .tracks-accordion-card__trigger {
@@ -12146,6 +12135,42 @@ button.modality-hub-mode-card {
 
 .track-inline-expand .comenzar-inline-races {
   margin-top: 0;
+  padding: 0.45rem 0.3rem;
+}
+
+.track-tickets-panel--inline {
+  padding: 0.55rem;
+  margin-top: 0;
+}
+
+.track-tickets-panel--inline .track-tickets-tabs {
+  gap: 0.35rem;
+  margin-bottom: 0.45rem;
+}
+
+.track-tickets-panel--inline .track-tickets-tab {
+  min-height: 4.25rem;
+  padding: 0.45rem 0.25rem;
+}
+
+.track-tickets-panel--inline .track-tickets-tab__num {
+  font-size: 1.25rem;
+}
+
+.track-tickets-panel--inline .track-tickets-tab__label,
+.track-tickets-panel--inline .track-tickets-tab__status {
+  font-size: 0.52rem;
+}
+
+.track-inline-expand .comenzar-inline-races__row {
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem;
+  padding: 0.5rem 0.55rem;
+}
+
+.track-inline-expand .comenzar-inline-races__meta,
+.track-inline-expand .comenzar-inline-races__status-pill {
+  display: none;
 }
 
 .track-tickets-panel--inline .free-ticket-card__play-btn,

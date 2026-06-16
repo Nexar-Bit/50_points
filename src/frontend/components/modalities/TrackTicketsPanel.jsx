@@ -8,7 +8,6 @@ import {
   getModality,
 } from "@/frontend/lib/gameModalities";
 import { isTrackTicketUsed } from "@/frontend/lib/trackTicketUsage";
-import FreeTicketCard from "@/frontend/components/modalities/FreeTicketCard";
 
 const TICKET_NUMS = [1, 2, 3];
 
@@ -68,13 +67,15 @@ export default function TrackTicketsPanel({
       style={{ "--modality-accent": mod.accent }}
       key={`${usageVersion}-${trackSlug}`}
     >
-      <div className="track-tickets-panel__banner">
-        <Gift className="track-tickets-panel__banner-icon" aria-hidden />
-        <p className="track-tickets-panel__banner-title">
-          {t("gameModalities.freeTicketsBanner")}
-        </p>
-        <p className="track-tickets-panel__banner-sub">{t("gameModalities.freeTicketsBannerSub")}</p>
-      </div>
+      {!inline ? (
+        <div className="track-tickets-panel__banner">
+          <Gift className="track-tickets-panel__banner-icon" aria-hidden />
+          <p className="track-tickets-panel__banner-title">
+            {t("gameModalities.freeTicketsBanner")}
+          </p>
+          <p className="track-tickets-panel__banner-sub">{t("gameModalities.freeTicketsBannerSub")}</p>
+        </div>
+      ) : null}
 
       <div className="track-tickets-tabs" role="tablist" aria-label={t("gameModalities.yourTickets")}>
         {TICKET_NUMS.map((num) => {

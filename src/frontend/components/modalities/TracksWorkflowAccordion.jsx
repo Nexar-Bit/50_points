@@ -42,7 +42,7 @@ export default function TracksWorkflowAccordion({
   }
 
   return (
-    <div className="tracks-accordion-grid">
+    <div className="live-tournaments-section__grid tracks-accordion-grid">
       {tracks.map((track) => {
         const isOpen = expandedSlug === track.slug;
         const showRaces = isOpen && racesOpen && activeTicketNum && track.tournamentSlug;

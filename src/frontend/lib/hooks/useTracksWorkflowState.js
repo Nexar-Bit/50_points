@@ -53,9 +53,17 @@ export function useTracksWorkflowState(initialTrackSlug = null, initialTicketNum
   );
 
   const toggleTrack = useCallback((slug) => {
-    setExpandedSlug((prev) => (prev === slug ? null : slug));
-    setActiveTicketNum(null);
-    setRacesOpen(false);
+    setExpandedSlug((prev) => {
+      const opening = prev !== slug;
+      if (opening) {
+        setActiveTicketNum(1);
+        setRacesOpen(true);
+      } else {
+        setActiveTicketNum(null);
+        setRacesOpen(false);
+      }
+      return opening ? slug : null;
+    });
   }, []);
 
   const handleTicketSelect = useCallback((num) => {
