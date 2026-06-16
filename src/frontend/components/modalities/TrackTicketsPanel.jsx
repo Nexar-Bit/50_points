@@ -8,6 +8,7 @@ import {
   getModality,
 } from "@/frontend/lib/gameModalities";
 import { isTrackTicketUsed } from "@/frontend/lib/trackTicketUsage";
+import { BrowserTabs, BrowserTabBar, BrowserTab } from "@/frontend/components/ui/BrowserTabBar";
 
 const TICKET_NUMS = [1, 2, 3];
 
@@ -77,43 +78,44 @@ export default function TrackTicketsPanel({
         </div>
       ) : null}
 
-      <div className="track-tickets-tabs" role="tablist" aria-label={t("gameModalities.yourTickets")}>
-        {TICKET_NUMS.map((num) => {
-          const used = isTrackTicketUsed(trackSlug, num);
-          const isActive = activeNum > 0 && activeNum === num;
-          return (
-            <button
-              key={num}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              aria-controls={`track-ticket-panel-${trackSlug}-${num}`}
-              id={`track-ticket-tab-${trackSlug}-${num}`}
-              className={`track-tickets-tab track-tickets-tab--n${num}${
-                used ? " track-tickets-tab--used" : ""
-              }${isActive ? " track-tickets-tab--active" : ""}`}
-              onClick={() => onActiveNumChange?.(num)}
-            >
-              <span className="track-tickets-tab__num">{num}</span>
-              <span className="track-tickets-tab__label">
-                {t("gameModalities.ticketLabel")} {num}
-              </span>
-              <span className="track-tickets-tab__status">
-                {used ? (
-                  <>
-                    <Check className="track-tickets-tab__status-icon" strokeWidth={3} aria-hidden />
-                    {t("gameModalities.ticketUsed")}
-                  </>
-                ) : isActive ? (
-                  t("gameModalities.ticketReady")
-                ) : (
-                  t("gameModalities.ticketAvailable")
-                )}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+      <BrowserTabs className="browser-tabs--tickets">
+        <BrowserTabBar role="tablist" aria-label={t("gameModalities.yourTickets")}>
+          {TICKET_NUMS.map((num) => {
+            const used = isTrackTicketUsed(trackSlug, num);
+            const isActive = activeNum > 0 && activeNum === num;
+            return (
+              <BrowserTab
+                key={num}
+                id={`track-ticket-tab-${trackSlug}-${num}`}
+                aria-controls={`track-ticket-panel-${trackSlug}-${num}`}
+                active={isActive}
+                used={used}
+                className={`track-tickets-tab track-tickets-tab--n${num}${
+                  used ? " track-tickets-tab--used" : ""
+                }${isActive ? " track-tickets-tab--active" : ""}`}
+                onClick={() => onActiveNumChange?.(num)}
+              >
+                <span className="track-tickets-tab__num">{num}</span>
+                <span className="track-tickets-tab__label">
+                  {t("gameModalities.ticketLabel")} {num}
+                </span>
+                <span className="track-tickets-tab__status">
+                  {used ? (
+                    <>
+                      <Check className="track-tickets-tab__status-icon" strokeWidth={3} aria-hidden />
+                      {t("gameModalities.ticketUsed")}
+                    </>
+                  ) : isActive ? (
+                    t("gameModalities.ticketReady")
+                  ) : (
+                    t("gameModalities.ticketAvailable")
+                  )}
+                </span>
+              </BrowserTab>
+            );
+          })}
+        </BrowserTabBar>
+      </BrowserTabs>
 
       {/* FreeTicketCard removed — ticket tabs above are sufficient */}
     </div>

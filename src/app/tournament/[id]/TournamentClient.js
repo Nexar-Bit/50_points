@@ -107,7 +107,7 @@ function TournamentSkeleton() {
 export default function TournamentClient() {
   const params = useParams();
   const searchParams = useSearchParams();
-  const { token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated, ensureGuestSession, loading: authLoading } = useAuth();
   const fromQuery = searchParams.get('modality');
   const modalityId = isValidModalityId(fromQuery)
     ? fromQuery
@@ -139,6 +139,12 @@ export default function TournamentClient() {
       setActiveTicketNumber(ticketFromQuery);
     }
   }, [ticketFromQuery]);
+
+  useEffect(() => {
+    if (authLoading || token) return;
+    if (modalityId !== 'guest' && modalityId !== 'free') return;
+    ensureGuestSession().catch(() => {});
+  }, [authLoading, token, modalityId, ensureGuestSession]);
 
   useEffect(() => {
     const slug = params.id;
@@ -243,8 +249,12 @@ export default function TournamentClient() {
     if (racePicks.length === 0) return;
 
     if (!isAuthenticated) {
-      alert('Inicia sesion o juega como invitado para enviar tu ticket');
-      return;
+      try {
+        await ensureGuestSession();
+      } catch {
+        alert('Error al enviar el ticket');
+        return;
+      }
     }
 
     setSubmitting(true);
@@ -288,6 +298,7 @@ export default function TournamentClient() {
     activeStrategy,
     picks,
     isAuthenticated,
+    ensureGuestSession,
     submitting,
     activeTicketNumber,
     tournamentRaw,

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { fetchJson, fetchAuthJson } from '@/frontend/lib/api/client';
@@ -99,8 +99,43 @@ export function AuthProvider({ children }) {
     setToken(data.token);
     setUser(data.user);
     persistModality('guest');
-    return data.user;
+    return data;
   };
+
+  /** Resume or create a guest JWT so unregistered players can submit tickets. */
+  const ensureGuestSession = useCallback(async () => {
+    if (token) {
+      return { token, user };
+    }
+
+    const guestStored = localStorage.getItem('50points_guest_token');
+    if (guestStored) {
+      try {
+        const data = await fetchJson('/auth/guest/resume', {
+          method: 'POST',
+          body: JSON.stringify({ guestToken: guestStored }),
+          timeoutMs: 10000,
+        });
+        localStorage.setItem('50points_token', data.token);
+        setToken(data.token);
+        setUser(data.user);
+        if (data.user?.isGuest) persistModality('guest');
+        return { token: data.token, user: data.user };
+      } catch {
+        localStorage.removeItem('50points_guest_token');
+      }
+    }
+
+    const data = await fetchJson('/auth/guest', { method: 'POST' });
+    localStorage.setItem('50points_token', data.token);
+    if (data.guestToken) {
+      localStorage.setItem('50points_guest_token', data.guestToken);
+    }
+    setToken(data.token);
+    setUser(data.user);
+    persistModality('guest');
+    return { token: data.token, user: data.user };
+  }, [token, user]);
 
   const logout = () => {
     localStorage.removeItem('50points_token');
@@ -126,6 +161,7 @@ export function AuthProvider({ children }) {
         login,
         register,
         playAsGuest,
+        ensureGuestSession,
         logout,
         refreshUser,
       }}

@@ -5,11 +5,13 @@ import { staticFile } from "@/frontend/lib/config/paths";
 import TrackTicketsPanel from "@/frontend/components/modalities/TrackTicketsPanel";
 import EmbeddedTicketRaces from "@/frontend/components/onboarding/EmbeddedTicketRaces";
 import { useTracksWorkflowState } from "@/frontend/lib/hooks/useTracksWorkflowState";
+import {
+  BrowserTabs,
+  BrowserTabBar,
+  BrowserTab,
+  BrowserTabPanel,
+} from "@/frontend/components/ui/BrowserTabBar";
 
-/**
- * Track cards — same big-card design as /tournaments page.
- * Cards stay in a 3-column row; tickets + races expand full-width below.
- */
 export default function TracksWorkflowAccordion({
   tracks,
   modalityId,
@@ -69,9 +71,7 @@ export default function TracksWorkflowAccordion({
                 } tracks-accordion-card__trigger`}
                 onClick={() => toggleTrack(track.slug)}
                 aria-expanded={isOpen}
-                aria-controls={
-                  isOpen ? `track-panel-${track.slug}` : undefined
-                }
+                aria-controls={isOpen ? `track-panel-${track.slug}` : undefined}
               >
                 <div className="live-tournament-card__shell">
                   <div className="live-tournament-card__gloss" aria-hidden />
@@ -106,29 +106,65 @@ export default function TracksWorkflowAccordion({
       </div>
 
       {expandedTrack?.tournamentSlug ? (
-        <div
-          id={`track-panel-${expandedTrack.slug}`}
-          className="track-inline-expand track-inline-expand--full"
-        >
-          <TrackTicketsPanel
-            inline
-            modalityId={modalityId}
-            trackSlug={expandedTrack.slug}
-            tournamentSlug={expandedTrack.tournamentSlug}
-            usageVersion={usageVersion}
-            activeNum={activeTicketNum ?? 0}
-            onActiveNumChange={handleTicketSelect}
-            onOpenRaces={openRaces}
-          />
-          {showRaces ? (
-            <EmbeddedTicketRaces
-              tournamentSlug={expandedTrack.tournamentSlug}
-              ticketNum={activeTicketNum}
-              trackSlug={expandedTrack.slug}
-              onUsageChange={bumpUsage}
-            />
-          ) : null}
-        </div>
+        <BrowserTabs className="browser-tabs--tracks">
+          <BrowserTabBar
+            className="browser-tabs__bar--tracks"
+            role="tablist"
+            aria-label={t("tournamentsSection.title")}
+          >
+            {tracks.map((track) => {
+              const isActive = expandedSlug === track.slug;
+              return (
+                <BrowserTab
+                  key={track.slug}
+                  active={isActive}
+                  className="browser-tabs__tab--track"
+                  onClick={() => toggleTrack(track.slug)}
+                  aria-controls={`track-panel-${track.slug}`}
+                >
+                  <img
+                    src={track.imageUrl || staticFile("/images/live-feed.jpg")}
+                    alt=""
+                    className="browser-tabs__favicon"
+                  />
+                  <span className="browser-tabs__label">{track.name}</span>
+                </BrowserTab>
+              );
+            })}
+          </BrowserTabBar>
+
+          <BrowserTabPanel
+            id={`track-panel-${expandedTrack.slug}`}
+            className="track-inline-expand track-inline-expand--full track-inline-expand--tab-panel"
+          >
+            <BrowserTabs className="browser-tabs--tickets-stack">
+              <TrackTicketsPanel
+                inline
+                modalityId={modalityId}
+                trackSlug={expandedTrack.slug}
+                tournamentSlug={expandedTrack.tournamentSlug}
+                usageVersion={usageVersion}
+                activeNum={activeTicketNum ?? 0}
+                onActiveNumChange={handleTicketSelect}
+                onOpenRaces={openRaces}
+              />
+              <BrowserTabPanel
+                id={`track-ticket-panel-${expandedTrack.slug}-${activeTicketNum}`}
+                className="browser-tabs__panel--ticket-content"
+              >
+                {showRaces ? (
+                  <EmbeddedTicketRaces
+                    tournamentSlug={expandedTrack.tournamentSlug}
+                    ticketNum={activeTicketNum}
+                    trackSlug={expandedTrack.slug}
+                    trackName={expandedTrack.name}
+                    onUsageChange={bumpUsage}
+                  />
+                ) : null}
+              </BrowserTabPanel>
+            </BrowserTabs>
+          </BrowserTabPanel>
+        </BrowserTabs>
       ) : null}
     </div>
   );
