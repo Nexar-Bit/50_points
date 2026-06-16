@@ -1,19 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import AnimateInView from "@/frontend/components/ui/AnimateInView";
 import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
-import LiveTournamentCard from "@/frontend/components/home/LiveTournamentCard";
 import ModalityScope from "@/frontend/components/modalities/ModalityScope";
 import ModalityFlowNav from "@/frontend/components/modalities/ModalityFlowNav";
+import TracksWorkflowAccordion from "@/frontend/components/modalities/TracksWorkflowAccordion";
+import { buildTracksFromTournaments } from "@/frontend/components/modalities/ModalityTracksList";
+import { useTracksWorkflowState } from "@/frontend/lib/hooks/useTracksWorkflowState";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useLiveTournamentsPoll } from "@/frontend/lib/hooks/useLiveTournamentsPoll";
-import {
-  isValidModalityId,
-  readPersistedModality,
-  withModalityQuery,
-} from "@/frontend/lib/gameModalities";
+import { isValidModalityId, readPersistedModality } from "@/frontend/lib/gameModalities";
 
 function LiveTournamentCardSkeleton() {
   return (
@@ -35,23 +33,25 @@ export default function TournamentsPageClient() {
   const { t } = useLanguage();
   const searchParams = useSearchParams();
   const fromQuery = searchParams.get("modality");
+  const expandFromUrl = searchParams.get("track");
+  const ticketFromUrl = Number.parseInt(searchParams.get("ticket") || "", 10);
   const modalityId = isValidModalityId(fromQuery)
     ? fromQuery
-    : readPersistedModality() || "free";
-  const [liveTournaments, setLiveTournaments] = useState([]);
+    : readPersistedModality() || "guest";
+  const [tournaments, setTournaments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const workflow = useTracksWorkflowState(expandFromUrl, ticketFromUrl);
+  const tracks = useMemo(() => buildTracksFromTournaments(tournaments), [tournaments]);
 
   useLiveTournamentsPoll({
     forHome: true,
-    onData: (mapped) => setLiveTournaments(mapped),
+    onData: (mapped) => setTournaments(mapped),
     onLoadingChange: setLoading,
   });
 
   return (
     <ModalityScope modalityId={modalityId}>
-      {isValidModalityId(fromQuery) ? (
-        <ModalityFlowNav modalityId={modalityId} currentStep="tracks" />
-      ) : null}
+      <ModalityFlowNav modalityId={modalityId} currentStep="tracks" />
       <AnimateInView>
         <AppPageHeader
           title={t("tournamentsSection.title")}
@@ -65,26 +65,21 @@ export default function TournamentsPageClient() {
         />
       </AnimateInView>
 
-      <div className="live-tournaments-section__grid">
-        {loading ? (
-          Array.from({ length: 3 }).map((_, i) => (
+      {loading ? (
+        <div className="live-tournaments-section__grid tracks-accordion-grid">
+          {Array.from({ length: 3 }).map((_, i) => (
             <LiveTournamentCardSkeleton key={i} />
-          ))
-        ) : liveTournaments.length === 0 ? (
-          <p className="text-zinc-500 text-sm col-span-full py-8">{t("tournamentsSection.empty")}</p>
-        ) : (
-          liveTournaments.map((tournament, i) => (
-            <AnimateInView key={tournament.id || tournament.slug} delay={i * 0.15}>
-              <LiveTournamentCard
-                tournament={tournament}
-                t={t}
-                featured={i === 0}
-                href={withModalityQuery(`/tournament/${tournament.slug}`, modalityId)}
-              />
-            </AnimateInView>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <TracksWorkflowAccordion
+          tracks={tracks}
+          modalityId={modalityId}
+          loading={false}
+          t={t}
+          workflow={workflow}
+        />
+      )}
     </ModalityScope>
   );
 }
