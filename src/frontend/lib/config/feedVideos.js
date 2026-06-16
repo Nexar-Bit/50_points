@@ -29,6 +29,12 @@ const SEGMENTS = ["hot", "live", "trending"];
 
 const TRACKS = ["Churchill Downs", "Gulfstream Park", "Santa Anita Park"];
 
+const POSTERS = [
+  "/images/live-feed.jpg",
+  "/images/hero-banner.jpg",
+  "/images/ranking-hero.jpg",
+];
+
 function clipTitle(file, index) {
   if (file.startsWith("gemini_generated")) {
     return { es: `Highlight IA ${index + 1}`, en: `AI Highlight ${index + 1}` };
@@ -36,13 +42,14 @@ function clipTitle(file, index) {
   return { es: `Momento en vivo ${index + 1}`, en: `Live moment ${index + 1}` };
 }
 
-/** @returns {Array<{ id: string, src: string, segment: string, titleEs: string, titleEn: string, track: string }>} */
+/** @returns {Array<{ id: string, src: string, poster: string, segment: string, titleEs: string, titleEn: string, track: string }>} */
 export function getFeedVideos() {
   return FEED_VIDEO_FILES.map((file, index) => {
     const titles = clipTitle(file, index);
     return {
       id: file,
       src: staticFile(`/video/${file}`),
+      poster: staticFile(POSTERS[index % POSTERS.length]),
       segment: SEGMENTS[index % SEGMENTS.length],
       titleEs: titles.es,
       titleEn: titles.en,
