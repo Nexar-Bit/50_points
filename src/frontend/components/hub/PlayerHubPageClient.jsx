@@ -1,45 +1,101 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ChevronRight, Newspaper, Trophy, Activity, MessageCircle, Ticket, Flag } from "lucide-react";
+import { ChevronRight, Trophy, MessageCircle, Ticket, Flag, Star, BarChart3, Video } from "lucide-react";
 import AnimateInView from "@/frontend/components/ui/AnimateInView";
 import TicketWorkflowJourney from "@/frontend/components/onboarding/TicketWorkflowJourney";
 import ModalityHubBoard from "@/frontend/components/modalities/ModalityHubBoard";
+import HubSegmentSection from "@/frontend/components/hub/HubSegmentSection";
+import HubTracksSummary from "@/frontend/components/hub/HubTracksSummary";
+import HubMenuRowsSummary from "@/frontend/components/hub/HubMenuRowsSummary";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
-import { withModalityQuery } from "@/frontend/lib/gameModalities";
+import { getModality, withModalityQuery } from "@/frontend/lib/gameModalities";
 import { useModality } from "@/frontend/contexts/ModalityContext";
 import VideoFeedPreview from "@/frontend/components/home/VideoFeedPreview";
 import { fetchJson } from "@/frontend/lib/api/client";
 import { mapLegendForHome } from "@/frontend/lib/api/mappers";
 import { ticketWorkflowAsset } from "@/frontend/lib/config/ticketWorkflowAssets";
 
-function HubCard({ href, title, description, icon: Icon }) {
-  return (
-    <Link href={href} className="player-hub-card">
-      <span className="player-hub-card__icon-wrap">
-        <Icon className="player-hub-card__icon" aria-hidden strokeWidth={1.75} />
-      </span>
-      <span className="player-hub-card__body">
-        <span className="player-hub-card__title">{title}</span>
-        <span className="player-hub-card__desc">{description}</span>
-      </span>
-      <ChevronRight className="player-hub-card__chevron" aria-hidden />
-    </Link>
-  );
-}
-
 export default function PlayerHubPageClient() {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { activeModalityId } = useModality();
   const [topPlayers, setTopPlayers] = useState([]);
+  const mod = getModality(activeModalityId);
 
   const q = (href) => withModalityQuery(href, activeModalityId);
 
   const heroBg = ticketWorkflowAsset("landingHeroBg");
   const noise = ticketWorkflowAsset("noiseOverlayTile");
+
+  const gameMenuItems = useMemo(
+    () => [
+      {
+        id: "gameModes",
+        href: "/modalidades",
+        title: t("floatingMenu.gameModes"),
+        description: t("playerHub.segmentGameModesDesc"),
+        icon: Flag,
+      },
+      {
+        id: "tickets",
+        href: "/statistics",
+        title: t("floatingMenu.tickets"),
+        description: t("playerHub.segmentTicketsDesc"),
+        icon: Ticket,
+      },
+    ],
+    [t],
+  );
+
+  const competitionMenuItems = useMemo(
+    () => [
+      {
+        id: "ranking",
+        href: "/leaderboard",
+        title: t("floatingMenu.ranking"),
+        description: t("playerHub.segmentRankingDesc"),
+        icon: Trophy,
+      },
+      {
+        id: "chat",
+        href: "/chat",
+        title: t("floatingMenu.chat"),
+        description: t("playerHub.segmentChatDesc"),
+        icon: MessageCircle,
+      },
+      {
+        id: "feed",
+        href: "/feed",
+        title: t("floatingMenu.feed"),
+        description: t("playerHub.feedDesc"),
+        icon: Video,
+      },
+    ],
+    [t],
+  );
+
+  const prestigeMenuItems = useMemo(
+    () => [
+      {
+        id: "hallOfFame",
+        href: "/hall-of-fame",
+        title: t("floatingMenu.hallOfFame"),
+        description: t("playerHub.segmentHallDesc"),
+        icon: Star,
+      },
+      {
+        id: "statistics",
+        href: "/statistics/explorer",
+        title: t("floatingMenu.statistics"),
+        description: t("playerHub.segmentStatsDesc"),
+        icon: BarChart3,
+      },
+    ],
+    [t],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -98,7 +154,11 @@ export default function PlayerHubPageClient() {
         </div>
       </div>
 
-      <div className="player-hub-page__dashboard">
+      <div
+        className="player-hub-page__dashboard"
+        data-modality={activeModalityId}
+        style={{ "--modality-accent": mod.accent }}
+      >
         <p className="player-hub-page__welcome">
           {user?.username
             ? t("playerHub.welcomeUser").replace("{name}", user.username)
@@ -106,44 +166,36 @@ export default function PlayerHubPageClient() {
         </p>
         <p className="player-hub-page__subtitle">{t("playerHub.subtitle")}</p>
 
-        <div className="player-hub-page__grid">
-          <HubCard
-            href={q("/chat")}
-            title={t("playerHub.cardNews")}
-            description={t("playerHub.cardNewsDesc")}
-            icon={Newspaper}
-          />
-          <HubCard
-            href={q("/leaderboard")}
-            title={t("playerHub.cardRanking")}
-            description={t("playerHub.cardRankingDesc")}
-            icon={Trophy}
-          />
-          <HubCard
-            href={q("/statistics/explorer")}
-            title={t("playerHub.cardActivity")}
-            description={t("playerHub.cardActivityDesc")}
-            icon={Activity}
-          />
-          <HubCard
-            href={q("/chat")}
-            title={t("playerHub.cardMessages")}
-            description={t("playerHub.cardMessagesDesc")}
-            icon={MessageCircle}
-          />
-          <HubCard
-            href={q("/statistics")}
-            title={t("playerHub.cardTickets")}
-            description={t("playerHub.cardTicketsDesc")}
-            icon={Ticket}
-          />
-          <HubCard
-            href={q("/tournaments")}
-            title={t("playerHub.cardTournaments")}
-            description={t("playerHub.cardTournamentsDesc")}
-            icon={Flag}
-          />
-        </div>
+        <AnimateInView>
+          <HubSegmentSection
+            eyebrow={t(`gameModalities.${activeModalityId}.title`)}
+            tabLabel={t("gameModalities.hubTabTracks")}
+            title={t("gameModalities.tracksTitle")}
+            subtitle={t("gameModalities.tracksSubtitle")}
+            seeAllHref={q("/tournaments")}
+            seeAllLabel={t("playerHub.seeAll")}
+          >
+            <HubTracksSummary modalityId={activeModalityId} />
+          </HubSegmentSection>
+        </AnimateInView>
+
+        <AnimateInView delay={0.08}>
+          <HubSegmentSection
+            title={t("floatingMenu.blockGame")}
+            subtitle={t("playerHub.segmentGameDesc")}
+          >
+            <HubMenuRowsSummary items={gameMenuItems} modalityId={activeModalityId} />
+          </HubSegmentSection>
+        </AnimateInView>
+
+        <AnimateInView delay={0.12}>
+          <HubSegmentSection
+            title={t("floatingMenu.blockCompetition")}
+            subtitle={t("playerHub.segmentCompetitionDesc")}
+          >
+            <HubMenuRowsSummary items={competitionMenuItems} modalityId={activeModalityId} />
+          </HubSegmentSection>
+        </AnimateInView>
 
         <section className="player-hub-section">
           <div className="player-hub-section__head">
@@ -167,6 +219,15 @@ export default function PlayerHubPageClient() {
             )}
           </ul>
         </section>
+
+        <AnimateInView delay={0.16}>
+          <HubSegmentSection
+            title={t("floatingMenu.blockPrestige")}
+            subtitle={t("playerHub.segmentPrestigeDesc")}
+          >
+            <HubMenuRowsSummary items={prestigeMenuItems} modalityId={activeModalityId} />
+          </HubSegmentSection>
+        </AnimateInView>
 
         <section id="feed" className="player-hub-section player-hub-section--feed">
           <h2 className="player-hub-section__title">{t("floatingMenu.feed")}</h2>
