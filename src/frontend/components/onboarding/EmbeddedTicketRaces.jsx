@@ -9,7 +9,6 @@ import { normalizeTournament } from "@/frontend/lib/tournamentNormalize";
 import RaceCard from "@/frontend/components/tournament/RaceCard";
 import PickSelector, { strategies } from "@/frontend/components/tournament/PickSelector";
 import TicketConfirmation from "@/frontend/components/tournament/TicketConfirmation";
-import TicketWorkflowContext from "@/frontend/components/onboarding/TicketWorkflowContext";
 import {
   BrowserTabs,
   BrowserTabBar,
@@ -30,8 +29,7 @@ export default function EmbeddedTicketRaces({
   trackName = "",
   onUsageChange,
 }) {
-  const { t, language } = useLanguage();
-  const isEn = language === "en";
+  const { t } = useLanguage();
   const { token, ensureGuestSession, loading: authLoading } = useAuth();
   const [tournamentRaw, setTournamentRaw] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -271,17 +269,9 @@ export default function EmbeddedTicketRaces({
   const strategy = strategies.find((s) => s.id === activeStrategy);
   const isPicksComplete = currentRacePicks.length === (strategy?.maxPicks || 1);
   const expandedDone = expandedRace ? Boolean(submittedForRace(expandedRace)) : false;
-  const displayTrack = trackName || tournament.track || tournament.name || "Track";
 
   return (
     <BrowserTabs className="browser-tabs--races ticket-workflow-segment comenzar-inline-races">
-      <TicketWorkflowContext
-        trackName={displayTrack}
-        ticketNum={ticketNum}
-        raceNumber={expandedRaceData?.raceNumber ?? expandedRaceData?.number}
-        isEn={isEn}
-      />
-
       <BrowserTabBar
         className="browser-tabs__bar--races ticket-race-overview"
         role="tablist"
