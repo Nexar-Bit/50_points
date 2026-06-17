@@ -4,13 +4,14 @@ import { useEffect } from "react";
 import { staticFile } from "@/frontend/lib/config/paths";
 import TrackTicketsPanel from "@/frontend/components/modalities/TrackTicketsPanel";
 import EmbeddedTicketRaces from "@/frontend/components/onboarding/EmbeddedTicketRaces";
-import { useTracksWorkflowState } from "@/frontend/lib/hooks/useTracksWorkflowState";
+import { getUsedTicketMeta, isTrackTicketUsed } from "@/frontend/lib/trackTicketUsage";
 import {
   BrowserTabs,
   BrowserTabBar,
   BrowserTab,
   BrowserTabPanel,
 } from "@/frontend/components/ui/BrowserTabBar";
+import { useTracksWorkflowState } from "@/frontend/lib/hooks/useTracksWorkflowState";
 
 export default function TracksWorkflowAccordion({
   tracks,
@@ -50,11 +51,23 @@ export default function TracksWorkflowAccordion({
   }
 
   const expandedTrack = tracks.find((track) => track.slug === expandedSlug) ?? null;
+  const activeTicketUsed =
+    expandedTrack &&
+    activeTicketNum &&
+    isTrackTicketUsed(expandedTrack.slug, activeTicketNum);
+  const usedTicketMeta =
+    activeTicketUsed && expandedTrack
+      ? getUsedTicketMeta(expandedTrack.slug, activeTicketNum)
+      : null;
+  const effectiveTournamentSlug =
+    activeTicketUsed && usedTicketMeta?.tournamentSlug
+      ? usedTicketMeta.tournamentSlug
+      : expandedTrack?.tournamentSlug;
   const showRaces =
     expandedTrack &&
     racesOpen &&
     activeTicketNum &&
-    expandedTrack.tournamentSlug;
+    effectiveTournamentSlug;
 
   return (
     <div className="tracks-accordion-shell" id="tracks-workflow-tabs">
@@ -121,7 +134,8 @@ export default function TracksWorkflowAccordion({
               >
                 {showRaces ? (
                   <EmbeddedTicketRaces
-                    tournamentSlug={expandedTrack.tournamentSlug}
+                    key={`${expandedTrack.slug}-${activeTicketNum}-${usageVersion}`}
+                    tournamentSlug={effectiveTournamentSlug}
                     ticketNum={activeTicketNum}
                     trackSlug={expandedTrack.slug}
                     trackName={expandedTrack.name}

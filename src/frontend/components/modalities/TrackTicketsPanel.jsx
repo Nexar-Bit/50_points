@@ -8,6 +8,10 @@ import {
   getModality,
 } from "@/frontend/lib/gameModalities";
 import { isTrackTicketUsed } from "@/frontend/lib/trackTicketUsage";
+import {
+  ticketDesignAssets,
+  ticketTabAsset,
+} from "@/frontend/lib/config/ticketDesignAssets";
 import { BrowserTabs, BrowserTabBar, BrowserTab } from "@/frontend/components/ui/BrowserTabBar";
 
 const TICKET_NUMS = [1, 2, 3];
@@ -83,6 +87,11 @@ export default function TrackTicketsPanel({
           {TICKET_NUMS.map((num) => {
             const used = isTrackTicketUsed(trackSlug, num);
             const isActive = activeNum > 0 && activeNum === num;
+            const tabBg = used
+              ? ticketTabAsset({ used: true })
+              : isActive
+                ? ticketTabAsset({ used: false, available: true })
+                : ticketTabAsset({ used: false, available: false });
             return (
               <BrowserTab
                 key={num}
@@ -93,8 +102,15 @@ export default function TrackTicketsPanel({
                 className={`track-tickets-tab track-tickets-tab--n${num}${
                   used ? " track-tickets-tab--used" : ""
                 }${isActive ? " track-tickets-tab--active" : ""}`}
+                style={{ "--ticket-tab-art": `url("${tabBg}")` }}
                 onClick={() => onActiveNumChange?.(num)}
               >
+                <img
+                  className="track-tickets-tab__badge"
+                  src={ticketDesignAssets.badge50MyPoints.svg}
+                  alt=""
+                  aria-hidden
+                />
                 <span className="track-tickets-tab__num">{num}</span>
                 <span className="track-tickets-tab__label">
                   {t("gameModalities.ticketLabel")} {num}
