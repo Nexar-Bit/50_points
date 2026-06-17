@@ -21,7 +21,13 @@ import {
   markTrackTicketUsed,
   unmarkTrackTicketUsed,
 } from "@/frontend/lib/trackTicketUsage";
-import { STRATEGY_MAP, STRATEGY_REVERSE } from "@/frontend/lib/ticketRaceSummary";
+import { STRATEGY_MAP, STRATEGY_REVERSE, getRacePickSummary } from "@/frontend/lib/ticketRaceSummary";
+import {
+  BrowserTabs,
+  BrowserTabBar,
+  BrowserTab,
+  BrowserTabPanel,
+} from "@/frontend/components/ui/BrowserTabBar";
 
 export default function EmbeddedTicketRaces({
   tournamentSlug,
@@ -166,12 +172,16 @@ export default function EmbeddedTicketRaces({
   );
 
   useEffect(() => {
-    if (ticketUsed || !tournament?.races?.length || showSummary || ticketFinalized) return;
-    const firstOpen = tournament.races.find(
-      (race) => !submittedTickets[`${race.id}-${ticketNum}`],
-    );
-    if (!firstOpen) return;
-    selectRace(firstOpen.id);
+    if (ticketUsed || !tournament?.races?.length || showSummary || ticketFinalized || showReceipt) {
+      return;
+    }
+    if (expandedRace && tournament.races.some((race) => race.id === expandedRace)) {
+      return;
+    }
+    const firstOpen =
+      tournament.races.find((race) => !submittedTickets[`${race.id}-${ticketNum}`]) ||
+      tournament.races[0];
+    if (firstOpen) selectRace(firstOpen.id);
   }, [
     tournamentRaw?.id,
     ticketNum,
@@ -181,6 +191,8 @@ export default function EmbeddedTicketRaces({
     showSummary,
     ticketFinalized,
     ticketUsed,
+    showReceipt,
+    expandedRace,
   ]);
 
   useEffect(() => {
@@ -505,7 +517,12 @@ export default function EmbeddedTicketRaces({
         submittedTickets={submittedTickets}
         onEditRace={handleEditRace}
         onClear={handleClearTicket}
-        onBack={() => setShowSummary(false)}
+        onBack={() => {
+          setShowSummary(false);
+          const resume =
+            tournament.races.find((race) => !submittedForRace(race.id)) || tournament.races[0];
+          if (resume) selectRace(resume.id);
+        }}
         onConfirmTicket={handleFinalizeTicket}
         clearing={clearing}
         confirming={finalizing}
@@ -536,8 +553,72 @@ export default function EmbeddedTicketRaces({
   }
 
   return (
-    <div className="comenzar-inline-races comenzar-inline-races--linear">
-      <div className="comenzar-inline-races__zone" id={`race-zone-${expandedRace}`}>
+    <BrowserTabs className="browser-tabs--races ticket-workflow-segment comenzar-inline-races comenzar-inline-races--linear">
+      <BrowserTabBar
+        className="browser-tabs__bar--races ticket-race-overview"
+        role="tablist"
+        aria-label={t("gameModalities.raceLabel")}
+      >
+        {tournament.races.map((race) => {
+          const raceNum = race.raceNumber ?? race.number ?? tournament.races.indexOf(race) + 1;
+          const isActive = expandedRace === race.id;
+          const submitted = submittedForRace(race.id);
+          const summary = getRacePickSummary(
+            race,
+            submitted,
+            picks[race.id],
+            isActive ? activeStrategy : submitted ? STRATEGY_REVERSE[submitted.strategy] || "full" : activeStrategy,
+          );
+
+          let statusLabel = t("gameModalities.raceOverviewNoPick");
+          if (summary.ready) statusLabel = t("gameModalities.raceOverviewReady");
+          else if (summary.draft) statusLabel = t("gameModalities.raceOverviewDraft");
+          else if (isActive) statusLabel = t("gameModalities.raceOverviewEdit");
+
+          return (
+            <BrowserTab
+              key={race.id}
+              id={`race-tab-${race.id}`}
+              aria-controls={`race-zone-${race.id}`}
+              active={isActive}
+              className={`ticket-race-overview__card${
+                isActive ? " ticket-race-overview__card--active" : ""
+              }${summary.ready ? " ticket-race-overview__card--ready" : ""}`}
+              onClick={() => selectRace(race.id)}
+            >
+              <span className="ticket-race-overview__num">
+                {t("gameModalities.raceLabel")} {raceNum}
+              </span>
+              <span className="ticket-race-overview__strategy">
+                {summary.strategy || "—"}
+              </span>
+              <span className="ticket-race-overview__picks">
+                {summary.posts.length
+                  ? summary.posts.map((post, index) => (
+                      <span key={`${race.id}-pick-${index}`} className="ticket-race-overview__pick">
+                        {post}
+                      </span>
+                    ))
+                  : t("gameModalities.raceOverviewNoPick")}
+              </span>
+              <span
+                className={`ticket-race-overview__status${
+                  summary.ready ? " ticket-race-overview__status--ready" : ""
+                }`}
+              >
+                {statusLabel}
+              </span>
+            </BrowserTab>
+          );
+        })}
+      </BrowserTabBar>
+
+      <BrowserTabPanel
+        className="comenzar-inline-races__zone"
+        id={`race-zone-${expandedRace}`}
+        role="tabpanel"
+        aria-labelledby={`race-tab-${expandedRace}`}
+      >
         <div className="comenzar-inline-races__zone-body">
           <RaceCard
             race={expandedRaceData}
@@ -589,7 +670,7 @@ export default function EmbeddedTicketRaces({
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </BrowserTabPanel>
+    </BrowserTabs>
   );
 }
