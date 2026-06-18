@@ -111,6 +111,10 @@ export default function FreeTicketsOverviewBar({
                 </button>
               )}
 
+              <p className="free-tickets-overview__track-name" title={track.name}>
+                {track.name}
+              </p>
+
               <div className="free-tickets-overview__dots">
                 {TICKET_NUMS.map((num) => {
                   const used = isTrackTicketUsed(track.slug, num);
@@ -125,8 +129,8 @@ export default function FreeTicketsOverviewBar({
                       }${isTicketActive ? " free-tickets-overview__slot--active" : ""}`}
                       aria-label={
                         used
-                          ? `${t("gameModalities.ticketLabel")} ${num} — ${t("gameModalities.ticketUsed")}`
-                          : `${t("gameModalities.ticketLabel")} ${num} — ${t("gameModalities.ticketAvailable")}`
+                          ? `${track.name} — ${t("gameModalities.ticketLabel")} ${num} — ${t("gameModalities.ticketUsed")}`
+                          : `${track.name} — ${t("gameModalities.ticketLabel")} ${num} — ${t("gameModalities.ticketAvailable")}`
                       }
                       onClick={() => onSelectTicket?.(track, num)}
                     >

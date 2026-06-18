@@ -4,6 +4,7 @@ const BASE = "/images/modality-workspace";
 
 export const MODALITY_WORKSPACE_ASSET_KEYS = {
   logoStrip: "logo-50-my-points-strip.svg",
+  stripesBadge: "workspace-stripes-badge.png",
   iconModalityPaid: "icon-modality-paid.svg",
   iconModalityFree: "icon-modality-free.svg",
   iconModalitySpecial: "icon-modality-special.svg",

@@ -23,6 +23,7 @@ export default function TournamentGuideSteps({ t, compact = false }) {
           <li
             key={step.title}
             className={`tg-steps__item tg-steps__item--${theme}`}
+            tabIndex={0}
           >
             <span className="tg-steps__num" aria-hidden>
               {stepNum}

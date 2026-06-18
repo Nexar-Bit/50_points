@@ -94,8 +94,8 @@ export default function FreeTicketsOverviewBar({
                       onClick={() => onTicketSlotClick?.(track, num)}
                       aria-label={
                         used
-                          ? `${t("gameModalities.ticketLabel")} ${num} — ${t("gameModalities.ticketGalleryOpen")}`
-                          : `${t("gameModalities.ticketLabel")} ${num} — ${t("gameModalities.ticketPlayFirst")}`
+                          ? `${track.name} — ${t("gameModalities.ticketLabel")} ${num} — ${t("gameModalities.ticketGalleryOpen")}`
+                          : `${track.name} — ${t("gameModalities.ticketLabel")} ${num} — ${t("gameModalities.ticketPlayFirst")}`
                       }
                     >
                       {used ? (
@@ -105,6 +105,9 @@ export default function FreeTicketsOverviewBar({
                   );
                 })}
               </div>
+              <p className="free-tickets-overview__track-name" title={track.name}>
+                {track.name}
+              </p>
             </div>
           );
         })}

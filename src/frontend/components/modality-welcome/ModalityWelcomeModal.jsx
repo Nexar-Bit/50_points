@@ -1,16 +1,25 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, Info } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { acceptModalityWelcome } from "@/frontend/lib/modalityWelcomeStorage";
 import ModalityWelcomeCards, {
+  ModalityWelcomeHubStripes,
   ModalityWelcomePathStrip,
 } from "@/frontend/components/modality-welcome/ModalityWelcomeCards";
+import ModalityWelcomeDetail from "@/frontend/components/modality-welcome/ModalityWelcomeDetail";
+
+const COLLAPSE_MS = 420;
 
 export default function ModalityWelcomeModal({ open, modalityId, onAccept }) {
   const { t } = useLanguage();
+  const [closing, setClosing] = useState(false);
+
+  useEffect(() => {
+    if (open) setClosing(false);
+  }, [open, modalityId]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -22,32 +31,30 @@ export default function ModalityWelcomeModal({ open, modalityId, onAccept }) {
   }, [open]);
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!open || closing) return undefined;
     const onKeyDown = (event) => {
-      if (event.key === "Escape") onAccept();
+      if (event.key === "Escape") handleAccept();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, onAccept]);
+  }, [open, closing, handleAccept]);
 
-  const handleAccept = useCallback(() => {
+  const finishAccept = useCallback(() => {
     acceptModalityWelcome(modalityId);
     onAccept();
   }, [modalityId, onAccept]);
 
-  if (!open || !modalityId) return null;
+  const handleAccept = useCallback(() => {
+    if (closing || !modalityId) return;
+    setClosing(true);
+    window.setTimeout(finishAccept, COLLAPSE_MS);
+  }, [closing, modalityId, finishAccept]);
 
-  const detailBullets = t(`modalityWelcome.detailBullets.${modalityId}`);
-  const bulletList = Array.isArray(detailBullets) ? detailBullets : [];
-  const importantText = t(`modalityWelcome.importantText.${modalityId}`);
-  const exampleTitle = t(`modalityWelcome.detailExampleTitle.${modalityId}`);
-  const exampleFields = t(`modalityWelcome.detailExampleFields.${modalityId}`);
-  const exampleList = Array.isArray(exampleFields) ? exampleFields : [];
-  const asideText = t(`modalityWelcome.detailAside.${modalityId}`);
+  if (!open || !modalityId) return null;
 
   return (
     <div
-      className="mw-modal"
+      className={`mw-modal mw-modal--${modalityId}${closing ? " mw-modal--closing" : ""}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="mw-modal-title"
@@ -57,22 +64,20 @@ export default function ModalityWelcomeModal({ open, modalityId, onAccept }) {
         className="mw-modal__backdrop"
         aria-label={t("modalityWelcome.acceptCta")}
         onClick={handleAccept}
+        disabled={closing}
       />
       <div className="mw-modal__panel">
         <ModalityWelcomePathStrip t={t} />
 
         <header className="mw-modal__head">
-          <div className="mw-modal__stripes" aria-hidden>
-            <span className="mw-modal__stripe mw-modal__stripe--paid" />
-            <span className="mw-modal__stripe mw-modal__stripe--free" />
-            <span className="mw-modal__stripe mw-modal__stripe--special" />
-            <span className="mw-modal__stripe mw-modal__stripe--guest" />
-          </div>
           <h2 id="mw-modal-title" className="mw-modal__title">
             {t("gameModalities.hubTitle")}
           </h2>
+          <ModalityWelcomeHubStripes />
           <p className="mw-modal__current-label">
-            <span className="mw-modal__current-icon" aria-hidden>▶</span>
+            <span className="mw-modal__current-icon" aria-hidden>
+              ▶
+            </span>
             {t("modalityWelcome.currentModality")}
           </p>
           <p className="mw-modal__lead">{t("ticketWorkflow.landingLead")}</p>
@@ -80,60 +85,16 @@ export default function ModalityWelcomeModal({ open, modalityId, onAccept }) {
 
         <div className="mw-modal__body">
           <ModalityWelcomeCards t={t} activeModalityId={modalityId} />
-
-          <section
-            className={`mw-detail mw-detail--${modalityId}`}
-            aria-labelledby="mw-detail-title"
-          >
-            <h3 id="mw-detail-title" className="mw-detail__title">
-              {t(`modalityWelcome.detailTitle.${modalityId}`)}
-            </h3>
-            <div className="mw-detail__grid">
-              <div className="mw-detail__main">
-                <p className="mw-detail__highlight">{t(`modalityWelcome.detailHighlight.${modalityId}`)}</p>
-                <p className="mw-detail__text">{t(`modalityWelcome.detailBody.${modalityId}`)}</p>
-                {bulletList.length > 0 ? (
-                  <ul className="mw-detail__list">
-                    {bulletList.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </div>
-              {exampleList.length > 0 ? (
-                <aside className="mw-detail__example">
-                  {exampleTitle ? (
-                    <p className="mw-detail__example-title">{exampleTitle}</p>
-                  ) : null}
-                  <dl className="mw-detail__example-list">
-                    {exampleList.map((field) => (
-                      <div key={field.label} className="mw-detail__example-row">
-                        <dt>{field.label}</dt>
-                        <dd>{field.value}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </aside>
-              ) : asideText ? (
-                <aside className="mw-detail__aside">
-                  <p className="mw-detail__aside-text">{asideText}</p>
-                </aside>
-              ) : null}
-            </div>
-          </section>
-
-          {importantText ? (
-            <div className="mw-important">
-              <Info className="mw-important__icon" strokeWidth={2} aria-hidden />
-              <p className="mw-important__text">
-                <strong>{t("modalityWelcome.importantLabel")}</strong> {importantText}
-              </p>
-            </div>
-          ) : null}
+          <ModalityWelcomeDetail t={t} modalityId={modalityId} />
         </div>
 
         <footer className="mw-modal__footer">
-          <button type="button" className="mw-modal__accept" onClick={handleAccept}>
+          <button
+            type="button"
+            className={`mw-modal__accept mw-modal__accept--${modalityId}`}
+            onClick={handleAccept}
+            disabled={closing}
+          >
             <CheckCircle2 className="mw-modal__accept-icon" strokeWidth={2.25} aria-hidden />
             <span>{t("modalityWelcome.acceptCta")}</span>
           </button>

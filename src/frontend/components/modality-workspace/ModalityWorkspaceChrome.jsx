@@ -1,15 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { isModalityWelcomeAccepted } from "@/frontend/lib/modalityWelcomeStorage";
 import FreeTicketsOverviewBar from "@/frontend/components/modality-workspace/FreeTicketsOverviewBar";
-import ModalityMediaStrip from "@/frontend/components/modality-workspace/ModalityMediaStrip";
 import ModalityNavRail from "@/frontend/components/modality-workspace/ModalityNavRail";
 import ModalityLiveHeader from "@/frontend/components/modality-workspace/ModalityLiveHeader";
+import ModalityTorneoBar, { ModalityColorStripes } from "@/frontend/components/modality-workspace/ModalityTorneoBar";
+import ModalityWelcomeSummaryPanel from "@/frontend/components/modality-welcome/ModalityWelcomeSummaryPanel";
 import OnboardingSequenceGate from "@/frontend/components/onboarding/OnboardingSequenceGate";
 
 /**
- * Top workspace chrome: media bars contract to 4-color strip after modality accept.
+ * Workspace after modality accept: TORNEO header → 4 stripes → nav → info panel → tickets → live.
  */
 export default function ModalityWorkspaceChrome({
   modalityId,
@@ -19,15 +21,16 @@ export default function ModalityWorkspaceChrome({
   workflow = null,
   children,
 }) {
-  const [mediaContracted, setMediaContracted] = useState(false);
+  const { t } = useLanguage();
+  const [workspaceReady, setWorkspaceReady] = useState(false);
   const showTicketsBar = modalityId === "free" || modalityId === "guest";
 
   useEffect(() => {
-    setMediaContracted(isModalityWelcomeAccepted(modalityId));
+    setWorkspaceReady(isModalityWelcomeAccepted(modalityId));
   }, [modalityId]);
 
   const handleWorkspaceUnlocked = useCallback(() => {
-    setMediaContracted(true);
+    setWorkspaceReady(true);
   }, []);
 
   return (
@@ -36,9 +39,22 @@ export default function ModalityWorkspaceChrome({
         modalityId={modalityId}
         onWorkspaceUnlocked={handleWorkspaceUnlocked}
       />
-      <ModalityMediaStrip modalityId={modalityId} contracted={mediaContracted} />
-      <ModalityNavRail activeModalityId={modalityId} />
-      {showTicketsBar ? (
+
+      {workspaceReady ? (
+        <header className="mw-workspace-top">
+          <ModalityTorneoBar t={t} />
+          <ModalityColorStripes contracted className="mw-color-stripes--workspace" />
+        </header>
+      ) : null}
+
+      <div className="mw-workspace-nav-block">
+        <ModalityNavRail activeModalityId={modalityId} />
+        {workspaceReady ? (
+          <ModalityWelcomeSummaryPanel modalityId={modalityId} defaultExpanded />
+        ) : null}
+      </div>
+
+      {workspaceReady && showTicketsBar ? (
         <FreeTicketsOverviewBar
           modalityId={modalityId}
           tracks={tracks}
@@ -50,7 +66,11 @@ export default function ModalityWorkspaceChrome({
           onSelectTicket={workflow?.selectTrackTicket}
         />
       ) : null}
-      <ModalityLiveHeader modalityId={modalityId} activeStep={liveStep} />
+
+      {workspaceReady ? (
+        <ModalityLiveHeader modalityId={modalityId} activeStep={liveStep} />
+      ) : null}
+
       {children}
     </>
   );

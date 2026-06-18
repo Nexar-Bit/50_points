@@ -411,7 +411,10 @@ export const translations = {
       registeredUsers: "USUARIOS REGISTRADOS",
       guestUsers: "SIN REGISTRARTE",
       importantLabel: "IMPORTANTE:",
-      acceptCta: "ACEPTO QUE LEÍ LA INFORMACIÓN",
+      acceptCta: "ACEPTO QUE HE LEÍDO LA INFORMACIÓN",
+      expandInfo: "VER INFORMACIÓN DE LA MODALIDAD",
+      collapseInfo: "OCULTAR INFORMACIÓN",
+      summaryAria: "Resumen de modalidad — expandir o contraer",
       menuHint: "Puedes revisar esta información en",
       cardEyebrow: {
         paid: "MODALIDAD PAGA",
@@ -1774,7 +1777,10 @@ export const translations = {
       registeredUsers: "REGISTERED USERS",
       guestUsers: "NO SIGN-UP",
       importantLabel: "IMPORTANT:",
-      acceptCta: "I ACCEPT THAT I HAVE READ THIS INFORMATION",
+      acceptCta: "I ACCEPT THAT I HAVE READ THE INFORMATION",
+      expandInfo: "VIEW MODE INFORMATION",
+      collapseInfo: "HIDE INFORMATION",
+      summaryAria: "Mode summary — expand or collapse",
       menuHint: "You can review this information in",
       cardEyebrow: {
         paid: "PAID MODE",

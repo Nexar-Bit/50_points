@@ -2,11 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { MapPin } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
-import { getModality, trackSlug, modalityPath } from "@/frontend/lib/gameModalities";
+import { getModality, trackSlug } from "@/frontend/lib/gameModalities";
 import { useLiveTournamentsPoll } from "@/frontend/lib/hooks/useLiveTournamentsPoll";
-import ModalityFlowNav from "@/frontend/components/modalities/ModalityFlowNav";
 import ModalityPageShell from "@/frontend/components/modalities/ModalityPageShell";
 import TracksWorkflowList from "@/frontend/components/modalities/TracksWorkflowList";
 import { getTournamentImageUrl } from "@/frontend/lib/tournamentImages";
@@ -67,70 +65,12 @@ export default function ModalityTracksList({ modalityId }) {
     );
   }
 
-  if (modalityId === "free" || modalityId === "guest") {
-    return (
-      <TracksWorkflowList
-        modalityId={modalityId}
-        tracks={tracks}
-        loading={loading}
-        t={t}
-      />
-    );
-  }
-
   return (
-    <ModalityPageShell modalityId={modalityId}>
-      <ModalityFlowNav modalityId={modalityId} currentStep="tracks" />
-
-      <header className="modality-page__head">
-        <p
-          className="modality-page__eyebrow modality-page__eyebrow--accent"
-          style={{ color: mod.accent }}
-        >
-          {t(`gameModalities.${modalityId}.title`)}
-        </p>
-        <h1 className="modality-page__title">{t("gameModalities.tracksTitle")}</h1>
-        <p className="modality-page__subtitle">{t("gameModalities.tracksSubtitle")}</p>
-      </header>
-
-      {loading ? (
-        <p className="text-zinc-500 text-sm">{t("gameModalities.loading")}</p>
-      ) : tracks.length === 0 ? (
-        <p className="text-zinc-500 text-sm">{t("tournamentsSection.empty")}</p>
-      ) : (
-        <ul className="modality-tracks-list">
-          {tracks.map((track) => (
-            <li key={track.slug}>
-              <Link
-                href={modalityPath(modalityId, "tickets", { trackSlug: track.slug })}
-                className={`modality-track-row modality-track-row--${modalityId}`}
-              >
-                <span
-                  className="modality-track-row__thumb"
-                  style={
-                    track.imageUrl ? { backgroundImage: `url(${track.imageUrl})` } : undefined
-                  }
-                />
-                <span className="modality-track-row__info">
-                  <span className="modality-track-row__name">{track.name}</span>
-                  {track.location ? (
-                    <span className="modality-track-row__loc">
-                      <MapPin className="w-3 h-3 inline mr-1 opacity-60" aria-hidden />
-                      {track.location}
-                    </span>
-                  ) : null}
-                  <span className="modality-track-row__meta">
-                    {track.count} {t("gameModalities.tournamentsAtTrack")}
-                    {track.live ? (
-                      <span className="modality-track-row__live">{t("gameModalities.live")}</span>
-                    ) : null}
-                  </span>
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </ModalityPageShell>
+    <TracksWorkflowList
+      modalityId={modalityId}
+      tracks={tracks}
+      loading={loading}
+      t={t}
+    />
   );
 }

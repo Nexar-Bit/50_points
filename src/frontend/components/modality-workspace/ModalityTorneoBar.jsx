@@ -1,9 +1,10 @@
 "use client";
 
+import { logoFile } from "@/frontend/lib/config/paths";
 import { modalityWorkspaceAsset } from "@/frontend/lib/config/modalityWorkspaceAssets";
 
 export default function ModalityTorneoBar({ t, className = "" }) {
-  const logo = modalityWorkspaceAsset("logoStrip");
+  const logo = logoFile();
   const menu = modalityWorkspaceAsset("menuLines");
 
   return (

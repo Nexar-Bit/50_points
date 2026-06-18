@@ -12411,6 +12411,23 @@ html[data-modality="free"] .modality-page--free-tracks {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.free-tickets-overview__track-name {
+  margin: 0;
+  width: 100%;
+  font-size: clamp(0.48rem, 1.1vw, 0.58rem);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.88);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-word;
+}
+
 .free-tickets-overview__check {
   width: 0.55rem;
   height: 0.55rem;

@@ -10,7 +10,7 @@ import TournamentGuideSteps, {
 } from "@/frontend/components/tournament-guide/TournamentGuideSteps";
 import TournamentGuideQuickSummary from "@/frontend/components/tournament-guide/TournamentGuideQuickSummary";
 
-export default function TournamentGuideModal({ open, onClose, beginHref }) {
+export default function TournamentGuideModal({ open, onClose }) {
   const { t } = useLanguage();
   const [dontShow, setDontShow] = useState(false);
 
@@ -88,10 +88,7 @@ export default function TournamentGuideModal({ open, onClose, beginHref }) {
               onClick={() => handleClose(true)}
             >
               <Play className="tg-modal__btn-icon" strokeWidth={2.5} aria-hidden />
-              <span className="tg-modal__btn-text">
-                <strong>{t("tournamentGuide.beginCta")}</strong>
-                <span>{beginHref ? t("tournamentGuide.beginSubContinue") : t("tournamentGuide.beginSub")}</span>
-              </span>
+              <span className="tg-modal__btn-text">{t("tournamentGuide.beginCta")}</span>
             </button>
             <button
               type="button"
@@ -99,10 +96,7 @@ export default function TournamentGuideModal({ open, onClose, beginHref }) {
               onClick={() => handleClose(false)}
             >
               <X className="tg-modal__btn-icon" strokeWidth={2.5} aria-hidden />
-              <span className="tg-modal__btn-text">
-                <strong>{t("tournamentGuide.closeCta")}</strong>
-                <span>{t("tournamentGuide.closeSub")}</span>
-              </span>
+              <span className="tg-modal__btn-text">{t("tournamentGuide.closeCta")}</span>
             </button>
           </div>
 
