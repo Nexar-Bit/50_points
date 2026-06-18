@@ -39,7 +39,7 @@ export function buildTracksFromTournaments(tournaments) {
       entry.tournamentSlug = tourn.slug;
     }
   }
-  return [...map.values()].sort((a, b) => (b.live ? 1 : 0) - (a.live ? 1 : 0));
+  return [...map.values()].sort((a, b) => a.name.localeCompare(b.name, "es"));
 }
 
 export default function ModalityTracksList({ modalityId }) {

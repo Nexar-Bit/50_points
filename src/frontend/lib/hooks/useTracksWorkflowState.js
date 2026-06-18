@@ -58,10 +58,10 @@ export function useTracksWorkflowState(initialTrackSlug = null, initialTicketNum
       if (prev !== slug) {
         setActiveTicketNum(1);
         setRacesOpen(true);
+        scrollToTrack(slug);
       }
       return slug;
     });
-    scrollToTrack(slug);
   }, [scrollToTrack]);
 
   const toggleTrack = useCallback((slug) => {

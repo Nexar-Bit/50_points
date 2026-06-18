@@ -41,9 +41,11 @@ export default function TournamentsPageClient() {
   const [loading, setLoading] = useState(true);
   const workflow = useTracksWorkflowState(expandFromUrl, ticketFromUrl);
   const tracks = useMemo(() => buildTracksFromTournaments(tournaments), [tournaments]);
+  const freezeTrackTabs = Boolean(workflow.expandedSlug && workflow.racesOpen);
 
   useLiveTournamentsPoll({
     forHome: true,
+    enabled: !freezeTrackTabs,
     onData: (mapped) => setTournaments(mapped),
     onLoadingChange: setLoading,
   });

@@ -70,7 +70,7 @@ export default function TracksWorkflowAccordion({
     effectiveTournamentSlug;
 
   return (
-    <div className="tracks-accordion-shell" id="tracks-workflow-tabs">
+    <div className={`tracks-accordion-shell${showRaces ? " tracks-accordion-shell--picking" : ""}`} id="tracks-workflow-tabs">
       <BrowserTabs className="browser-tabs--tracks browser-tabs--tracks-primary">
         <BrowserTabBar
           className="browser-tabs__bar--tracks"

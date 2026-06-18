@@ -12782,6 +12782,20 @@ button.modality-hub-mode-card {
     0 6px 18px rgba(0, 0, 0, 0.45);
 }
 
+.tracks-accordion-shell--picking .browser-tabs__tab--track-rich,
+.tracks-accordion-shell--picking .browser-tabs__tab-thumb,
+.tracks-accordion-shell--picking .browser-tabs__tab-pill {
+  transition: none !important;
+}
+
+.tracks-accordion-shell--picking .browser-tabs__tab-thumb {
+  transform: none !important;
+}
+
+.tracks-accordion-shell--picking .browser-tabs__tab-live-dot {
+  animation: none !important;
+}
+
 .browser-tabs__tab-thumb {
   display: block;
   width: 100%;
