@@ -53,6 +53,7 @@ export const FLOATING_MENU_BLOCKS = [
     labelKey: "floatingMenu.blockSystem",
     items: [
       { id: "settings", href: "/profile?section=settings", labelKey: "floatingMenu.settings" },
+      { id: "tournamentGuide", href: "/guia-torneo", labelKey: "floatingMenu.tournamentGuide", skipModality: true },
       { id: "help", href: "/how-to-play?section=faq", labelKey: "floatingMenu.help" },
       { id: "logout", labelKey: "floatingMenu.logout", isLogout: true },
     ],

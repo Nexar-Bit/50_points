@@ -3,64 +3,52 @@
  * always know where they are. Flow: Modalidades → Hipódromos → Tickets → Torneo.
  */
 
+import {
+  BRAND_BY_MODALITY,
+  BRAND_TICKET_GUEST,
+  brandCssCustomProperties,
+  ticketPaletteToModality,
+} from "@/frontend/lib/brandColors";
+
 export const MODALITY_IDS = ["guest", "free", "paid", "special"];
 
 export const MODALITIES = {
-  /** Sin registro — blue identity */
   guest: {
     id: "guest",
-    accent: "#3b82f6",
-    bgBase: "#060d1a",
-    bgGradient:
-      "radial-gradient(ellipse 120% 80% at 15% 0%, rgba(37, 99, 235, 0.42) 0%, transparent 55%), radial-gradient(ellipse 90% 60% at 85% 100%, rgba(59, 130, 246, 0.18) 0%, transparent 50%), linear-gradient(180deg, #0a1628 0%, #060d1a 50%, #040a14 100%)",
-    border: "rgba(96, 165, 250, 0.45)",
-    glow: "rgba(59, 130, 246, 0.28)",
-    hubInverted: false,
-    gameMode: 1,
-    available: true,
-    icon: "user",
-    badgeLabel: "INVITADO",
+    ...ticketPaletteToModality(BRAND_TICKET_GUEST, {
+      hubInverted: true,
+      gameMode: 1,
+      available: true,
+      icon: "user",
+      badgeLabel: "INVITADO",
+    }),
   },
-  /** Registered, plays free — magenta identity */
   free: {
     id: "free",
-    accent: "#d946ef",
-    bgBase: "#14061a",
-    bgGradient:
-      "radial-gradient(ellipse 120% 80% at 12% 0%, rgba(192, 38, 211, 0.42) 0%, transparent 55%), radial-gradient(ellipse 90% 60% at 88% 100%, rgba(217, 70, 239, 0.22) 0%, transparent 50%), linear-gradient(180deg, #1a0820 0%, #14061a 50%, #0c0410 100%)",
-    border: "rgba(232, 121, 249, 0.45)",
-    glow: "rgba(217, 70, 239, 0.28)",
-    gameMode: 2,
-    available: true,
-    icon: "trophy",
-    badgeLabel: "REGISTRADO",
+    ...ticketPaletteToModality(BRAND_BY_MODALITY.free, {
+      gameMode: 2,
+      available: true,
+      icon: "trophy",
+      badgeLabel: "REGISTRADO",
+    }),
   },
-  /** Registered, pays to play — yellow identity */
   paid: {
     id: "paid",
-    accent: "#facc15",
-    bgBase: "#141008",
-    bgGradient:
-      "radial-gradient(ellipse 120% 80% at 15% 0%, rgba(234, 179, 8, 0.38) 0%, transparent 55%), radial-gradient(ellipse 90% 60% at 85% 100%, rgba(250, 204, 21, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a1406 0%, #141008 50%, #0c0a04 100%)",
-    border: "rgba(250, 204, 21, 0.48)",
-    glow: "rgba(250, 204, 21, 0.3)",
-    gameMode: 3,
-    available: false,
-    icon: "ticket",
-    badgeLabel: "PAGO",
+    ...ticketPaletteToModality(BRAND_BY_MODALITY.paid, {
+      gameMode: 3,
+      available: false,
+      icon: "ticket",
+      badgeLabel: "PAGO",
+    }),
   },
   special: {
     id: "special",
-    accent: "#d4d4d8",
-    bgBase: "#18181b",
-    bgGradient:
-      "radial-gradient(ellipse 120% 80% at 10% 0%, rgba(228, 228, 231, 0.12) 0%, transparent 55%), radial-gradient(ellipse 90% 60% at 90% 100%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), linear-gradient(180deg, #27272a 0%, #18181b 50%, #09090b 100%)",
-    border: "rgba(228, 228, 231, 0.35)",
-    glow: "rgba(212, 212, 216, 0.18)",
-    gameMode: 4,
-    available: false,
-    icon: "star",
-    badgeLabel: "ESPECIAL",
+    ...ticketPaletteToModality(BRAND_BY_MODALITY.special, {
+      gameMode: 4,
+      available: false,
+      icon: "star",
+      badgeLabel: "ESPECIAL",
+    }),
   },
 };
 
@@ -113,10 +101,10 @@ export function getModalityBadgeClasses(gameMode, isGuest = false) {
   const mod = getModality(gameModeToModalityId(gameMode, isGuest));
   const id = mod.id;
   const map = {
-    guest: "bg-blue-600/20 text-blue-300 border-blue-500/40",
-    free: "bg-fuchsia-600/20 text-fuchsia-300 border-fuchsia-500/40",
-    paid: "bg-yellow-600/20 text-yellow-300 border-yellow-500/40",
-    special: "bg-zinc-600/25 text-zinc-300 border-zinc-400/40",
+    guest: "bg-zinc-200/15 text-zinc-200 border-zinc-300/35",
+    free: "bg-cyan-600/20 text-cyan-300 border-cyan-500/40",
+    paid: "bg-purple-600/20 text-purple-300 border-purple-500/40",
+    special: "bg-amber-600/20 text-amber-300 border-amber-500/40",
   };
   return {
     className: map[id] || map.free,
@@ -127,23 +115,31 @@ export function getModalityBadgeClasses(gameMode, isGuest = false) {
 export function applyModalityToDocument(modalityId) {
   if (typeof document === "undefined") return;
   const id = isValidModalityId(modalityId) ? modalityId : "free";
-  const mod = getModality(id);
   const root = document.documentElement;
   root.setAttribute("data-modality", id);
-  root.style.setProperty("--modality-accent", mod.accent);
-  root.style.setProperty("--modality-border", mod.border);
-  root.style.setProperty("--modality-glow", mod.glow);
-  root.style.setProperty("--modality-bg", mod.bgGradient);
+  const vars = brandCssCustomProperties(id);
+  Object.entries(vars).forEach(([key, value]) => {
+    root.style.setProperty(key, value);
+  });
 }
 
 export function clearModalityFromDocument() {
   if (typeof document === "undefined") return;
   const root = document.documentElement;
   root.removeAttribute("data-modality");
-  root.style.removeProperty("--modality-accent");
-  root.style.removeProperty("--modality-border");
-  root.style.removeProperty("--modality-glow");
-  root.style.removeProperty("--modality-bg");
+  [
+    "--modality-accent",
+    "--modality-neon",
+    "--modality-neon-line",
+    "--modality-border",
+    "--modality-glow",
+    "--modality-matte-bg",
+    "--modality-matte-panel",
+    "--modality-matte-muted",
+    "--modality-matte-fg",
+    "--modality-bg",
+    "--modality-ticket",
+  ].forEach((key) => root.style.removeProperty(key));
 }
 
 const STORAGE_KEY = "50points_active_modality";

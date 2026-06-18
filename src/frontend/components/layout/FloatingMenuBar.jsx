@@ -190,6 +190,8 @@ export default function FloatingMenuBar() {
         return isProfilePath(pathname) && section === "settings";
       case "help":
         return pathname === "/how-to-play" && howSection === "faq";
+      case "tournamentGuide":
+        return pathname === "/guia-torneo";
       default:
         return false;
     }

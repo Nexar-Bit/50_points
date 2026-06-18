@@ -232,6 +232,16 @@ export function MenuIconSettings({ className }) {
   );
 }
 
+export function MenuIconGuide({ className }) {
+  return (
+    <Icon className={className}>
+      <path d="M8 6.5h8a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2z" />
+      <path d="M10.5 11h7M10.5 14.5h7M10.5 18h4.5" />
+      <path d="M16 6.5V5a1.5 1.5 0 0 0-3 0v1.5" />
+    </Icon>
+  );
+}
+
 export const FLOATING_MENU_ICONS = {
   home: MenuIconHome,
   mainPage: MenuIconMainHub,
@@ -247,6 +257,7 @@ export const FLOATING_MENU_ICONS = {
   statistics: MenuIconBarChart,
   privacy: MenuIconPrivacy,
   settings: MenuIconSettings,
+  tournamentGuide: MenuIconGuide,
   help: MenuIconHelp,
   logout: MenuIconPower,
   racecourses: MenuIconHorse,

@@ -1,10 +1,10 @@
 "use client";
 
 import { useId } from "react";
-import Link from "next/link";
 import { Caveat } from "next/font/google";
-import { UserPlus, Play, LogIn, Trophy } from "lucide-react";
-import { markCoverPassed, persistModality } from "@/frontend/lib/gameModalities";
+import HeroTorneoHeader from "@/frontend/components/home/HeroTorneoHeader";
+import ModalityEntryCards from "@/frontend/components/modalities/ModalityEntryCards";
+import ModalityImportantNotice from "@/frontend/components/modalities/ModalityImportantNotice";
 import LanguageToggle from "@/frontend/components/layout/LanguageToggle";
 
 const caveat = Caveat({
@@ -15,27 +15,6 @@ const caveat = Caveat({
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { staticFile } from "@/frontend/lib/config/paths";
 import AnimateInView from "@/frontend/components/ui/AnimateInView";
-
-function TournamentCrown({ label }) {
-  return (
-    <div className="tournament-crown-block">
-      <div className="tournament-crown-block__icon-wrap">
-        <div className="tournament-crown-block__glow" aria-hidden />
-        <img
-          src={staticFile("/Img/king.png")}
-          alt=""
-          className="tournament-crown-block__crown"
-        />
-      </div>
-      <p className="tournament-crown-block__label">{label}</p>
-      <div className="tournament-crown-divider" aria-hidden>
-        <span className="tournament-crown-divider__line tournament-crown-divider__line--left" />
-        <span className="tournament-crown-divider__diamond" />
-        <span className="tournament-crown-divider__line tournament-crown-divider__line--right" />
-      </div>
-    </div>
-  );
-}
 
 function LaurelTrophy() {
   const frameGradId = `gold-cup-frame-${useId().replace(/:/g, "")}`;
@@ -172,77 +151,11 @@ function MyFiftyPointsBrand({ tagline }) {
   );
 }
 
-function HeroModeHeader({ t }) {
+function HeroModalityPanel({ t }) {
   return (
-    <header className="hero-mode-header" aria-label={t("ticketWorkflow.landingCtaModes")}>
-      <div className="hero-mode-header__main">
-        <Play className="hero-mode-header__icon" strokeWidth={2} aria-hidden />
-        <span className="hero-mode-header__label">{t("ticketWorkflow.landingCtaModes")}</span>
-      </div>
-      <p className="hero-mode-header__lead">{t("ticketWorkflow.landingLead")}</p>
-    </header>
-  );
-}
-
-function HeroCtaPanel({ t }) {
-  return (
-    <div className="hero-cta-panel">
-      <div className="hero-cta-panel__buttons">
-        <Link
-          href="/login?modality=paid"
-          className="hero-cta-btn hero-cta-btn--purple group"
-          onClick={() => { persistModality("paid"); markCoverPassed(); }}
-        >
-          <span className="hero-cta-btn__main">
-            <LogIn className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
-            <span className="hero-cta-btn__label">{t("hero.loginExisting")}</span>
-          </span>
-          <span className="hero-cta-btn__sub">{t("hero.loginExistingSub")}</span>
-        </Link>
-
-        <Link
-          href="/register?modality=free"
-          className="hero-cta-btn hero-cta-btn--cyan group"
-          onClick={() => { persistModality("free"); markCoverPassed(); }}
-        >
-          <span className="hero-cta-btn__main">
-            <UserPlus className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
-            <span className="hero-cta-btn__label">{t("hero.register")}</span>
-          </span>
-          <span className="hero-cta-btn__sub">{t("hero.registerSub")}</span>
-        </Link>
-
-        <Link
-          href="/inicio?modality=special"
-          className="hero-cta-btn hero-cta-btn--gold group"
-          onClick={() => {
-            persistModality("special");
-            markCoverPassed();
-          }}
-        >
-          <span className="hero-cta-btn__main">
-            <Trophy className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
-            <span className="hero-cta-btn__label">{t("hero.specialTournament")}</span>
-          </span>
-          <span className="hero-cta-btn__sub">{t("hero.specialTournamentSub")}</span>
-        </Link>
-
-        <Link
-          href="/inicio?modality=guest"
-          className="hero-cta-btn hero-cta-btn--guest group"
-          onClick={() => {
-            persistModality("guest");
-            markCoverPassed();
-          }}
-        >
-          <span className="hero-cta-btn__main">
-            <Play className="hero-cta-btn__icon" strokeWidth={2} aria-hidden />
-            <span className="hero-cta-btn__label">{t("hero.enter")}</span>
-          </span>
-          <span className="hero-cta-btn__sub">{t("hero.enterSub")}</span>
-        </Link>
-      </div>
-
+    <div className="hero-modality-panel">
+      <ModalityEntryCards t={t} />
+      <ModalityImportantNotice t={t} className="hero-modality-panel__notice" />
       <p className="hero-cta-panel__slogan">
         <span className="text-purple-light">{t("hero.sloganPoints")}</span>
         <span className="hero-slogan-dot hero-slogan-dot--purple" aria-hidden />
@@ -399,40 +312,37 @@ export default function HomeLanding() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-4 sm:pt-6 pb-8">
-        {/* Top bar */}
+        {/* Top bar + strategy points — tight cluster so cards clear jockey helmet */}
         <AnimateInView>
-          <div className="grid grid-cols-[auto_1fr_auto] items-start gap-3 sm:gap-4 mb-6 sm:mb-8">
-            <LaurelTrophy />
-            <div className="flex justify-center min-w-0">
-              <TournamentCrown label={t("hero.tournament")} />
+          <div className="hero-top-cluster">
+            <div className="hero-top-bar">
+              <LaurelTrophy />
+              <HeroTorneoHeader t={t} />
+              <LanguageToggle />
             </div>
-            <LanguageToggle className="justify-self-end" />
-          </div>
-        </AnimateInView>
 
-        {/* Strategy points — FULL / DUAL / SMART (image left, text right) */}
-        <AnimateInView delay={0.1}>
-          <div className="flex flex-col sm:flex-row items-stretch mb-8 sm:mb-10 bg-transparent">
-            <StrategyPointColumn
-              variant="full"
-              label={t("hero.fullPointTitle")}
-              taglineLines={[t("hero.fullPointTag1"), t("hero.fullPointTag2")]}
-              imageSrc={staticFile(STRATEGY_IMAGES.full)}
-            />
-            <StrategyDivider />
-            <StrategyPointColumn
-              variant="dual"
-              label={t("hero.dualPointTitle")}
-              taglineLines={[t("hero.dualPointTag1"), t("hero.dualPointTag2")]}
-              imageSrc={staticFile(STRATEGY_IMAGES.dual)}
-            />
-            <StrategyDivider />
-            <StrategyPointColumn
-              variant="smart"
-              label={t("hero.smartPointTitle")}
-              taglineLines={[t("hero.smartPointTag1"), t("hero.smartPointTag2")]}
-              imageSrc={staticFile(STRATEGY_IMAGES.smart)}
-            />
+            <div className="hero-strategy-points flex flex-col sm:flex-row items-stretch bg-transparent">
+              <StrategyPointColumn
+                variant="full"
+                label={t("hero.fullPointTitle")}
+                taglineLines={[t("hero.fullPointTag1"), t("hero.fullPointTag2")]}
+                imageSrc={staticFile(STRATEGY_IMAGES.full)}
+              />
+              <StrategyDivider />
+              <StrategyPointColumn
+                variant="dual"
+                label={t("hero.dualPointTitle")}
+                taglineLines={[t("hero.dualPointTag1"), t("hero.dualPointTag2")]}
+                imageSrc={staticFile(STRATEGY_IMAGES.dual)}
+              />
+              <StrategyDivider />
+              <StrategyPointColumn
+                variant="smart"
+                label={t("hero.smartPointTitle")}
+                taglineLines={[t("hero.smartPointTag1"), t("hero.smartPointTag2")]}
+                imageSrc={staticFile(STRATEGY_IMAGES.smart)}
+              />
+            </div>
           </div>
         </AnimateInView>
 
@@ -446,7 +356,7 @@ export default function HomeLanding() {
         {/* REGISTER / ENTER + slogan — horizontal center, same vertical band */}
         <AnimateInView delay={0.2}>
           <div id="hero-cta" className="hero-cta-panel-wrap">
-            <HeroCtaPanel t={t} />
+            <HeroModalityPanel t={t} />
           </div>
         </AnimateInView>
 

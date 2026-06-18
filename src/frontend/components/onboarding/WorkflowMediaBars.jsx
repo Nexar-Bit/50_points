@@ -116,7 +116,10 @@ export default function WorkflowMediaBars() {
         </header>
         <div className="workflow-media-bar__body workflow-media-bar__body--info">
           <p className="workflow-media-bar__info-lead">{t("ticketWorkflow.landingLeadDetail1")}</p>
-          <p className="workflow-media-bar__info-detail">{t("ticketWorkflow.landingFactModes")}</p>
+          <Link href="/guia-torneo" className="workflow-media-bar__guide-link">
+            {t("floatingMenu.tournamentGuide")}
+            <ChevronRight className="w-4 h-4" aria-hidden />
+          </Link>
         </div>
       </article>
 

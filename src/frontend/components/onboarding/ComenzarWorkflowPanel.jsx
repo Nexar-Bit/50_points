@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
 import { useModality } from "@/frontend/contexts/ModalityContext";
@@ -8,10 +8,8 @@ import { getModality } from "@/frontend/lib/gameModalities";
 import { useLiveTournamentsPoll } from "@/frontend/lib/hooks/useLiveTournamentsPoll";
 import { buildTracksFromTournaments } from "@/frontend/components/modalities/ModalityTracksList";
 import ModalityPageShell from "@/frontend/components/modalities/ModalityPageShell";
-import ModalityHubBoard from "@/frontend/components/modalities/ModalityHubBoard";
+import ModalityWorkspaceChrome from "@/frontend/components/modality-workspace/ModalityWorkspaceChrome";
 import TracksWorkflowAccordion from "@/frontend/components/modalities/TracksWorkflowAccordion";
-import TracksWorkflowTicketsBridge from "@/frontend/components/modalities/TracksWorkflowTicketsBridge";
-import WorkflowMediaBars from "@/frontend/components/onboarding/WorkflowMediaBars";
 import { useTracksWorkflowState } from "@/frontend/lib/hooks/useTracksWorkflowState";
 import { ticketWorkflowAsset } from "@/frontend/lib/config/ticketWorkflowAssets";
 
@@ -25,7 +23,7 @@ function resolveDefaultModality(activeModalityId, user) {
 export default function ComenzarWorkflowPanel() {
   const { t } = useLanguage();
   const { user } = useAuth();
-  const { activeModalityId, setActiveModality } = useModality();
+  const { activeModalityId } = useModality();
   const [selectedModalityId, setSelectedModalityId] = useState(() =>
     resolveDefaultModality(activeModalityId, user),
   );
@@ -45,21 +43,11 @@ export default function ComenzarWorkflowPanel() {
     onLoadingChange: setLoading,
   });
 
-  const handleModeSelect = useCallback(
-    (modeId) => {
-      setSelectedModalityId(modeId);
-      setActiveModality(modeId);
-    },
-    [setActiveModality],
-  );
-
+  const workflow = useTracksWorkflowState();
   const noise = ticketWorkflowAsset("noiseOverlayTile");
   const pageBg = ticketWorkflowAsset("tracksWorkflowBg");
   const mainPanelBg = ticketWorkflowAsset("tracksWorkflowMainPanelBg");
-  const bannerBg = ticketWorkflowAsset("workflowBannerBg");
-
   const workflowAvailable = selectedModalityId === "guest" || selectedModalityId === "free";
-  const workflow = useTracksWorkflowState();
 
   return (
     <ModalityPageShell modalityId={selectedModalityId} className="modality-page--workflow-embedded">
@@ -82,47 +70,19 @@ export default function ComenzarWorkflowPanel() {
           ) : null}
         </div>
 
-        <div className="tracks-workflow__inner comenzar-workflow-panel__inner">
-          <ModalityHubBoard
-            layout="flat"
-            selectable
-            showHow={false}
-            titleAs="h2"
-            activeModeId={selectedModalityId}
-            onModeSelect={handleModeSelect}
-            className="modality-hub-board--comenzar-access"
-          />
-
-          <WorkflowMediaBars />
-
+        <div className="tracks-workflow__inner comenzar-workflow-panel__inner tracks-workflow__inner--workspace">
           {!workflowAvailable ? (
-            <p className="tracks-workflow__status">{t("gameModalities.comingSoon")}</p>
-          ) : (
             <>
-              <header
-                className="tracks-workflow-banner"
-                style={bannerBg ? { "--workflow-banner-bg": `url(${bannerBg})` } : undefined}
-              >
-                <div className="tracks-workflow-banner__badge" aria-hidden>
-                  <img
-                    src={ticketWorkflowAsset("workflowBannerIcon")}
-                    alt=""
-                    className="tracks-workflow-banner__badge-img"
-                  />
-                  <span className="tracks-workflow-banner__badge-num">3</span>
-                </div>
-                <div className="tracks-workflow-banner__copy">
-                  <p className="tracks-workflow-banner__title">{t("ticketWorkflow.bannerTitle")}</p>
-                  <p className="tracks-workflow-banner__body">{t("ticketWorkflow.bannerBody")}</p>
-                </div>
-              </header>
-
-              <TracksWorkflowTicketsBridge
-                tracks={tracks}
-                workflow={workflow}
-                loading={loading}
-              />
-
+              <ModalityWorkspaceChrome modalityId={selectedModalityId} />
+              <p className="tracks-workflow__status">{t("gameModalities.comingSoon")}</p>
+            </>
+          ) : (
+            <ModalityWorkspaceChrome
+              modalityId={selectedModalityId}
+              tracks={tracks}
+              tracksLoading={loading}
+              workflow={workflow}
+            >
               <div className="tracks-workflow__grid tracks-workflow__grid--stacked">
                 <div className="tracks-workflow__main tracks-workflow__main--full">
                   <div
@@ -149,7 +109,7 @@ export default function ComenzarWorkflowPanel() {
                   </div>
                 </div>
               </div>
-            </>
+            </ModalityWorkspaceChrome>
           )}
         </div>
       </div>

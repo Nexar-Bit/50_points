@@ -41,6 +41,7 @@ export const translations = {
       privacy: "Privacidad",
       settings: "Configuracion",
       help: "Ayuda",
+      tournamentGuide: "Guía del Torneo",
       logout: "Cerrar Sesion",
       login: "Iniciar Sesion",
       racecourses: "Hipodromos",
@@ -180,6 +181,25 @@ export const translations = {
       raceOverviewDraft: "EN CURSO",
       submitError: "Error al enviar el ticket.",
       howTitle: "¿COMO FUNCIONAN?",
+      hubLoginCta: "INICIAR SESIÓN",
+      hubRegisterCta: "REGÍSTRATE",
+      hubGuestCta: "ENTRAR SIN REGISTRARTE",
+      hubImportantTitle: "IMPORTANTE",
+      hubImportantAccount:
+        "Solo necesitas una única cuenta para acceder a todo el ecosistema MY 50 POINTS.",
+      hubImportantNoSeparate: "No existen cuentas diferentes para cada modalidad de torneo.",
+      hubImportantAfterLogin:
+        "Una vez registrado e iniciada tu sesión, podrás entrar libremente entre las distintas modalidades disponibles:",
+      hubImportantFreeList: "TORNEO (GRATIS)",
+      hubImportantPaidList: "TORNEO (CON PREMIO)",
+      hubImportantSpecialList: "TORNEO ESPECIAL (CON PREMIO)",
+      hubImportantPaidNote:
+        "Las modalidades con premio requieren el pago correspondiente para participar en sus torneos, mientras que las modalidades gratuitas pueden utilizarse sin coste.",
+      hubImportantGuestNote:
+        "Los jugadores que entren mediante «Entrar sin registrarte» podrán jugar en la modalidad gratuita para invitados y, si lo desean, registrarse en cualquier momento para acceder al resto de modalidades y funciones del sistema.",
+      hubImportantFooter: "Tu cuenta es una sola.",
+      hubImportantFooterSub:
+        "Lo único que cambia es la modalidad de torneo en la que decides participar.",
       hubHowLead: "Los Torneos Generales son completamente GRATIS para todos los jugadores.",
       hubHowAudiences: ["Usuarios sin registrar", "Usuarios registrados"],
       hubHowGoal:
@@ -196,7 +216,8 @@ export const translations = {
       guest: {
         title: "Sin Registro",
         desc: "Juega gratis sin crear cuenta",
-        hubTournament: "TORNEO GENERAL",
+        hubTournament: "TORNEO (GRATIS)",
+        hubModalityNum: "MODALIDAD 4",
         hubPlayLine: "JUEGAS GRATIS",
         hubDetail: "ENTRA SIN REGISTRARTE",
         hubAudience: "(USUARIOS SIN REGISTRAR)",
@@ -204,7 +225,8 @@ export const translations = {
       free: {
         title: "Gratis / Registrado",
         desc: "Torneos abiertos con cuenta o invitado",
-        hubTournament: "TORNEO GENERAL",
+        hubTournament: "TORNEO (GRATIS)",
+        hubModalityNum: "MODALIDAD 2",
         hubPlayLine: "JUEGAS GRATIS",
         hubDetail: "USUARIOS REGISTRADOS",
         hubAudience: "",
@@ -212,7 +234,8 @@ export const translations = {
       paid: {
         title: "Torneo de Pago",
         desc: "Competencias premium con entrada",
-        hubTournament: "TORNEO PAGO",
+        hubTournament: "TORNEO (CON PREMIO)",
+        hubModalityNum: "MODALIDAD 1",
         hubPlayLine: "PAGO DE UN TICKET PARA JUGAR",
         hubDetail: "USUARIOS REGISTRADOS",
         hubAudience: "",
@@ -220,7 +243,8 @@ export const translations = {
       special: {
         title: "Torneo Especial",
         desc: "Eventos limitados y temporada",
-        hubTournament: "TORNEO ESPECIAL",
+        hubTournament: "TORNEO ESPECIAL (CON PREMIO)",
+        hubModalityNum: "MODALIDAD 3",
         hubPlayLine: "PAGO ESPECIAL PARA JUGAR",
         hubDetail: "USUARIOS REGISTRADOS",
         hubAudience: "",
@@ -232,6 +256,240 @@ export const translations = {
       showcaseModes: "Modalidades",
       showcaseTickets: "Tickets / torneo",
       showcasePerRace: "Pts por carrera",
+    },
+    tournamentGuide: {
+      docTitle: "GUÍA DEL TORNEO – MY 50 POINTS",
+      pageTitle: "Guía del Torneo",
+      objectiveTitle: "OBJETIVO DE ESTA GUÍA",
+      objectiveText:
+        "Esta guía reúne en un solo lugar el recorrido completo del jugador y las reglas básicas necesarias para participar en los torneos de MY 50 POINTS.",
+      part1Title: "PARTE 1 – TU CAMINO AL TORNEO",
+      part1Intro:
+        "Antes de entrar a un torneo, conoce los pasos para crear un ticket y participar correctamente.",
+      pathLabel: "RECORRIDO GENERAL",
+      pathSteps: "Modalidad → Hipódromo → Ticket → Estrategias → Confirmación → Torneo → Ranking",
+      modalEyebrow: "CÓMO EMPEZAR",
+      modalTitle: "TU CAMINO AL TORNEO",
+      modalLead:
+        "Sigue estos pasos para participar correctamente en los torneos y acumular puntos en MY 50 POINTS.",
+      quickSummary: "RESUMEN RÁPIDO",
+      dontShowAgain: "NO VOLVER A MOSTRAR",
+      dontShowHint: "Puedes consultar esta guía en cualquier momento desde el menú «Guía del Torneo».",
+      beginCta: "COMENZAR",
+      beginSub: "IR A MODALIDADES",
+      beginSubContinue: "CONTINUAR",
+      closeCta: "CERRAR",
+      closeSub: "CERRAR GUÍA",
+      menuHint:
+        "Puedes revisar esta información en cualquier momento desde el menú principal en Guía del Torneo.",
+      step2Title: "PASO 2 – SELECCIONAR HIPÓDROMO",
+      step2Detail: "Accede a uno de los hipódromos disponibles para ese día. Ejemplos:",
+      step2Note:
+        "Cada hipódromo posee sus propios torneos, carreras y clasificaciones.",
+      step4Title: "PASO 4 – ELEGIR TUS ESTRATEGIAS",
+      step4Detail: "Para cada carrera deberás elegir una de las estrategias disponibles.",
+      step4Note: "Cada estrategia representa una forma distinta de distribuir tus puntos.",
+      trackExamples: ["Gulfstream Park", "Churchill Downs", "Santa Anita Park"],
+      summaryLabels: [
+        "Modalidad",
+        "Hipódromo",
+        "Ticket",
+        "Estrategias",
+        "Confirmar",
+        "Torneo",
+        "Ranking",
+      ],
+      steps: [
+        {
+          title: "ELIGE MODALIDAD",
+          desc: "Selecciona una de las cuatro modalidades disponibles antes de continuar.",
+        },
+        {
+          title: "SELECCIONA HIPÓDROMO",
+          desc: "Accede a uno de los hipódromos disponibles para ese día.",
+        },
+        {
+          title: "SELECCIONA TICKET",
+          desc: "Cada ticket compite de forma independiente y acumula sus propios puntos.",
+        },
+        {
+          title: "ELIGE TUS ESTRATEGIAS",
+          desc: "Full Point, Dual Point o Smart Point: distribuye tus 50 puntos por carrera.",
+        },
+        {
+          title: "CONFIRMA TU TICKET",
+          desc: "Una vez confirmado, el ticket queda registrado y no podrá modificarse.",
+        },
+        {
+          title: "PARTICIPA EN EL TORNEO",
+          desc: "Tus puntos se acumulan automáticamente según los resultados de cada carrera.",
+        },
+        {
+          title: "RANKING Y RESULTADOS",
+          desc: "Consulta tu posición en tiempo real y compite hasta finalizar el torneo.",
+        },
+      ],
+      strategies: [
+        { name: "Full Point", desc: "50 puntos a un solo caballo." },
+        { name: "Dual Point", desc: "25 puntos + 25 puntos a dos caballos." },
+        { name: "Smart Point", desc: "30 puntos + 15 puntos + 5 puntos a tres caballos." },
+      ],
+      part2Title: "PARTE 2 – REGLAS DEL TORNEO",
+      whatIsTitle: "¿QUÉ ES UN TORNEO?",
+      whatIsP1:
+        "Un torneo es una competición formada por varias carreras consecutivas donde los jugadores acumulan puntos mediante sus selecciones.",
+      whatIsP2: "El objetivo es finalizar con la mayor cantidad de puntos posible.",
+      pointsTitle: "SISTEMA DE PUNTOS",
+      pointsP1: "Cada carrera dispone de 50 puntos obligatorios.",
+      resultsTitle: "CÁLCULO DE RESULTADOS",
+      resultsP1:
+        "Los puntos asignados al caballo ganador se multiplican por el dividendo oficial del caballo.",
+      resultsP2: "La suma de todas las carreras determina la puntuación total del jugador.",
+      scratchesTitle: "SCRATCHES",
+      scratchesP1:
+        "Si un caballo seleccionado es retirado oficialmente antes de la carrera, los puntos correspondientes se transferirán al favorito oficial establecido por el sistema.",
+      rankingTitle: "RANKING",
+      rankingP1: "El ranking se actualiza automáticamente después de cada carrera. Los jugadores pueden consultar:",
+      rankingItems: [
+        "Clasificación actual.",
+        "Diferencia de puntos.",
+        "Posición general.",
+        "Evolución durante el torneo.",
+      ],
+      modalitiesTitle: "MODALIDADES DE JUEGO",
+      modalities: [
+        {
+          title: "MODALIDAD 1",
+          name: "TORNEO DE PAGO",
+          items: [
+            "Pago por ticket.",
+            "Licencia diaria por hipódromo.",
+            "Participación en premios monetarios.",
+          ],
+        },
+        {
+          title: "MODALIDAD 2",
+          name: "TORNEO GRATIS (USUARIO REGISTRADO)",
+          items: [
+            "3 tickets gratuitos por torneo.",
+            "Historial permanente.",
+            "Estadísticas.",
+            "Logros.",
+            "Perfil de usuario.",
+          ],
+        },
+        {
+          title: "MODALIDAD 3",
+          name: "TORNEO ESPECIAL DE PAGO",
+          items: [
+            "Pago especial por participación.",
+            "Reglas avanzadas.",
+            "Premios especiales.",
+            "Funciones exclusivas del torneo.",
+          ],
+        },
+        {
+          title: "MODALIDAD 4",
+          name: "TORNEO GRATIS (SIN REGISTRO)",
+          items: [
+            "3 tickets gratuitos por torneo.",
+            "No requiere crear cuenta.",
+            "Los tickets no se almacenan permanentemente.",
+            "Sin historial ni estadísticas personales.",
+          ],
+        },
+      ],
+      reminderTitle: "RECORDATORIO",
+      reminderP1:
+        "MY 50 POINTS es un sistema basado en estrategia, toma de decisiones y acumulación de puntos carrera tras carrera.",
+      reminderP2:
+        "Cada modalidad ofrece una experiencia diferente, pero todas forman parte del mismo ecosistema competitivo de MY 50 POINTS.",
+    },
+    modalityWelcome: {
+      viewFullGuide: "VER GUÍA COMPLETA",
+      currentModality: "MODALIDAD ACTUAL",
+      registeredUsers: "USUARIOS REGISTRADOS",
+      guestUsers: "SIN REGISTRARTE",
+      importantLabel: "IMPORTANTE:",
+      acceptCta: "ACEPTO QUE LEÍ LA INFORMACIÓN",
+      menuHint: "Puedes revisar esta información en",
+      cardEyebrow: {
+        paid: "MODALIDAD PAGA",
+        free: "MODALIDAD GRATIS",
+        special: "MODALIDAD PAGA",
+        guest: "MODALIDAD GRATIS",
+      },
+      detailTitle: {
+        paid: "MODALIDAD 1 — TORNEO (CON PREMIO)",
+        free: "MODALIDAD 2 — TORNEO (GRATIS)",
+        special: "MODALIDAD 3 — TORNEO ESPECIAL (CON PREMIO)",
+        guest: "MODALIDAD 4 — TORNEO (GRATIS) (SIN REGISTRO)",
+      },
+      detailHighlight: {
+        paid: "PRECIO: 1 USD POR 1 SOLO TICKET",
+        free: "RECIBES 3 TICKETS GRATIS POR TORNEO E INDEPENDIENTES",
+        special: "PRECIO: 50 USD POR 1 SOLO TICKET",
+        guest: "RECIBES 3 TICKETS GRATIS POR TORNEO",
+      },
+      detailBody: {
+        paid:
+          "Cada ticket compite de forma independiente en las 7 carreras del torneo y participa en los premios disponibles de esta categoría.",
+        free:
+          "para participar en las 7 carreras del torneo. Aunque son tickets gratis, pertenecen al sistema MY 50 POINTS, quedan guardados en tu cuenta y crean historial, estadísticas, logros y resultados propios.",
+        special:
+          "Modalidad especial con premios exclusivos y reglas avanzadas de competición.",
+        guest: "para participar en las 7 carreras del torneo.",
+      },
+      detailBullets: {
+        paid: [],
+        free: [],
+        special: [],
+        guest: [
+          "Participa sin crear una cuenta utilizando tickets temporales.",
+          "Los tickets creados en esta modalidad no se guardan permanentemente en una cuenta.",
+          "Los tickets destacados podrán ser reclamados posteriormente desde una cuenta registrada.",
+          "Al reclamar un ticket, perderás uno de tus 5 mejores tickets históricos para realizar el intercambio.",
+          "El ticket reclamado conservará siempre el historial y origen de su creador original.",
+        ],
+      },
+      detailAside: {
+        paid:
+          "Los tickets quedan registrados en tu cuenta, generan historial, estadísticas, logros y resultados permanentes dentro de MY 50 POINTS.",
+        free:
+          "Cada ticket acumula sus propios puntos y resultados. Tu actividad queda registrada y forma parte de tu perfil dentro del sistema MY 50 POINTS.",
+        special:
+          "Los tickets quedan registrados en tu cuenta, generan historial, estadísticas, logros y resultados dentro de MY 50 POINTS.",
+        guest: "",
+      },
+      detailExampleTitle: {
+        guest: "EJEMPLO",
+      },
+      detailExampleFields: {
+        guest: [
+          { label: "Creador original (alias):", value: "Maria Won" },
+          { label: "Cuenta asociada:", value: "Marco Nav" },
+          { label: "Estado actual:", value: "Ticket reclamado por Marco Nav" },
+          { label: "Origen:", value: "Modalidad 4 (Sin registro)" },
+        ],
+      },
+      importantText: {
+        paid: "",
+        free:
+          "Recibes 3 tickets gratis por cada torneo disponible en esta modalidad. Cada torneo genera sus propios tickets independientes para sus 7 carreras, por lo que al acceder a un nuevo torneo recibirás otros 3 tickets adicionales en esta modalidad.",
+        special: "",
+        guest:
+          "Recibes 3 tickets gratis por cada torneo disponible en esta modalidad. Cada torneo genera sus propios tickets independientes para sus 7 carreras, por lo que al acceder a un nuevo torneo recibirás otros 3 tickets adicionales en esta modalidad.",
+      },
+    },
+    modalityWorkspace: {
+      torneoTitle: "TORNEO",
+      mediaStripAria: "Novedades y videos del torneo",
+      mediaStripContractedAria: "Resumen de modalidades",
+      breadcrumbAria: "Recorrido de modalidades e hipódromos",
+      crumbTournament: "TORNEO",
+      changeConfirmMessage: "¿ESTÁS SEGURO QUE QUIERES CAMBIAR DE MODALIDAD?",
+      changeConfirmAccept: "ACEPTAR",
+      changeConfirmCancel: "CANCELAR",
     },
     feed: {
       title: "FEED",
@@ -624,7 +882,7 @@ export const translations = {
       mediaBarVideos: "VIDEOS",
       mediaBarVideosDesc: "Momentos destacados y jugadas de la comunidad",
       mediaBarInfo: "INFORMACION",
-      mediaBarInfoDesc: "Guia rapida del flujo de torneo",
+      mediaBarInfoDesc: "Guía completa del recorrido y reglas del torneo",
       mediaBarNews: "NOVEDADES DEL TORNEO",
       mediaBarNewsDesc: "Avisos, resultados y proximos eventos",
       mediaBarNewsItems: [
@@ -1148,6 +1406,7 @@ export const translations = {
       privacy: "Privacy",
       settings: "Settings",
       help: "Help",
+      tournamentGuide: "Tournament Guide",
       logout: "Log Out",
       login: "Log In",
       racecourses: "Racecourses",
@@ -1287,6 +1546,24 @@ export const translations = {
       raceOverviewDraft: "IN PROGRESS",
       submitError: "Could not submit ticket.",
       howTitle: "HOW DO THEY WORK?",
+      hubLoginCta: "LOG IN",
+      hubRegisterCta: "SIGN UP",
+      hubGuestCta: "ENTER WITHOUT SIGNING UP",
+      hubImportantTitle: "IMPORTANT",
+      hubImportantAccount:
+        "You only need one account to access the entire MY 50 POINTS ecosystem.",
+      hubImportantNoSeparate: "There are no separate accounts for each tournament mode.",
+      hubImportantAfterLogin:
+        "Once registered and logged in, you can move freely between the available modes:",
+      hubImportantFreeList: "FREE TOURNAMENT",
+      hubImportantPaidList: "PRIZE TOURNAMENT",
+      hubImportantSpecialList: "SPECIAL PRIZE TOURNAMENT",
+      hubImportantPaidNote:
+        "Prize modes require the corresponding payment to join their tournaments, while free modes can be used at no cost.",
+      hubImportantGuestNote:
+        "Players who enter via «Enter without signing up» can play the guest free mode and register at any time to access the rest of the modes and system features.",
+      hubImportantFooter: "Your account is one.",
+      hubImportantFooterSub: "The only thing that changes is the tournament mode you choose to play.",
       hubHowLead: "General Tournaments are completely FREE for all players.",
       hubHowAudiences: ["Unregistered users", "Registered users"],
       hubHowGoal:
@@ -1303,7 +1580,8 @@ export const translations = {
       guest: {
         title: "No Registration",
         desc: "Play free without an account",
-        hubTournament: "General tournament",
+        hubTournament: "FREE TOURNAMENT",
+        hubModalityNum: "MODE 4",
         hubPlayLine: "Play free",
         hubDetail: "Enter without signing up",
         hubAudience: "(Unregistered users)",
@@ -1311,7 +1589,8 @@ export const translations = {
       free: {
         title: "Free / Registered",
         desc: "Open tournaments with account or guest",
-        hubTournament: "General tournament",
+        hubTournament: "FREE TOURNAMENT",
+        hubModalityNum: "MODE 2",
         hubPlayLine: "Play free",
         hubDetail: "Registered users",
         hubAudience: "",
@@ -1319,7 +1598,8 @@ export const translations = {
       paid: {
         title: "Paid Tournament",
         desc: "Premium competitions with entry fee",
-        hubTournament: "Paid tournament",
+        hubTournament: "PRIZE TOURNAMENT",
+        hubModalityNum: "MODE 1",
         hubPlayLine: "Pay one ticket to play",
         hubDetail: "Registered users",
         hubAudience: "",
@@ -1327,7 +1607,8 @@ export const translations = {
       special: {
         title: "Special Tournament",
         desc: "Limited events and seasons",
-        hubTournament: "Special tournament",
+        hubTournament: "SPECIAL PRIZE TOURNAMENT",
+        hubModalityNum: "MODE 3",
         hubPlayLine: "Special entry fee to play",
         hubDetail: "Registered users",
         hubAudience: "",
@@ -1339,6 +1620,239 @@ export const translations = {
       showcaseModes: "Modes",
       showcaseTickets: "Tickets / event",
       showcasePerRace: "Pts per race",
+    },
+    tournamentGuide: {
+      docTitle: "TOURNAMENT GUIDE – MY 50 POINTS",
+      pageTitle: "Tournament Guide",
+      objectiveTitle: "PURPOSE OF THIS GUIDE",
+      objectiveText:
+        "This guide brings together the full player journey and the basic rules needed to take part in MY 50 POINTS tournaments.",
+      part1Title: "PART 1 – YOUR PATH TO THE TOURNAMENT",
+      part1Intro:
+        "Before entering a tournament, learn the steps to build a ticket and compete correctly.",
+      pathLabel: "GENERAL FLOW",
+      pathSteps: "Mode → Racetrack → Ticket → Strategies → Confirmation → Tournament → Ranking",
+      modalEyebrow: "HOW TO START",
+      modalTitle: "YOUR PATH TO THE TOURNAMENT",
+      modalLead:
+        "Follow these steps to compete correctly in tournaments and accumulate points in MY 50 POINTS.",
+      quickSummary: "QUICK SUMMARY",
+      dontShowAgain: "DO NOT SHOW AGAIN",
+      dontShowHint: "You can open this guide anytime from the «Tournament Guide» menu item.",
+      beginCta: "START",
+      beginSub: "GO TO GAME MODES",
+      beginSubContinue: "CONTINUE",
+      closeCta: "CLOSE",
+      closeSub: "CLOSE GUIDE",
+      menuHint:
+        "You can review this information anytime from the main menu under Tournament Guide.",
+      step2Title: "STEP 2 – SELECT RACETRACK",
+      step2Detail: "Enter one of the racetracks available for that day. Examples:",
+      step2Note: "Each racetrack has its own tournaments, races, and standings.",
+      step4Title: "STEP 4 – CHOOSE YOUR STRATEGIES",
+      step4Detail: "For each race you must pick one of the available strategies.",
+      step4Note: "Each strategy is a different way to distribute your points.",
+      trackExamples: ["Gulfstream Park", "Churchill Downs", "Santa Anita Park"],
+      summaryLabels: [
+        "Mode",
+        "Racetrack",
+        "Ticket",
+        "Strategies",
+        "Confirm",
+        "Tournament",
+        "Ranking",
+      ],
+      steps: [
+        {
+          title: "CHOOSE MODE",
+          desc: "Select one of the four available tournament modes before continuing.",
+        },
+        {
+          title: "SELECT RACETRACK",
+          desc: "Enter one of the racetracks available for that day.",
+        },
+        {
+          title: "SELECT TICKET",
+          desc: "Each ticket competes independently and accumulates its own points.",
+        },
+        {
+          title: "CHOOSE STRATEGIES",
+          desc: "Full Point, Dual Point, or Smart Point: distribute your 50 points per race.",
+        },
+        {
+          title: "CONFIRM TICKET",
+          desc: "Once confirmed, the ticket is locked and cannot be changed.",
+        },
+        {
+          title: "JOIN THE TOURNAMENT",
+          desc: "Points accumulate automatically based on each race result.",
+        },
+        {
+          title: "RANKING & RESULTS",
+          desc: "Check your live position and compete until the tournament ends.",
+        },
+      ],
+      strategies: [
+        { name: "Full Point", desc: "50 points on a single horse." },
+        { name: "Dual Point", desc: "25 points + 25 points on two horses." },
+        { name: "Smart Point", desc: "30 points + 15 points + 5 points on three horses." },
+      ],
+      part2Title: "PART 2 – TOURNAMENT RULES",
+      whatIsTitle: "WHAT IS A TOURNAMENT?",
+      whatIsP1:
+        "A tournament is a competition made up of several consecutive races where players accumulate points through their selections.",
+      whatIsP2: "The goal is to finish with the highest total points possible.",
+      pointsTitle: "POINTS SYSTEM",
+      pointsP1: "Each race requires 50 points to be allocated.",
+      resultsTitle: "SCORING",
+      resultsP1:
+        "Points assigned to the winning horse are multiplied by the horse's official dividend.",
+      resultsP2: "The sum across all races determines the player's total score.",
+      scratchesTitle: "SCRATCHES",
+      scratchesP1:
+        "If a selected horse is officially scratched before the race, those points transfer to the system's official favorite.",
+      rankingTitle: "RANKING",
+      rankingP1: "The ranking updates automatically after each race. Players can view:",
+      rankingItems: [
+        "Current standings.",
+        "Point difference.",
+        "Overall position.",
+        "Progress during the tournament.",
+      ],
+      modalitiesTitle: "GAME MODES",
+      modalities: [
+        {
+          title: "MODE 1",
+          name: "PAID TOURNAMENT",
+          items: [
+            "Pay per ticket.",
+            "Daily license per racetrack.",
+            "Cash prize participation.",
+          ],
+        },
+        {
+          title: "MODE 2",
+          name: "FREE TOURNAMENT (REGISTERED USER)",
+          items: [
+            "3 free tickets per tournament.",
+            "Permanent history.",
+            "Statistics.",
+            "Achievements.",
+            "User profile.",
+          ],
+        },
+        {
+          title: "MODE 3",
+          name: "SPECIAL PAID TOURNAMENT",
+          items: [
+            "Special entry fee.",
+            "Advanced rules.",
+            "Special prizes.",
+            "Exclusive tournament features.",
+          ],
+        },
+        {
+          title: "MODE 4",
+          name: "FREE TOURNAMENT (NO REGISTRATION)",
+          items: [
+            "3 free tickets per tournament.",
+            "No account required.",
+            "Tickets are not stored permanently.",
+            "No personal history or statistics.",
+          ],
+        },
+      ],
+      reminderTitle: "REMINDER",
+      reminderP1:
+        "MY 50 POINTS is a system built on strategy, decision-making, and point accumulation race by race.",
+      reminderP2:
+        "Each mode offers a different experience, but all belong to the same MY 50 POINTS competitive ecosystem.",
+    },
+    modalityWelcome: {
+      viewFullGuide: "VIEW FULL GUIDE",
+      currentModality: "CURRENT MODE",
+      registeredUsers: "REGISTERED USERS",
+      guestUsers: "NO SIGN-UP",
+      importantLabel: "IMPORTANT:",
+      acceptCta: "I ACCEPT THAT I HAVE READ THIS INFORMATION",
+      menuHint: "You can review this information in",
+      cardEyebrow: {
+        paid: "PAID MODE",
+        free: "FREE MODE",
+        special: "PAID MODE",
+        guest: "FREE MODE",
+      },
+      detailTitle: {
+        paid: "MODE 1 — PRIZE TOURNAMENT",
+        free: "MODE 2 — FREE TOURNAMENT",
+        special: "MODE 3 — SPECIAL PRIZE TOURNAMENT",
+        guest: "MODE 4 — FREE TOURNAMENT (NO SIGN-UP)",
+      },
+      detailHighlight: {
+        paid: "PRICE: 1 USD FOR 1 TICKET ONLY",
+        free: "YOU GET 3 FREE INDEPENDENT TICKETS PER TOURNAMENT",
+        special: "PRICE: 50 USD FOR 1 TICKET ONLY",
+        guest: "YOU GET 3 FREE TICKETS PER TOURNAMENT",
+      },
+      detailBody: {
+        paid:
+          "Each ticket competes independently in the tournament's 7 races and participates in the prizes available in this category.",
+        free:
+          "to participate in the tournament's 7 races. Although the tickets are free, they belong to the MY 50 POINTS system, are saved to your account, and create history, statistics, achievements, and results of your own.",
+        special:
+          "Special mode with exclusive prizes and advanced competition rules.",
+        guest: "to participate in the tournament's 7 races.",
+      },
+      detailBullets: {
+        paid: [],
+        free: [],
+        special: [],
+        guest: [
+          "Play without creating an account using temporary tickets.",
+          "Tickets created in this mode are not stored permanently in an account.",
+          "Outstanding tickets may later be claimed from a registered account.",
+          "When you claim a ticket, you will lose one of your 5 best historical tickets to complete the exchange.",
+          "The claimed ticket will always keep the history and origin of its original creator.",
+        ],
+      },
+      detailAside: {
+        paid:
+          "Tickets are saved to your account and generate permanent history, statistics, achievements, and results within MY 50 POINTS.",
+        free:
+          "Each ticket accumulates its own points and results. Your activity is recorded and becomes part of your profile within the MY 50 POINTS system.",
+        special:
+          "Tickets are saved to your account and generate history, statistics, achievements, and results within MY 50 POINTS.",
+        guest: "",
+      },
+      detailExampleTitle: {
+        guest: "EXAMPLE",
+      },
+      detailExampleFields: {
+        guest: [
+          { label: "Original creator (alias):", value: "Maria Won" },
+          { label: "Linked account:", value: "Marco Nav" },
+          { label: "Current status:", value: "Ticket claimed by Marco Nav" },
+          { label: "Origin:", value: "Mode 4 (No sign-up)" },
+        ],
+      },
+      importantText: {
+        paid: "",
+        free:
+          "You receive 3 free tickets for each tournament available in this mode. Each tournament generates its own independent tickets for its 7 races, so entering a new tournament grants 3 additional tickets in this mode.",
+        special: "",
+        guest:
+          "You receive 3 free tickets for each tournament available in this mode. Each tournament generates its own independent tickets for its 7 races, so entering a new tournament grants 3 additional tickets in this mode.",
+      },
+    },
+    modalityWorkspace: {
+      torneoTitle: "TOURNAMENT",
+      mediaStripAria: "Tournament news and videos",
+      mediaStripContractedAria: "Modes summary strip",
+      breadcrumbAria: "Modes and racetracks path",
+      crumbTournament: "TOURNAMENT",
+      changeConfirmMessage: "ARE YOU SURE YOU WANT TO CHANGE MODE?",
+      changeConfirmAccept: "ACCEPT",
+      changeConfirmCancel: "CANCEL",
     },
     feed: {
       title: "FEED",
@@ -1731,7 +2245,7 @@ export const translations = {
       mediaBarVideos: "VIDEOS",
       mediaBarVideosDesc: "Community highlights and featured plays",
       mediaBarInfo: "INFORMATION",
-      mediaBarInfoDesc: "Quick guide to the tournament flow",
+      mediaBarInfoDesc: "Full tournament flow and rules guide",
       mediaBarNews: "TOURNAMENT NEWS",
       mediaBarNewsDesc: "Alerts, results, and upcoming events",
       mediaBarNewsItems: [

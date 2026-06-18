@@ -71,7 +71,6 @@ export default function ModalityTracksList({ modalityId }) {
     return (
       <TracksWorkflowList
         modalityId={modalityId}
-        mod={mod}
         tracks={tracks}
         loading={loading}
         t={t}

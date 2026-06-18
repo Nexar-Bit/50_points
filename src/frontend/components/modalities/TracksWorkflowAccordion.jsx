@@ -105,6 +105,10 @@ export default function TracksWorkflowAccordion({
                   ) : null}
                 </span>
                 <span className="browser-tabs__tab-pill">{track.name}</span>
+                <span className="browser-tabs__tab-enter">
+                  {t("tournamentsSection.enterTournament")}
+                  <span className="browser-tabs__tab-enter-arrow" aria-hidden>›</span>
+                </span>
               </BrowserTab>
             );
           })}

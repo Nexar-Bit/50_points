@@ -27,6 +27,10 @@ function isWorkflowTracksPath(pathname) {
   return /^\/modalidades\/(guest|free)\/?$/.test(pathname);
 }
 
+function isGuiaTorneoPath(pathname) {
+  return pathname === "/guia-torneo";
+}
+
 function isHowToPlayPath(pathname) {
   return pathname === "/how-to-play";
 }
@@ -39,6 +43,7 @@ function isImmersiveBgPath(pathname) {
   return (
     isComenzarPath(pathname) ||
     isHowToPlayPath(pathname) ||
+    isGuiaTorneoPath(pathname) ||
     isWorkflowTracksPath(pathname) ||
     isAuthPath(pathname) ||
     pathname.includes("/hall-of-fame")
@@ -63,8 +68,9 @@ export default function ConditionalShell({ children }) {
   const onInicio = isInicioPath(pathname);
   const onWorkflowTracks = isWorkflowTracksPath(pathname);
   const onHowToPlay = isHowToPlayPath(pathname);
+  const onGuiaTorneo = isGuiaTorneoPath(pathname);
   const hideChrome = isChromelessPath(pathname);
-  const skipSurface = hideChrome || onAuth || onComenzar || onHowToPlay || onInicio;
+  const skipSurface = hideChrome || onAuth || onComenzar || onHowToPlay || onGuiaTorneo || onInicio;
 
   // Floating menu is visible on ALL pages for ALL users (guests and registered)
   // except: cover (/), login, and register
@@ -87,6 +93,8 @@ export default function ConditionalShell({ children }) {
       return "app-main app-main--with-menu app-main--immersive app-main--workflow-tracks min-h-screen";
     if (onHowToPlay)
       return "app-main app-main--with-menu app-main--immersive app-main--how-to-play min-h-screen";
+    if (onGuiaTorneo)
+      return "app-main app-main--with-menu app-main--immersive app-main--tournament-guide min-h-screen";
     return "app-main app-main--with-menu app-main--immersive min-h-screen";
   })();
 
