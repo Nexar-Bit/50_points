@@ -312,7 +312,7 @@ export default function HomeLanding() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-4 sm:pt-6 pb-8">
-        {/* Top bar + strategy points — tight cluster so cards clear jockey helmet */}
+        {/* Top bar + strategy points — spaced below TORNEO header, cluster high for jockey */}
         <AnimateInView>
           <div className="hero-top-cluster">
             <div className="hero-top-bar">

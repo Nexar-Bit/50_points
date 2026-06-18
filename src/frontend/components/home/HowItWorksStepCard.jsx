@@ -1,13 +1,19 @@
-﻿"use client";
+"use client";
 
 import { staticFile } from "@/frontend/lib/config/paths";
 
-function HorseIcons({ count }) {
-  const src = staticFile("/images/icons/icon-horse.png");
+const HOW_IT_WORKS_ICON = staticFile("/Img/HOW IT WORKS.png");
+
+function StrategyHorseIcons({ count }) {
   return (
-    <div className="how-step-card__horse-icons" aria-hidden>
+    <div className="how-step-card__strategy-icons" aria-hidden>
       {Array.from({ length: count }, (_, i) => (
-        <img key={i} src={src} alt="" className="how-step-card__horse-icon" />
+        <img
+          key={i}
+          src={HOW_IT_WORKS_ICON}
+          alt=""
+          className="how-step-card__strategy-icon"
+        />
       ))}
     </div>
   );
@@ -45,8 +51,10 @@ export default function HowItWorksStepCard({
             <p className="how-step-card__intro">{intro}</p>
             <ul className="how-step-card__strategies">
               {strategies.map((item) => (
-                <li key={item.name} className="how-step-card__strategy-row">
-                  <HorseIcons count={item.horseCount} />
+                <li key={item.name} className="how-step-card__strategy-item">
+                  <div className="how-step-card__strategy-icon-cell">
+                    <StrategyHorseIcons count={item.iconCount} />
+                  </div>
                   <p className="how-step-card__strategy-text">
                     <span className="how-step-card__strategy-name">
                       {item.name}:

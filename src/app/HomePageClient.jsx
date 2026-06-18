@@ -102,17 +102,17 @@ export default function HomePageClient({ initialTournaments = [] }) {
           {
             name: t("strategies.fullPoint"),
             description: t("howItWorksSection.step1FullPointDesc"),
-            horseCount: 1,
+            iconCount: 1,
           },
           {
             name: t("strategies.dualPoint"),
             description: t("howItWorksSection.step1DualPointDesc"),
-            horseCount: 2,
+            iconCount: 2,
           },
           {
             name: t("strategies.smartPoint"),
             description: t("howItWorksSection.step1SmartPointDesc"),
-            horseCount: 3,
+            iconCount: 3,
           },
         ],
       };

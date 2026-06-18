@@ -98,3 +98,31 @@
 .mw-color-stripes--contracted .mw-color-stripes__line--guest {
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.35);
 }
+
+/*
+ * Fullscreen modality matte — html → body → app shell share the active ticket bg.
+ * Same pattern as ticket-landing-surface[data-modality] (comenzar / onboarding).
+ */
+html[data-modality]:has(.ticket-landing-surface),
+html[data-modality]:has(.tracks-workflow-surface:not(.tracks-workflow-surface--embedded)),
+html[data-modality]:has(.modality-page--workflow-tracks) {
+  background-color: var(--modality-matte-bg, var(--modality-bg));
+  color: var(--modality-matte-fg, var(--foreground));
+}
+
+html[data-modality]:has(.ticket-landing-surface) body,
+html[data-modality]:has(.tracks-workflow-surface:not(.tracks-workflow-surface--embedded)) body,
+html[data-modality]:has(.modality-page--workflow-tracks) body,
+html[data-modality]:has(.tracks-workflow-surface:not(.tracks-workflow-surface--embedded)) .app-main--workflow-tracks,
+html[data-modality]:has(.modality-page--workflow-tracks) .app-main--workflow-tracks,
+html[data-modality]:has(.tracks-workflow-surface:not(.tracks-workflow-surface--embedded)) .app-surface,
+html[data-modality]:has(.modality-page--workflow-tracks) .app-surface {
+  background-color: var(--modality-matte-bg, var(--modality-bg)) !important;
+  background-image: none;
+  color: var(--modality-matte-fg, #f4f4f5);
+}
+
+html[data-modality="guest"]:has(.tracks-workflow-surface:not(.tracks-workflow-surface--embedded)) .app-surface,
+html[data-modality="guest"]:has(.modality-page--workflow-tracks) .app-surface {
+  color: var(--modality-matte-fg, #18181b);
+}

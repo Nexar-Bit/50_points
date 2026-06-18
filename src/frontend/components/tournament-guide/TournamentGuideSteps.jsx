@@ -4,6 +4,7 @@ import {
   tournamentGuideAsset,
   tournamentGuideStepAsset,
 } from "@/frontend/lib/config/tournamentGuideAssets";
+import { logoFile } from "@/frontend/lib/config/paths";
 
 const STEP_THEMES = ["purple", "cyan", "blue", "gold", "purple", "cyan", "gold"];
 
@@ -51,10 +52,12 @@ export function TournamentGuidePath({ t, className = "" }) {
 export function TournamentGuideHeroArt({ className = "" }) {
   const horses = tournamentGuideAsset("heroHorses");
   const trophy = tournamentGuideAsset("heroTrophy");
+  const logo = logoFile();
 
   return (
     <div className={`tg-hero-art${className ? ` ${className}` : ""}`} aria-hidden>
       {horses ? <img src={horses} alt="" className="tg-hero-art__horses" /> : null}
+      <img src={logo} alt="" className="tg-hero-art__logo" />
       {trophy ? <img src={trophy} alt="" className="tg-hero-art__trophy" /> : null}
     </div>
   );

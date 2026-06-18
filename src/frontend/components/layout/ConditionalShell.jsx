@@ -24,7 +24,7 @@ function isInicioPath(pathname) {
 }
 
 function isWorkflowTracksPath(pathname) {
-  return /^\/modalidades\/(guest|free)\/?$/.test(pathname);
+  return /^\/modalidades\/(guest|free|paid|special)\/?$/.test(pathname);
 }
 
 function isGuiaTorneoPath(pathname) {

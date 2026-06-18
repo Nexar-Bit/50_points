@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Sparkles, Shield, Layers } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
+import { useModality } from "@/frontend/contexts/ModalityContext";
 import AnimateInView from "@/frontend/components/ui/AnimateInView";
 import TicketWorkflowJourney from "@/frontend/components/onboarding/TicketWorkflowJourney";
 import ComenzarTracksAccess from "@/frontend/components/onboarding/ComenzarTracksAccess";
@@ -16,6 +17,7 @@ const BENEFIT_FALLBACK_ICONS = [Layers, Shield, Sparkles];
 
 export default function ComenzarPageClient() {
   const { t } = useLanguage();
+  const { activeModalityId } = useModality();
 
   const benefitTitles = t("ticketWorkflow.landingBenefitTitles");
   const benefitTitleList = Array.isArray(benefitTitles) ? benefitTitles : [];
@@ -29,7 +31,7 @@ export default function ComenzarPageClient() {
   const noise = ticketWorkflowAsset("noiseOverlayTile");
 
   return (
-    <div className="ticket-landing-surface">
+    <div className="ticket-landing-surface" data-modality={activeModalityId}>
       <div className="ticket-landing__bg-layer" aria-hidden>
         {heroBg ? <img src={heroBg} alt="" className="ticket-landing__hero-bg" /> : null}
         <div className="ticket-landing__shade" />

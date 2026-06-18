@@ -296,11 +296,11 @@ body {
   box-shadow: 0 0 6px rgba(34, 211, 238, 0.65);
 }
 
-/* Hero top — crown + FULL/DUAL/SMART sit high to clear jockey helmet */
+/* Hero top — TORNEO header + FULL/DUAL/SMART; cluster stays high to clear jockey helmet */
 .hero-top-cluster {
   display: flex;
   flex-direction: column;
-  gap: clamp(0.15rem, 0.8vw, 0.35rem);
+  gap: clamp(0.85rem, 2.8vh, 1.35rem);
   margin-bottom: clamp(1.25rem, 3vh, 2rem);
 }
 
@@ -421,23 +421,22 @@ body {
 
 .hero-strategy-points {
   position: relative;
-  margin-top: clamp(-0.35rem, -1.2vw, -0.15rem);
+  margin-top: 0;
   margin-bottom: 0;
   max-width: min(52rem, 92%);
   margin-inline: auto;
-  transform: translateY(clamp(-0.35rem, -1.5vw, -0.75rem));
+  transform: none;
 }
 
 @media (min-width: 640px) {
   .hero-strategy-points {
-    transform: translateY(clamp(-0.75rem, -2.5vw, -1.35rem));
     max-width: min(56rem, 88%);
   }
 }
 
 @media (min-width: 1024px) {
   .hero-strategy-points {
-    transform: translateY(-1.75rem);
+    transform: translateY(-0.65rem);
     max-width: min(58rem, 82%);
     margin-inline: clamp(0.5rem, 4vw, 2.5rem) auto;
   }
@@ -2113,40 +2112,46 @@ body {
 .how-step-card__strategies {
   position: relative;
   z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(3.25rem, auto) 1fr;
+  grid-template-rows: repeat(3, auto);
+  column-gap: clamp(0.65rem, 2vw, 0.85rem);
+  row-gap: clamp(0.75rem, 2.2vw, 0.95rem);
   margin: 0;
   padding: 0;
   list-style: none;
+  border: none;
 }
 
-.how-step-card__strategy-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.65rem;
-  margin-bottom: 0.85rem;
+.how-step-card__strategy-item {
+  display: contents;
 }
 
-.how-step-card__strategy-row:last-child {
-  margin-bottom: 0;
-}
-
-.how-step-card__horse-icons {
+.how-step-card__strategy-icon-cell {
   display: flex;
   align-items: center;
-  gap: 0.15rem;
-  flex-shrink: 0;
-  padding-top: 0.1rem;
+  justify-content: center;
+  align-self: center;
+  min-height: 2.75rem;
 }
 
-.how-step-card__horse-icon {
-  width: 1.35rem;
-  height: 1.35rem;
+.how-step-card__strategy-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12rem;
+}
+
+.how-step-card__strategy-icon {
+  width: clamp(1.35rem, 4vw, 1.65rem);
+  height: auto;
   object-fit: contain;
-  filter: brightness(0) saturate(100%) invert(56%) sepia(90%) saturate(1200%)
-    hue-rotate(235deg) brightness(105%) contrast(101%);
+  flex-shrink: 0;
 }
 
 .how-step-card__strategy-text {
   margin: 0;
+  align-self: center;
   font-size: 0.8125rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.88);
@@ -9458,17 +9463,13 @@ body:has(.floating-menu--expanded) .app-main--immersive .app-surface__inner {
 }
 
 /* Modality ambient background — modality routes only (not profile, chat, guest AV, etc.) */
-html[data-modality] .app-surface:has(.modality-page:not(.chat-page):not(.modality-page--guest-av)) {
-  background: var(--modality-bg, #0b0e1b);
+html[data-modality] .app-surface:has(.modality-page:not(.chat-page):not(.modality-page--guest-av):not(.modality-page--workflow-tracks)) {
+  background: var(--modality-matte-bg, var(--modality-bg, #0b0e1b));
+  color: var(--modality-matte-fg, #f4f4f5);
 }
 
 /* Chat uses the standard dark shell — modality tints break contrast on feed UI */
 html[data-modality] .app-surface:has(.chat-page) {
-  background: #0b0e1b;
-}
-
-/* Guest flow (tracks/tickets) — dark shell; identity via white panels + purple accents */
-html[data-modality="guest"] .app-surface:has(.modality-page:not(.modality-page--hub):not(.modality-page--guest-av)) {
   background: #0b0e1b;
 }
 
@@ -12463,22 +12464,23 @@ html[data-modality="free"] .modality-page--free-tracks {
   margin: 0;
   padding-bottom: 0;
   min-height: 100dvh;
+  background: transparent;
 }
 
 .app-main--workflow-tracks {
   width: 100%;
   max-width: 100%;
   overflow-x: clip;
-  background: transparent;
+  background: var(--modality-matte-bg, var(--modality-bg));
 }
 
 .app-main--workflow-tracks .app-surface,
 html[data-modality] .app-surface:has(.tracks-workflow-surface),
-html[data-modality="guest"] .app-surface:has(.tracks-workflow-surface),
-html[data-modality="free"] .app-surface:has(.tracks-workflow-surface) {
-  background: transparent;
+html[data-modality] .app-surface:has(.modality-page--workflow-tracks) {
+  background: var(--modality-matte-bg, var(--modality-bg));
   min-height: 100dvh;
   padding-bottom: 0;
+  color: var(--modality-matte-fg, #f4f4f5);
 }
 
 .app-main--workflow-tracks .app-surface__inner {
@@ -12501,26 +12503,6 @@ html[data-modality="free"] .app-surface:has(.tracks-workflow-surface) {
 
 body:has(.floating-menu--expanded) .app-main--immersive.app-main--workflow-tracks .app-surface__inner {
   padding-left: max(clamp(1rem, 3vw, 2rem), env(safe-area-inset-left, 0px));
-}
-
-body:has(.tracks-workflow-surface[data-modality="guest"]) {
-  background-color: var(--brand-guest-matte-bg, #e4e2ea);
-}
-
-body:has(.tracks-workflow-surface[data-modality="free"]) {
-  background-color: var(--brand-cyan-matte-bg, #0a2228);
-}
-
-body:has(.tracks-workflow-surface[data-modality="paid"]) {
-  background-color: var(--brand-purple-matte-bg, #1a0e2e);
-}
-
-body:has(.tracks-workflow-surface[data-modality="special"]) {
-  background-color: var(--brand-gold-matte-bg, #261c08);
-}
-
-body:has(.tracks-workflow-surface:not([data-modality])) {
-  background-color: #05050d;
 }
 
 .tracks-workflow-surface {

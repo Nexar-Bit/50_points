@@ -1,6 +1,6 @@
 "use client";
 
-import { brandAsset } from "@/frontend/lib/config/brandAssets";
+import { logoFile } from "@/frontend/lib/config/paths";
 
 function capitalizePhrase(text) {
   if (!text) return text;
@@ -8,15 +8,13 @@ function capitalizePhrase(text) {
 }
 
 export default function HeroTorneoHeader({ t }) {
-  const ticketBadge = brandAsset("heroTorneoTicket");
+  const logo = logoFile();
 
   return (
     <header className="hero-torneo-header">
       <div className="hero-torneo-header__title-row">
         <h2 className="hero-torneo-header__title">{t("modalityWorkspace.torneoTitle")}</h2>
-        {ticketBadge ? (
-          <img src={ticketBadge} alt="" className="hero-torneo-header__badge" />
-        ) : null}
+        <img src={logo} alt="" className="hero-torneo-header__badge" />
       </div>
       <p className="hero-torneo-header__slogan">
         <span className="hero-torneo-header__slogan-part hero-torneo-header__slogan-part--purple">
