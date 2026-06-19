@@ -3,6 +3,7 @@ import "./brand-colors.css";
 import "./globals.css";
 import "./tournament-guide.css";
 import "./modality-workspace.css";
+import "./profile-hub.css";
 import Providers from "@/frontend/components/layout/Providers";
 import ConditionalShell from "@/frontend/components/layout/ConditionalShell";
 import SiteJsonLd from "@/frontend/components/seo/SiteJsonLd";

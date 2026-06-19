@@ -1,28 +1,40 @@
 "use client";
 
 import { logoFile } from "@/frontend/lib/config/paths";
-import { modalityWorkspaceAsset } from "@/frontend/lib/config/modalityWorkspaceAssets";
 
-export default function ModalityTorneoBar({ t, className = "" }) {
+export default function ModalityTorneoBar({ t, modalityId = "free", className = "" }) {
   const logo = logoFile();
-  const menu = modalityWorkspaceAsset("menuLines");
 
   return (
-    <div className={`mw-torneo-bar${className ? ` ${className}` : ""}`}>
-      {menu ? <img src={menu} alt="" className="mw-torneo-bar__menu" aria-hidden /> : null}
-      <div className="mw-torneo-bar__copy">
-        <p className="mw-torneo-bar__title">{t("modalityWorkspace.torneoTitle")}</p>
-        <p className="mw-torneo-bar__slogan">
-          <span className="text-purple-light">{t("hero.sloganPoints")}</span>
-          <span className="mw-torneo-bar__dot mw-torneo-bar__dot--purple" aria-hidden />
-          <span className="text-cyan-light">{t("hero.sloganGame")}</span>
-          <span className="mw-torneo-bar__dot mw-torneo-bar__dot--cyan" aria-hidden />
-          <span className="text-gold-light">{t("hero.sloganStrategy")}</span>
-        </p>
-      </div>
-      <div className="mw-torneo-bar__brand">
-        {logo ? <img src={logo} alt="" className="mw-torneo-bar__logo" /> : null}
-        {menu ? <img src={menu} alt="" className="mw-torneo-bar__menu" aria-hidden /> : null}
+    <div
+      className={`mw-torneo-banner mw-torneo-banner--${modalityId}${className ? ` ${className}` : ""}`}
+    >
+      <div className="mw-torneo-banner__inner">
+        <div className="mw-torneo-banner__copy">
+          <p className="mw-torneo-banner__title">{t("modalityWorkspace.torneoTitle")}</p>
+          <p className="mw-torneo-banner__slogan">
+            <span className="mw-torneo-banner__slogan-part mw-torneo-banner__slogan-part--strategy">
+              {t("hero.sloganStrategy")}.
+            </span>{" "}
+            <span className="mw-torneo-banner__slogan-part mw-torneo-banner__slogan-part--points">
+              {t("hero.sloganPoints")}.
+            </span>{" "}
+            <span className="mw-torneo-banner__slogan-part mw-torneo-banner__slogan-part--game">
+              {t("hero.sloganGame")}.
+            </span>
+          </p>
+        </div>
+
+        <div className="mw-torneo-banner__emblem">
+          <div className="mw-torneo-banner__ticket" aria-hidden>
+            <span className="mw-torneo-banner__ticket-stripe mw-torneo-banner__ticket-stripe--paid" />
+            <span className="mw-torneo-banner__ticket-stripe mw-torneo-banner__ticket-stripe--free" />
+            <span className="mw-torneo-banner__ticket-stripe mw-torneo-banner__ticket-stripe--special" />
+          </div>
+          {logo ? <img src={logo} alt="" className="mw-torneo-banner__logo" /> : null}
+        </div>
+
+        <div className="mw-torneo-banner__flare" aria-hidden />
       </div>
     </div>
   );

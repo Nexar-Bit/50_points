@@ -8,7 +8,11 @@ import { modalityNavIconAsset } from "@/frontend/lib/config/modalityWorkspaceAss
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import ModalityChangeConfirmDialog from "@/frontend/components/modality-workspace/ModalityChangeConfirmDialog";
 
-export default function ModalityNavRail({ activeModalityId }) {
+export default function ModalityNavRail({
+  activeModalityId,
+  stayOnPage = false,
+  onModalityChange,
+}) {
   const { t } = useLanguage();
   const router = useRouter();
   const [pendingModalityId, setPendingModalityId] = useState(null);
@@ -18,9 +22,13 @@ export default function ModalityNavRail({ activeModalityId }) {
       if (isActive) return;
       event.preventDefault();
       if (!available) return;
+      if (stayOnPage && onModalityChange) {
+        onModalityChange(modeId);
+        return;
+      }
       setPendingModalityId(modeId);
     },
-    [],
+    [stayOnPage, onModalityChange],
   );
 
   const handleConfirmAccept = useCallback(() => {
@@ -64,6 +72,21 @@ export default function ModalityNavRail({ activeModalityId }) {
                     {icon ? <img src={icon} alt="" className="mw-nav-rail__icon" /> : null}
                     <span className="mw-nav-rail__label">{label}</span>
                   </span>
+                ) : stayOnPage ? (
+                  <button
+                    type="button"
+                    className={itemClass}
+                    disabled={!mod.available}
+                    onClick={(event) =>
+                      handleModalityIntent(event, modeId, {
+                        isActive,
+                        available: mod.available,
+                      })
+                    }
+                  >
+                    {icon ? <img src={icon} alt="" className="mw-nav-rail__icon" /> : null}
+                    <span className="mw-nav-rail__label">{label}</span>
+                  </button>
                 ) : (
                   <Link
                     href={`/modalidades/${modeId}`}

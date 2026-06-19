@@ -32,7 +32,7 @@
   box-shadow:
     0 0 32px rgba(168, 85, 247, 0.35),
     inset 0 0 24px rgba(168, 85, 247, 0.05);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .tg-modal__header {
@@ -79,17 +79,35 @@
 
 .tg-modal__body {
   flex: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
   padding: clamp(0.75rem, 2vw, 1rem) clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.tg-modal__steps-zone {
+  position: relative;
+  z-index: 4;
+  overflow: visible;
+  padding: 0.35rem 0 clamp(2.5rem, 6vh, 3.75rem);
 }
 
 .tg-modal__body .tg-steps {
   overflow: visible;
-  padding: 0.35rem 0 1.5rem;
+  padding: 0;
+}
+
+.tg-modal__scroll-zone {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .tg-modal__footer {
+  position: relative;
+  z-index: 1;
   padding: clamp(0.75rem, 2vw, 1rem) clamp(0.75rem, 2vw, 1.25rem) clamp(1rem, 2vw, 1.25rem);
   border-top: 1px solid rgba(34, 211, 238, 0.2);
   background: rgba(0, 0, 0, 0.35);
@@ -176,13 +194,18 @@
 @media (hover: hover) and (pointer: fine) {
   .tg-steps__item:hover,
   .tg-steps__item:focus-visible {
-    transform: scale(1.48);
+    transform: scale(1.48) translateY(12%);
     z-index: 30;
     background: rgba(6, 6, 12, 0.97);
     box-shadow:
       0 18px 44px rgba(0, 0, 0, 0.72),
       0 0 28px rgba(168, 85, 247, 0.22);
     outline: none;
+  }
+
+  .tg-steps__item:last-child:hover,
+  .tg-steps__item:last-child:focus-visible {
+    transform: scale(1.48) translateY(22%);
   }
 
   .tg-steps__item--purple:hover,
@@ -493,7 +516,8 @@
 .tg-page-surface {
   position: relative;
   min-height: calc(100dvh - 4rem);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 .tg-page-surface__ambient {
@@ -561,6 +585,11 @@
   border: 1px solid rgba(168, 85, 247, 0.28);
   border-radius: 0.85rem;
   background: rgba(0, 0, 0, 0.55);
+}
+
+.tg-page__section:has(.tg-steps) {
+  overflow: visible;
+  padding-bottom: clamp(2.75rem, 6vh, 4rem);
 }
 
 .tg-page__section-title {
@@ -1268,18 +1297,64 @@ body:has(.tg-page-surface) {
   border-color: rgba(245, 168, 36, 0.4);
 }
 
-.mw-detail--guest .mw-detail__title {
-  color: #c4b5fd;
+.mw-detail--guest {
+  border-color: rgba(124, 58, 237, 0.35);
+  background: #fff;
+  color: #18181b;
 }
 
-.mw-detail--guest {
-  border-color: rgba(196, 181, 253, 0.35);
+.mw-detail--guest .mw-detail__title {
+  color: #6d28d9;
 }
 
 .mw-detail--guest .mw-detail__highlight {
-  background: rgba(124, 58, 237, 0.22);
-  border-color: rgba(124, 58, 237, 0.45);
-  color: #e9d5ff;
+  background: rgba(124, 58, 237, 0.12);
+  border-color: rgba(124, 58, 237, 0.35);
+  color: #5b21b6;
+}
+
+.mw-detail--guest .mw-detail__text,
+.mw-detail--guest .mw-detail__list {
+  color: #18181b;
+}
+
+.mw-detail--guest .mw-detail__list li::marker {
+  color: #6d28d9;
+}
+
+.mw-detail--guest .mw-detail__example {
+  background: #f5f3ff;
+  border-color: rgba(109, 40, 217, 0.35);
+}
+
+.mw-detail--guest .mw-detail__example-title {
+  background: #6d28d9;
+  color: #fff;
+}
+
+.mw-detail--guest .mw-detail__example-row dt {
+  color: #6d28d9;
+}
+
+.mw-detail--guest .mw-detail__example-row dd {
+  color: #18181b;
+}
+
+.mw-detail--guest .mw-important {
+  background: rgba(124, 58, 237, 0.08);
+  border-color: rgba(124, 58, 237, 0.28);
+}
+
+.mw-detail--guest .mw-important__icon {
+  color: #6d28d9;
+}
+
+.mw-detail--guest .mw-important__text {
+  color: #18181b;
+}
+
+.mw-detail--guest .mw-important__text strong {
+  color: #6d28d9;
 }
 
 .mw-important {
@@ -1394,22 +1469,6 @@ body:has(.tg-page-surface) {
 .mw-modal--guest .mw-detail {
   background: #fff;
   border-color: rgba(124, 58, 237, 0.35);
-  color: #18181b;
-}
-
-.mw-modal--guest .mw-detail__title {
-  color: #6d28d9;
-}
-
-.mw-modal--guest .mw-detail__text,
-.mw-modal--guest .mw-detail__list {
-  color: #3f3f46;
-}
-
-.mw-modal--guest .mw-important {
-  background: rgba(124, 58, 237, 0.08);
-  border-color: rgba(124, 58, 237, 0.25);
-  color: #3f3f46;
 }
 
 .mw-modal--closing .mw-modal__panel {
@@ -1645,17 +1704,6 @@ body:has(.tg-page-surface) {
 .mw-welcome-summary--guest .mw-welcome-summary__body .mw-detail {
   background: #fff;
   border-color: rgba(124, 58, 237, 0.3);
-}
-
-.mw-welcome-summary--guest .mw-welcome-summary__body .mw-detail__text,
-.mw-welcome-summary--guest .mw-welcome-summary__body .mw-detail__list {
-  color: #3f3f46;
-}
-
-.mw-welcome-summary--guest .mw-welcome-summary__body .mw-important {
-  background: rgba(124, 58, 237, 0.08);
-  border-color: rgba(124, 58, 237, 0.22);
-  color: #3f3f46;
 }
 
 @keyframes mw-welcome-summary-in {

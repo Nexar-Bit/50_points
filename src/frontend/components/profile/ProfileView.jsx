@@ -11,6 +11,7 @@ import { useAchievementCards } from "@/frontend/contexts/AchievementCardsContext
 import AchievementGallery from "@/frontend/components/profile/AchievementGallery";
 import TournamentRankingTabs from "@/frontend/components/profile/TournamentRankingTabs";
 import PlayerTicketsPanel from "@/frontend/components/profile/PlayerTicketsPanel";
+import ProfileHubChrome from "@/frontend/components/profile/hub/ProfileHubChrome";
 import AppPageHeader from "@/frontend/components/layout/AppPageHeader";
 import ProfileIcon from "@/frontend/components/profile/ProfileIcons";
 
@@ -67,6 +68,7 @@ export default function ProfileView({ userId: viewUserId }) {
     if (loading) return undefined;
     const sectionIds = {
       achievements: "achievements",
+      tickets: "profile-tickets",
       privacy: "profile-privacy",
       settings: "profile-settings",
     };
@@ -210,68 +212,59 @@ export default function ProfileView({ userId: viewUserId }) {
           title={isOwnProfile ? t("floatingMenu.profile") : userProfile.username}
         />
 
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-10"
-        >
-          <div className="relative">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple to-purple-light p-[3px]">
-              <div
-                className="w-full h-full rounded-full flex items-center justify-center text-2xl font-bold"
-                style={{
-                  backgroundColor: userProfile.color + "20",
-                  color: userProfile.color,
-                }}
-              >
-                {userProfile.initials}
+        {isOwnProfile ? (
+          <ProfileHubChrome profile={profile} userProfile={userProfile} />
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-10"
+          >
+            <div className="relative">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple to-purple-light p-[3px]">
+                <div
+                  className="w-full h-full rounded-full flex items-center justify-center text-2xl font-bold"
+                  style={{
+                    backgroundColor: userProfile.color + "20",
+                    color: userProfile.color,
+                  }}
+                >
+                  {userProfile.initials}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex-1 text-center sm:text-left">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 mb-2">
-              {isOwnProfile ? (
+            <div className="flex-1 text-center sm:text-left">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 mb-2">
                 <h2 className="text-3xl font-bold">{userProfile.username}</h2>
-              ) : null}
-              <span className="px-3 py-1 rounded-full bg-purple/15 border border-purple/20 text-purple-light text-xs font-semibold inline-flex items-center gap-1.5">
-                <ProfileIcon name="leader" className="w-3.5 h-3.5" />
-                #{userProfile.globalRank} {t("profile.global")}
-              </span>
-            </div>
-            {!isOwnProfile ? (
+                <span className="px-3 py-1 rounded-full bg-purple/15 border border-purple/20 text-purple-light text-xs font-semibold inline-flex items-center gap-1.5">
+                  <ProfileIcon name="leader" className="w-3.5 h-3.5" />
+                  #{userProfile.globalRank} {t("profile.global")}
+                </span>
+              </div>
               <p className="text-xs text-cyan/80 mb-2">{t("profile.viewingPublic")}</p>
-            ) : null}
-            <div className="flex flex-col sm:flex-row items-center gap-4 text-sm text-zinc-500">
-              <span className="flex items-center gap-1.5">
-                <ProfileIcon name="calendar" className="w-4 h-4" />
-                {t("profile.memberSince")} {userProfile.memberSince}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <ProfileIcon name="map-pin" className="w-4 h-4" />
-                {userProfile.location}
-              </span>
+              <div className="flex flex-col sm:flex-row items-center gap-4 text-sm text-zinc-500">
+                <span className="flex items-center gap-1.5">
+                  <ProfileIcon name="calendar" className="w-4 h-4" />
+                  {t("profile.memberSince")} {userProfile.memberSince}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <ProfileIcon name="map-pin" className="w-4 h-4" />
+                  {userProfile.location}
+                </span>
+              </div>
             </div>
-          </div>
+          </motion.div>
+        )}
 
-          {isOwnProfile ? (
-            <button
-              type="button"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 text-sm text-zinc-300 hover:border-purple/30 hover:text-white transition-all bg-white/[0.02]"
-            >
-              <ProfileIcon name="edit" className="w-4 h-4" />
-              {t("profile.editProfile")}
-            </button>
-          ) : null}
-        </motion.div>
-
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10"
-        >
+        {!isOwnProfile ? (
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10"
+          >
           <motion.div variants={fadeUp} className="glass-card rounded-2xl p-5 text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
               <ProfileIcon name="points" className="w-5 h-5 text-purple-light" />
@@ -343,15 +336,16 @@ export default function ProfileView({ userId: viewUserId }) {
             </div>
           </motion.div>
         </motion.div>
+        ) : null}
 
         {isOwnProfile ? (
-          <>
+          <div className="profile-hub-legacy">
             <TournamentRankingTabs onActiveTournamentChange={setActiveTournamentId} />
             <PlayerTicketsPanel
               tickets={ticketsForPanel}
               tournamentId={activeTournamentId}
             />
-          </>
+          </div>
         ) : null}
 
         <div ref={achievementsRef} id="achievements" className="scroll-mt-24">

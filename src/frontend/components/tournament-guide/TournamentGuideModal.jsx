@@ -64,8 +64,12 @@ export default function TournamentGuideModal({ open, onClose }) {
         </header>
 
         <div className="tg-modal__body">
-          <TournamentGuideSteps t={t} compact />
-          <TournamentGuideQuickSummary t={t} />
+          <div className="tg-modal__steps-zone">
+            <TournamentGuideSteps t={t} compact />
+          </div>
+          <div className="tg-modal__scroll-zone">
+            <TournamentGuideQuickSummary t={t} />
+          </div>
         </div>
 
         <footer className="tg-modal__footer">

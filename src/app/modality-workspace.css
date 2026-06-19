@@ -3,65 +3,152 @@
   gap: clamp(0.85rem, 2vw, 1.15rem);
 }
 
-.mw-torneo-bar {
+.mw-torneo-banner {
+  width: 100%;
+}
+
+.mw-torneo-banner__inner {
+  position: relative;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  gap: clamp(0.65rem, 2vw, 1rem);
-  padding: clamp(0.55rem, 1.5vw, 0.75rem) clamp(0.75rem, 2vw, 1rem);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: clamp(0.65rem, 2vw, 1.15rem);
+  min-height: clamp(4.75rem, 12vw, 6.25rem);
+  padding: clamp(0.85rem, 2.2vw, 1.2rem) clamp(1rem, 2.5vw, 1.45rem);
+  border: 2px solid #fff;
+  border-radius: clamp(0.65rem, 1.5vw, 0.9rem);
+  background: var(--modality-matte-bg, #0a0a0f);
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.22);
 }
 
-.mw-torneo-bar__menu {
-  width: 1.35rem;
-  height: 1.35rem;
-  opacity: 0.85;
+.mw-torneo-banner__copy {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
 }
 
-.mw-torneo-bar__title {
+.mw-torneo-banner__title {
   margin: 0;
-  font-size: clamp(1.35rem, 3.5vw, 2rem);
+  font-size: clamp(1.85rem, 4.8vw, 2.85rem);
   font-weight: 900;
   font-style: italic;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: #fff;
-  line-height: 1;
+  line-height: 0.95;
 }
 
-.mw-torneo-bar__slogan {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.3rem 0.35rem;
-  margin: 0.25rem 0 0;
-  font-size: clamp(0.62rem, 1.4vw, 0.72rem);
+.mw-torneo-banner__slogan {
+  margin: clamp(0.35rem, 1vw, 0.5rem) 0 0;
+  font-size: clamp(0.72rem, 1.65vw, 0.9rem);
   font-weight: 700;
+  line-height: 1.45;
 }
 
-.mw-torneo-bar__dot {
-  width: 0.28rem;
-  height: 0.28rem;
-  border-radius: 50%;
+.mw-torneo-banner__slogan-part--strategy {
+  color: var(--brand-gold-ticket, #f5a824);
 }
 
-.mw-torneo-bar__dot--purple {
+.mw-torneo-banner__slogan-part--points {
+  color: var(--brand-purple-accent, #9333ea);
+}
+
+.mw-torneo-banner__slogan-part--game {
+  color: var(--brand-cyan-ticket, #00c4dc);
+}
+
+.mw-torneo-banner__emblem {
+  position: relative;
+  flex-shrink: 0;
+  width: clamp(6.25rem, 18vw, 8.75rem);
+  height: clamp(4.5rem, 11vw, 5.75rem);
+}
+
+.mw-torneo-banner__ticket {
+  position: absolute;
+  left: 18%;
+  right: 0;
+  top: 30%;
+  bottom: 16%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.28rem 0 0 0.28rem;
+  overflow: hidden;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28));
+}
+
+.mw-torneo-banner__ticket::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -5px;
+  bottom: -1px;
+  width: 10px;
+  background:
+    radial-gradient(circle at 0 50%, var(--modality-matte-bg, #0a0a0f) 4px, transparent 4.5px)
+    center / 10px 13px repeat-y;
+  pointer-events: none;
+}
+
+.mw-torneo-banner__ticket-stripe {
+  flex: 1;
+}
+
+.mw-torneo-banner__ticket-stripe--paid {
   background: var(--brand-purple-ticket, #7b2dbe);
 }
 
-.mw-torneo-bar__dot--cyan {
+.mw-torneo-banner__ticket-stripe--free {
   background: var(--brand-cyan-ticket, #00c4dc);
 }
 
-.mw-torneo-bar__brand {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
+.mw-torneo-banner__ticket-stripe--special {
+  background: var(--brand-gold-ticket, #f5a824);
 }
 
-.mw-torneo-bar__logo {
-  width: clamp(2.75rem, 7vw, 3.5rem);
+.mw-torneo-banner__logo {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  z-index: 2;
+  width: clamp(3.65rem, 10.5vw, 5rem);
   height: auto;
+  transform: translateY(-50%);
+  object-fit: contain;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.45));
+}
+
+.mw-torneo-banner__flare {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  height: 0.32rem;
+  background: linear-gradient(
+    90deg,
+    rgba(245, 168, 36, 0.85) 0%,
+    rgba(0, 196, 220, 0.92) 28%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(147, 51, 234, 0.88) 72%,
+    rgba(245, 168, 36, 0.75) 100%
+  );
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.mw-torneo-banner--guest .mw-torneo-banner__title {
+  color: #18181b;
+}
+
+.mw-torneo-banner--guest .mw-torneo-banner__inner {
+  box-shadow:
+    inset 0 0 0 1px rgba(124, 58, 237, 0.12),
+    0 8px 20px rgba(124, 58, 237, 0.12);
 }
 
 .mw-color-stripes {
@@ -258,10 +345,7 @@
 }
 
 .mw-workspace-top {
-  display: flex;
-  flex-direction: column;
-  gap: 0.12rem;
-  margin-bottom: 0.15rem;
+  margin-bottom: clamp(0.35rem, 1vw, 0.55rem);
 }
 
 .mw-color-stripes--workspace {
@@ -291,30 +375,49 @@
 .mw-nav-rail__track {
   display: flex;
   align-items: flex-start;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.25rem 0;
+  width: 100%;
+  gap: 0;
 }
 
 .mw-nav-rail__item-wrap {
   position: relative;
   display: flex;
+  flex: 1;
   align-items: center;
+  min-width: 0;
+}
+
+.mw-nav-rail__item-wrap:last-child {
+  flex: 1;
 }
 
 .mw-nav-rail__item {
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  min-width: clamp(4.5rem, 14vw, 6.5rem);
-  min-height: 3.5rem;
-  padding: 0.45rem 0.65rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 3.65rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 0.55rem;
   border: 2px solid transparent;
   text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+button.mw-nav-rail__item {
+  appearance: none;
+  background: none;
+}
+
+button.mw-nav-rail__item:disabled {
+  cursor: not-allowed;
 }
 
 .mw-nav-rail__item--paid {
@@ -364,10 +467,11 @@
 }
 
 .mw-nav-rail__connector {
-  width: clamp(0.75rem, 3vw, 1.75rem);
+  flex-shrink: 0;
+  width: clamp(0.45rem, 1.5vw, 0.85rem);
   height: 0;
   border-top: 2px dotted rgba(255, 255, 255, 0.35);
-  margin: 0 0.15rem;
+  margin: 0 0.1rem;
   align-self: center;
 }
 
@@ -451,17 +555,18 @@
   color: var(--modality-accent, #c084fc);
 }
 
-.tracks-workflow-surface[data-modality] .mw-torneo-bar {
-  border-bottom-color: var(--modality-border, rgba(255, 255, 255, 0.08));
-}
-
 .tracks-workflow-surface[data-modality] .mw-media-strip__row {
   background: var(--modality-matte-panel, rgba(0, 0, 0, 0.55));
   border-color: var(--modality-border, rgba(255, 255, 255, 0.1));
   box-shadow: none;
 }
 
-.tracks-workflow-surface[data-modality="guest"] .mw-torneo-bar__title,
+.tracks-workflow-surface[data-modality] .mw-live-header {
+  background: var(--modality-matte-panel, rgba(0, 0, 0, 0.55));
+  border-color: var(--modality-border, rgba(255, 255, 255, 0.1));
+  box-shadow: none;
+}
+
 .tracks-workflow-surface[data-modality="guest"] .mw-live-header__title,
 .tracks-workflow-surface[data-modality="guest"] .mw-nav-rail__item--active .mw-nav-rail__label,
 .tracks-workflow-surface[data-modality="guest"] .mw-media-strip__label,
@@ -497,7 +602,7 @@
   margin-top: 0.35rem;
 }
 
-/* MIS TICKETS bar — modalidad 2 (cyan) y 4 (guest) */
+/* MIS TICKETS bar — all four modalities */
 .tracks-workflow-tickets-bridge {
   margin: 0.35rem 0 0.5rem;
   width: 100%;
@@ -529,6 +634,36 @@
 
 .free-tickets-overview--bridge.free-tickets-overview--guest .free-tickets-overview__title {
   color: #e9d5ff;
+}
+
+.free-tickets-overview--bridge.free-tickets-overview--paid {
+  border-color: color-mix(in srgb, var(--brand-purple-ticket, #7b2dbe) 55%, transparent);
+  background:
+    linear-gradient(180deg, rgba(28, 12, 48, 0.92) 0%, rgba(10, 6, 18, 0.97) 100%);
+  box-shadow:
+    0 1px 0 rgba(168, 85, 247, 0.12) inset,
+    0 8px 28px rgba(0, 0, 0, 0.38),
+    0 0 20px rgba(124, 58, 237, 0.12);
+}
+
+.free-tickets-overview--bridge.free-tickets-overview--paid .free-tickets-overview__title,
+.free-tickets-overview--bridge.free-tickets-overview--paid .free-tickets-overview__track-name {
+  color: #d8b4fe;
+}
+
+.free-tickets-overview--bridge.free-tickets-overview--special {
+  border-color: color-mix(in srgb, var(--brand-gold-ticket, #f5a824) 55%, transparent);
+  background:
+    linear-gradient(180deg, rgba(40, 28, 8, 0.92) 0%, rgba(14, 10, 6, 0.97) 100%);
+  box-shadow:
+    0 1px 0 rgba(251, 191, 36, 0.12) inset,
+    0 8px 28px rgba(0, 0, 0, 0.38),
+    0 0 20px rgba(245, 168, 36, 0.1);
+}
+
+.free-tickets-overview--bridge.free-tickets-overview--special .free-tickets-overview__title,
+.free-tickets-overview--bridge.free-tickets-overview--special .free-tickets-overview__track-name {
+  color: #fde68a;
 }
 
 .free-tickets-overview--bridge .free-tickets-overview__slot--open {

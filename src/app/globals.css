@@ -13438,48 +13438,34 @@ button.modality-hub-mode-card {
 .browser-tabs--races > .browser-tabs__bar--races {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 0;
-  padding: 0.2rem 0.25rem 0;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 0.65rem 0.65rem 0 0;
+  gap: 0.55rem;
+  padding: 0.55rem 0.35rem 0.65rem;
+  background: transparent;
+  border-radius: 0;
   overflow: visible;
 }
 
 .browser-tabs--races .browser-tabs__tab.ticket-race-overview__card {
-  flex: 1 1 0;
+  flex: initial;
   min-width: 0;
   max-width: none;
-  min-height: 5.5rem;
+  min-height: 7.25rem;
   margin: 0;
-  padding: 0.4rem 0.25rem 0.45rem;
-  border-radius: 0.55rem 0.55rem 0 0;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: none;
-  background: rgba(0, 0, 0, 0.35);
 }
 
 .browser-tabs--races .browser-tabs__tab.ticket-race-overview__card:not(.browser-tabs__tab--active) {
-  border-right: 1px solid var(--browser-tab-divider);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .browser-tabs--races .browser-tabs__tab.ticket-race-overview__card--active {
-  background: #18181b;
-  border-color: rgba(56, 189, 248, 0.45);
-  border-bottom: none;
-  box-shadow: none;
-  z-index: 2;
-  margin-bottom: -1px;
-  padding-bottom: calc(0.55rem + 1px);
-}
-
-.browser-tabs--races .browser-tabs__tab.ticket-race-overview__card--ready.ticket-race-overview__card--active {
-  border-color: rgba(52, 211, 153, 0.45);
+  margin-bottom: 0;
+  padding-bottom: 0.35rem;
 }
 
 .browser-tabs--races .comenzar-inline-races__zone {
-  margin-top: 0;
-  border-radius: 0 0 1rem 1rem;
-  border-top: none;
+  margin-top: 0.35rem;
+  border-radius: 1rem;
+  border-top: 2px solid rgba(139, 44, 255, 0.55);
 }
 
 @media (max-width: 767px) {
@@ -13721,35 +13707,99 @@ button.modality-hub-mode-card {
   flex-direction: column;
   align-items: stretch;
   gap: 0.35rem;
-  min-height: 6.5rem;
-  padding: 0.55rem 0.45rem;
+  min-height: 7.25rem;
+  padding: 0.35rem;
   border-radius: 0.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 3px solid transparent;
-  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.55);
   cursor: pointer;
   text-align: center;
   transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ticket-race-overview__card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .ticket-race-overview__card--active {
-  border-color: rgba(56, 189, 248, 0.55);
-  border-bottom-color: #38bdf8;
-  background: rgba(14, 165, 233, 0.12);
-  box-shadow: 0 0 18px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.08);
 }
 
-.ticket-race-overview__card--ready {
-  border-color: rgba(52, 211, 153, 0.35);
+.ticket-race-overview__card--full {
+  border-color: rgba(123, 45, 190, 0.55);
 }
 
-.ticket-race-overview__card--ready.ticket-race-overview__card--active {
-  border-bottom-color: #34d399;
+.ticket-race-overview__card--dual {
+  border-color: rgba(0, 196, 220, 0.55);
+}
+
+.ticket-race-overview__card--smart {
+  border-color: rgba(245, 168, 36, 0.55);
+}
+
+.ticket-race-overview__card--full.ticket-race-overview__card--active {
+  box-shadow: 0 0 20px rgba(123, 45, 190, 0.28);
+}
+
+.ticket-race-overview__card--dual.ticket-race-overview__card--active {
+  box-shadow: 0 0 20px rgba(0, 196, 220, 0.24);
+}
+
+.ticket-race-overview__card--smart.ticket-race-overview__card--active {
+  box-shadow: 0 0 20px rgba(245, 168, 36, 0.24);
+}
+
+.ticket-race-overview__head {
+  padding: 0.35rem 0.45rem;
+  border-radius: 0.45rem;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ticket-race-overview__card--full .ticket-race-overview__head {
+  background: linear-gradient(180deg, #9333ea 0%, #7b2dbe 100%);
+}
+
+.ticket-race-overview__card--dual .ticket-race-overview__head {
+  background: linear-gradient(180deg, #22d3ee 0%, #0891b2 100%);
+}
+
+.ticket-race-overview__card--smart .ticket-race-overview__head {
+  background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+  color: #1c1404;
+}
+
+.ticket-race-overview__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 3.25rem;
+  padding: 0.45rem 0.35rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.ticket-race-overview__card--full .ticket-race-overview__body {
+  background: linear-gradient(180deg, rgba(123, 45, 190, 0.42) 0%, rgba(88, 28, 135, 0.28) 100%);
+  border-color: rgba(196, 181, 253, 0.35);
+}
+
+.ticket-race-overview__card--dual .ticket-race-overview__body {
+  background: linear-gradient(180deg, rgba(0, 196, 220, 0.35) 0%, rgba(8, 145, 178, 0.22) 100%);
+  border-color: rgba(103, 232, 249, 0.35);
+}
+
+.ticket-race-overview__card--smart .ticket-race-overview__body {
+  background: linear-gradient(180deg, rgba(245, 168, 36, 0.38) 0%, rgba(217, 119, 6, 0.24) 100%);
+  border-color: rgba(253, 230, 138, 0.35);
 }
 
 .ticket-race-overview__num {
@@ -13761,35 +13811,81 @@ button.modality-hub-mode-card {
 }
 
 .ticket-race-overview__strategy {
-  font-size: 0.52rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  color: #c084fc;
-  min-height: 1.5em;
+  font-size: 0.56rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.ticket-race-overview__card--smart .ticket-race-overview__strategy {
+  color: #1c1404;
 }
 
 .ticket-race-overview__picks {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.25rem;
-  min-height: 1.4rem;
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: #71717a;
+  gap: 0.3rem;
+  min-height: 1.55rem;
 }
 
 .ticket-race-overview__pick {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 1.35rem;
-  height: 1.35rem;
+  min-width: 1.55rem;
+  height: 1.55rem;
   padding: 0 0.25rem;
   border-radius: 0.35rem;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fafafa;
+  background: #fff;
+  font-size: 0.72rem;
+  font-weight: 900;
   font-variant-numeric: tabular-nums;
+}
+
+.ticket-race-overview__card--full .ticket-race-overview__pick {
+  color: #7b2dbe;
+}
+
+.ticket-race-overview__card--dual .ticket-race-overview__pick {
+  color: #0891b2;
+}
+
+.ticket-race-overview__card--smart .ticket-race-overview__pick {
+  color: #d97706;
+}
+
+.ticket-race-overview__edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  width: 100%;
+  margin-top: auto;
+  padding: 0.38rem 0.45rem;
+  border: none;
+  border-radius: 0.45rem;
+  background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%);
+  color: #fff;
+  font-size: 0.56rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.ticket-race-overview__edit:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.ticket-race-overview__edit-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
 }
 
 .ticket-race-overview__status {
@@ -13877,6 +13973,224 @@ button.modality-hub-mode-card {
   flex-direction: column;
   gap: 0.75rem;
   padding: 0.85rem 1rem 1rem;
+}
+
+/* Strategy bars — mockup: stacked horizontal bars, name left, puntos right */
+.race-strategy-strip {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0.75rem 1rem;
+}
+
+.race-strategy-strip__head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.65rem;
+}
+
+.race-strategy-strip__label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.race-strategy-strip__head-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.race-strategy-strip__meta {
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.race-strategy-strip__bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.race-strategy-strip__bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 3.85rem;
+  padding: 0.65rem 0.9rem;
+  border: 2px solid #fff;
+  border-radius: 0.65rem;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.race-strategy-strip__bar--full {
+  background: linear-gradient(90deg, #6d28d9 0%, #9333ea 52%, #a855f7 100%);
+}
+
+.race-strategy-strip__bar--dual {
+  background: linear-gradient(90deg, #0891b2 0%, #06b6d4 52%, #00c4dc 100%);
+}
+
+.race-strategy-strip__bar--smart {
+  background: linear-gradient(90deg, #d97706 0%, #f59e0b 52%, #f5a824 100%);
+}
+
+.race-strategy-strip__bar:not(.race-strategy-strip__bar--active) {
+  opacity: 0.52;
+  filter: saturate(0.82);
+}
+
+.race-strategy-strip__bar:hover {
+  opacity: 0.88;
+  filter: saturate(1);
+}
+
+.race-strategy-strip__bar--active {
+  opacity: 1;
+  filter: saturate(1);
+  transform: translateY(-1px);
+}
+
+.race-strategy-strip__bar--full.race-strategy-strip__bar--active {
+  box-shadow: 0 0 22px rgba(147, 51, 234, 0.45);
+}
+
+.race-strategy-strip__bar--dual.race-strategy-strip__bar--active {
+  box-shadow: 0 0 22px rgba(0, 196, 220, 0.38);
+}
+
+.race-strategy-strip__bar--smart.race-strategy-strip__bar--active {
+  box-shadow: 0 0 22px rgba(245, 168, 36, 0.38);
+}
+
+.race-strategy-strip__name {
+  flex: 1;
+  min-width: 0;
+  font-size: clamp(0.82rem, 2.2vw, 1.05rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.05;
+}
+
+.race-strategy-strip__points {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-start;
+  gap: 0.45rem;
+}
+
+.race-strategy-strip__point-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.18rem;
+}
+
+.race-strategy-strip__point {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.35rem;
+  height: 2.35rem;
+  padding: 0 0.35rem;
+  border-radius: 0.4rem;
+  background: #fff;
+  font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  overflow: hidden;
+}
+
+.race-strategy-strip__point--blocked {
+  opacity: 0.88;
+}
+
+.race-strategy-strip__point-block {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.race-strategy-strip__point-block::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 145%;
+  height: 0.22rem;
+  background: #ef4444;
+  border-radius: 999px;
+  box-shadow:
+    0 0 6px rgba(239, 68, 68, 0.85),
+    0 0 2px rgba(127, 29, 29, 0.9);
+  transform: translate(-50%, -50%) rotate(-42deg);
+}
+
+.race-strategy-strip__bar--full .race-strategy-strip__point {
+  color: #7b2dbe;
+}
+
+.race-strategy-strip__bar--dual .race-strategy-strip__point {
+  color: #0891b2;
+}
+
+.race-strategy-strip__bar--smart .race-strategy-strip__point {
+  color: #d97706;
+}
+
+.race-strategy-strip__point-label {
+  font-size: 0.48rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1;
+}
+
+.race-strategy-strip__confirmed {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.55rem;
+  border-radius: 0.4rem;
+  border: 1px solid transparent;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.race-strategy-strip__confirmed--full {
+  border-color: rgba(123, 45, 190, 0.45);
+  background: rgba(123, 45, 190, 0.2);
+  color: #fff;
+}
+
+.race-strategy-strip__confirmed--dual {
+  border-color: rgba(0, 196, 220, 0.45);
+  background: rgba(0, 196, 220, 0.16);
+  color: #fff;
+}
+
+.race-strategy-strip__confirmed--smart {
+  border-color: rgba(245, 168, 36, 0.45);
+  background: rgba(245, 168, 36, 0.16);
+  color: #fff;
 }
 
 .comenzar-inline-races__strip {
@@ -14093,6 +14407,35 @@ button.modality-hub-mode-card {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
+}
+
+.comenzar-inline-races__edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(74, 222, 128, 0.45);
+  background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.comenzar-inline-races__edit:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.comenzar-inline-races__edit-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
 }
 
 .comenzar-inline-races__next {

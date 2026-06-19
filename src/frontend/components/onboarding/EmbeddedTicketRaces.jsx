@@ -1,5 +1,6 @@
 "use client";
 
+import { Pencil } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
@@ -25,7 +26,6 @@ import { STRATEGY_MAP, STRATEGY_REVERSE, getRacePickSummary } from "@/frontend/l
 import {
   BrowserTabs,
   BrowserTabBar,
-  BrowserTab,
   BrowserTabPanel,
 } from "@/frontend/components/ui/BrowserTabBar";
 
@@ -570,45 +570,76 @@ export default function EmbeddedTicketRaces({
             isActive ? activeStrategy : submitted ? STRATEGY_REVERSE[submitted.strategy] || "full" : activeStrategy,
           );
 
+          const strategyId =
+            summary.strategyId ||
+            (submitted ? STRATEGY_REVERSE[submitted.strategy] || null : null);
+
           let statusLabel = t("gameModalities.raceOverviewNoPick");
           if (summary.ready) statusLabel = t("gameModalities.raceOverviewReady");
           else if (summary.draft) statusLabel = t("gameModalities.raceOverviewDraft");
           else if (isActive) statusLabel = t("gameModalities.raceOverviewEdit");
 
           return (
-            <BrowserTab
+            <div
               key={race.id}
+              role="tab"
               id={`race-tab-${race.id}`}
               aria-controls={`race-zone-${race.id}`}
-              active={isActive}
-              className={`ticket-race-overview__card${
-                isActive ? " ticket-race-overview__card--active" : ""
-              }${summary.ready ? " ticket-race-overview__card--ready" : ""}`}
+              aria-selected={isActive}
+              tabIndex={isActive ? 0 : -1}
+              className={`browser-tabs__tab ticket-race-overview__card${
+                isActive ? " browser-tabs__tab--active ticket-race-overview__card--active" : ""
+              }${summary.ready ? " ticket-race-overview__card--ready" : ""}${
+                strategyId ? ` ticket-race-overview__card--${strategyId}` : ""
+              }`}
               onClick={() => selectRace(race.id)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  selectRace(race.id);
+                }
+              }}
             >
-              <span className="ticket-race-overview__num">
+              <span className="ticket-race-overview__head">
                 {t("gameModalities.raceLabel")} {raceNum}
               </span>
-              <span className="ticket-race-overview__strategy">
-                {summary.strategy || "—"}
-              </span>
-              <span className="ticket-race-overview__picks">
-                {summary.posts.length
-                  ? summary.posts.map((post, index) => (
-                      <span key={`${race.id}-pick-${index}`} className="ticket-race-overview__pick">
-                        {post}
-                      </span>
-                    ))
-                  : t("gameModalities.raceOverviewNoPick")}
-              </span>
-              <span
-                className={`ticket-race-overview__status${
-                  summary.ready ? " ticket-race-overview__status--ready" : ""
-                }`}
-              >
-                {statusLabel}
-              </span>
-            </BrowserTab>
+              <div className="ticket-race-overview__body">
+                <span className="ticket-race-overview__strategy">
+                  {summary.strategy || "—"}
+                </span>
+                <div className="ticket-race-overview__picks">
+                  {summary.posts.length
+                    ? summary.posts.map((post, index) => (
+                        <span key={`${race.id}-pick-${index}`} className="ticket-race-overview__pick">
+                          {post}
+                        </span>
+                      ))
+                    : t("gameModalities.raceOverviewNoPick")}
+                </div>
+              </div>
+              {summary.ready ? (
+                <button
+                  type="button"
+                  className="ticket-race-overview__edit"
+                  aria-label={`${t("gameModalities.raceOverviewEdit")} ${t("gameModalities.raceLabel")} ${raceNum}`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleEditRace(race.id);
+                  }}
+                >
+                  <Pencil className="ticket-race-overview__edit-icon" strokeWidth={2.5} aria-hidden />
+                  {t("gameModalities.raceOverviewEdit")}
+                </button>
+              ) : (
+                <span
+                  className={`ticket-race-overview__status${
+                    summary.ready ? " ticket-race-overview__status--ready" : ""
+                  }`}
+                >
+                  {statusLabel}
+                </span>
+              )}
+            </div>
           );
         })}
       </BrowserTabBar>
@@ -625,8 +656,8 @@ export default function EmbeddedTicketRaces({
             activeStrategy={activeStrategy}
             selectedHorses={currentRacePicks}
             confirmedStrategy={confirmedStrategyForRace(expandedRaceData.id)}
-            onPickHorse={handlePickHorse}
-            onStrategyChange={handleStrategyChange}
+            onPickHorse={expandedDone ? undefined : handlePickHorse}
+            onStrategyChange={expandedDone ? undefined : handleStrategyChange}
             isExpanded
             onToggleExpand={() => selectRace(expandedRaceData.id)}
             tournamentRace
@@ -640,7 +671,16 @@ export default function EmbeddedTicketRaces({
               </span>
             </p>
             <div className="comenzar-inline-races__pick-actions">
-              {!expandedDone ? (
+              {expandedDone ? (
+                <button
+                  type="button"
+                  className="comenzar-inline-races__edit"
+                  onClick={() => handleEditRace(expandedRaceData.id)}
+                >
+                  <Pencil className="comenzar-inline-races__edit-icon" strokeWidth={2.5} aria-hidden />
+                  {t("gameModalities.raceOverviewEdit")}
+                </button>
+              ) : (
                 <button
                   type="button"
                   className="comenzar-inline-races__confirm"
@@ -649,7 +689,7 @@ export default function EmbeddedTicketRaces({
                 >
                   {submitting ? "..." : t("gameModalities.confirmRacePick")}
                 </button>
-              ) : null}
+              )}
               <button
                 type="button"
                 className="comenzar-inline-races__next"

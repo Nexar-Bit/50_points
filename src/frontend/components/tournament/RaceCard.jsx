@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, MapPin, Trophy, ChevronDown, Check, Lock, Target, Layers, Zap } from 'lucide-react';
+import { Clock, MapPin, ChevronDown, Check, Lock } from 'lucide-react';
 import { strategies } from './PickSelector';
 
 function JockeySilk({ primary, secondary, size = 24 }) {
@@ -42,8 +42,6 @@ function PostBadge({ number }) {
     </div>
   );
 }
-
-const strategyIcons = { full: Target, dual: Layers, smart: Zap };
 
 export default function RaceCard({
   race,
@@ -93,6 +91,7 @@ export default function RaceCard({
 
   // A confirmed (already-picked) race row should feel "settled": slight opacity, no hover noise
   const isConfirmed = Boolean(confirmedStrategy);
+  const picksLocked = !onPickHorse;
 
   return (
     <div className={`rounded-xl overflow-hidden backdrop-blur-lg transition-opacity duration-300 ${
@@ -157,11 +156,9 @@ export default function RaceCard({
           <div className="flex items-center gap-3 flex-shrink-0">
             {confirmedStrategy && (() => {
               const cs = strategies.find((s) => s.id === confirmedStrategy);
-              const Icon = strategyIcons[confirmedStrategy];
               return cs ? (
-                <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold ${cs.bgActive} border ${cs.borderColor} border-opacity-40`}>
-                  <Icon size={12} className="text-white" />
-                  <span className="text-white">{cs.name}</span>
+                <div className={`race-strategy-strip__confirmed race-strategy-strip__confirmed--${confirmedStrategy}`}>
+                  <span className="race-strategy-strip__name">{cs.name}</span>
                 </div>
               ) : null;
             })()}
@@ -196,46 +193,49 @@ export default function RaceCard({
           >
             {/* Inline strategy selector */}
             {onStrategyChange && (
-              <div className="border-t border-white/5 bg-white/[0.02] px-4 md:px-5 py-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Estrategia</span>
-                  <div className="flex-1 h-px bg-white/5" />
-                  <span className="text-[10px] text-white/30">{race.horses.length} participantes</span>
+              <div className="race-strategy-strip">
+                <div className="race-strategy-strip__head">
+                  <span className="race-strategy-strip__label">Estrategia</span>
+                  <div className="race-strategy-strip__head-line" aria-hidden />
+                  <span className="race-strategy-strip__meta">{race.horses.length} participantes</span>
                 </div>
-                <div className="flex gap-2">
+                <div className="race-strategy-strip__bars">
                   {strategies.map((s) => {
                     const isActive = activeStrategy === s.id;
-                    const Icon = strategyIcons[s.id];
-                    const isFullPoint = s.id === 'full';
                     return (
                       <button
                         key={s.id}
+                        type="button"
                         onClick={() => onStrategyChange(s.id)}
-                        className={`
-                          ${isFullPoint ? 'flex-[1.4]' : 'flex-1'} flex items-center gap-2 ${isFullPoint ? 'px-4 py-3.5' : 'px-3 py-2.5'} rounded-lg border text-left transition-all duration-200
-                          ${isActive
-                            ? `${s.bgActive} ${s.borderColor} border-opacity-60 ${isFullPoint ? 'shadow-[0_0_20px_rgba(124,58,237,0.4)]' : 'shadow-sm'}`
-                            : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.05] hover:border-white/15'
-                          }
-                        `}
+                        className={`race-strategy-strip__bar race-strategy-strip__bar--${s.id}${
+                          isActive ? " race-strategy-strip__bar--active" : ""
+                        }`}
                       >
-                        <div className={`${isFullPoint ? 'p-2 rounded-lg' : 'p-1.5 rounded-md'} ${isActive ? `bg-gradient-to-br ${s.gradient} text-white` : 'bg-white/5 text-white/30'}`}>
-                          <Icon size={isFullPoint ? 18 : 14} />
-                        </div>
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-1.5">
-                            <span className={`${isFullPoint ? 'text-[13px]' : 'text-[11px]'} font-bold tracking-wide ${isActive ? 'text-white' : 'text-white/50'}`}>
-                              {s.name}
-                            </span>
-                            {isActive && <span className="w-1.5 h-1.5 rounded-full bg-green-400" />}
-                          </div>
-                          <div className="flex gap-1 mt-0.5">
-                            {s.allocation.map((pts, idx) => (
-                              <span key={idx} className={`${isFullPoint ? 'text-[10px] px-1.5 py-0.5' : 'text-[9px] px-1 py-px'} font-bold rounded ${isActive ? `${s.tagColors[idx]} text-white` : 'bg-white/5 text-white/25'}`}>
-                                {pts}
-                              </span>
-                            ))}
-                          </div>
+                        <span className="race-strategy-strip__name">{s.name}</span>
+                        <div className="race-strategy-strip__points">
+                          {s.allocation.map((pts, idx) => {
+                            const isBlocked = isActive && idx < selectedHorses.length;
+                            return (
+                              <div
+                                key={idx}
+                                className={`race-strategy-strip__point-wrap${
+                                  isBlocked ? " race-strategy-strip__point-wrap--blocked" : ""
+                                }`}
+                              >
+                                <span
+                                  className={`race-strategy-strip__point${
+                                    isBlocked ? " race-strategy-strip__point--blocked" : ""
+                                  }`}
+                                >
+                                  {pts}
+                                  {isBlocked ? (
+                                    <span className="race-strategy-strip__point-block" aria-hidden />
+                                  ) : null}
+                                </span>
+                                <span className="race-strategy-strip__point-label">PUNTOS</span>
+                              </div>
+                            );
+                          })}
                         </div>
                       </button>
                     );
@@ -313,10 +313,10 @@ export default function RaceCard({
                           </motion.span>
                         )}
                         <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => onPickHorse(horse.id)}
-                          disabled={!canPick && !selected}
+                          whileHover={picksLocked ? undefined : { scale: 1.05 }}
+                          whileTap={picksLocked ? undefined : { scale: 0.95 }}
+                          onClick={() => onPickHorse?.(horse.id)}
+                          disabled={picksLocked || (!canPick && !selected)}
                           className={`
                             px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 min-w-[60px]
                             ${selected
@@ -371,9 +371,9 @@ export default function RaceCard({
                             </motion.span>
                           )}
                           <motion.button
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => onPickHorse(horse.id)}
-                            disabled={!canPick && !selected}
+                            whileTap={picksLocked ? undefined : { scale: 0.9 }}
+                            onClick={() => onPickHorse?.(horse.id)}
+                            disabled={picksLocked || (!canPick && !selected)}
                             className={`
                               w-9 h-9 rounded-lg flex items-center justify-center transition-all
                               ${selected

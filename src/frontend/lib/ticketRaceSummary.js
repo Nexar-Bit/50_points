@@ -16,12 +16,14 @@ export function horsePostPosition(race, horseId) {
   return horse?.postPosition ?? horse?.number ?? "?";
 }
 
-/** @returns {{ strategy: string|null, posts: (number|string)[], ready: boolean, draft: boolean }} */
+/** @returns {{ strategy: string|null, strategyId: string|null, posts: (number|string)[], ready: boolean, draft: boolean }} */
 export function getRacePickSummary(race, submittedTicket, localPicks, localStrategy) {
   if (submittedTicket) {
     const picks = Array.isArray(submittedTicket.picks) ? submittedTicket.picks : [];
+    const strategyId = STRATEGY_REVERSE[submittedTicket.strategy] || null;
     return {
       strategy: STRATEGY_LABEL[submittedTicket.strategy] || submittedTicket.strategy,
+      strategyId,
       posts: picks.map((id) => horsePostPosition(race, id)),
       ready: true,
       draft: false,
@@ -32,13 +34,14 @@ export function getRacePickSummary(race, submittedTicket, localPicks, localStrat
     const strat = strategies.find((s) => s.id === localStrategy);
     return {
       strategy: strat?.name || null,
+      strategyId: localStrategy || null,
       posts: localPicks.map((id) => horsePostPosition(race, id)),
       ready: false,
       draft: true,
     };
   }
 
-  return { strategy: null, posts: [], ready: false, draft: false };
+  return { strategy: null, strategyId: null, posts: [], ready: false, draft: false };
 }
 
 export { STRATEGY_MAP, STRATEGY_REVERSE, STRATEGY_LABEL };

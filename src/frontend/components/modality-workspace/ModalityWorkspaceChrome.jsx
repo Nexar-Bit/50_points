@@ -4,9 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { isModalityWelcomeAccepted } from "@/frontend/lib/modalityWelcomeStorage";
 import FreeTicketsOverviewBar from "@/frontend/components/modality-workspace/FreeTicketsOverviewBar";
+import TournamentActionBar from "@/frontend/components/modality-workspace/TournamentActionBar";
 import ModalityNavRail from "@/frontend/components/modality-workspace/ModalityNavRail";
 import ModalityLiveHeader from "@/frontend/components/modality-workspace/ModalityLiveHeader";
-import ModalityTorneoBar, { ModalityColorStripes } from "@/frontend/components/modality-workspace/ModalityTorneoBar";
+import ModalityTorneoBar from "@/frontend/components/modality-workspace/ModalityTorneoBar";
 import ModalityWelcomeSummaryPanel from "@/frontend/components/modality-welcome/ModalityWelcomeSummaryPanel";
 import OnboardingSequenceGate from "@/frontend/components/onboarding/OnboardingSequenceGate";
 
@@ -23,7 +24,6 @@ export default function ModalityWorkspaceChrome({
 }) {
   const { t } = useLanguage();
   const [workspaceReady, setWorkspaceReady] = useState(false);
-  const showTicketsBar = modalityId === "free" || modalityId === "guest";
 
   useEffect(() => {
     setWorkspaceReady(isModalityWelcomeAccepted(modalityId));
@@ -42,8 +42,7 @@ export default function ModalityWorkspaceChrome({
 
       {workspaceReady ? (
         <header className="mw-workspace-top">
-          <ModalityTorneoBar t={t} />
-          <ModalityColorStripes contracted className="mw-color-stripes--workspace" />
+          <ModalityTorneoBar t={t} modalityId={modalityId} />
         </header>
       ) : null}
 
@@ -54,17 +53,29 @@ export default function ModalityWorkspaceChrome({
         ) : null}
       </div>
 
-      {workspaceReady && showTicketsBar ? (
-        <FreeTicketsOverviewBar
-          modalityId={modalityId}
-          tracks={tracks}
-          loading={tracksLoading}
-          activeTrackSlug={workflow?.expandedSlug ?? null}
-          activeTicketNum={workflow?.activeTicketNum ?? null}
-          usageVersion={workflow?.usageVersion ?? 0}
-          onSelectTrack={workflow?.selectTrack}
-          onSelectTicket={workflow?.selectTrackTicket}
-        />
+      {workspaceReady ? (
+        <>
+          <FreeTicketsOverviewBar
+            modalityId={modalityId}
+            tracks={tracks}
+            loading={tracksLoading}
+            activeTrackSlug={workflow?.expandedSlug ?? null}
+            activeTicketNum={workflow?.activeTicketNum ?? null}
+            usageVersion={workflow?.usageVersion ?? 0}
+            onSelectTrack={workflow?.selectTrack}
+            onSelectTicket={workflow?.selectTrackTicket}
+          />
+
+          <TournamentActionBar
+            t={t}
+            modalityId={modalityId}
+            tracks={tracks}
+            activeTrackSlug={workflow?.expandedSlug ?? null}
+            activeTicketNum={workflow?.activeTicketNum ?? 1}
+            usageVersion={workflow?.usageVersion ?? 0}
+            onTicketSelect={workflow?.handleTicketSelect}
+          />
+        </>
       ) : null}
 
       {workspaceReady ? (
