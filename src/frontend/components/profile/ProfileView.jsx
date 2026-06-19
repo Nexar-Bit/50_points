@@ -200,17 +200,21 @@ export default function ProfileView({ userId: viewUserId }) {
   }
 
   return (
-    <div className="text-white">
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple/10 rounded-full blur-[128px]" />
-        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-cyan/8 rounded-full blur-[100px]" />
-      </div>
+    <div className={isOwnProfile ? "profile-hub-surface" : "text-white"}>
+      {!isOwnProfile ? (
+        <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple/10 rounded-full blur-[128px]" />
+          <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-cyan/8 rounded-full blur-[100px]" />
+        </div>
+      ) : null}
 
-      <div className="relative z-10 py-4 sm:py-6">
-        <AppPageHeader
-          className="mb-8"
-          title={isOwnProfile ? t("floatingMenu.profile") : userProfile.username}
-        />
+      <div className={`relative z-10 py-4 sm:py-6${isOwnProfile ? "" : ""}`}>
+        {!isOwnProfile ? (
+          <AppPageHeader
+            className="mb-8"
+            title={userProfile.username}
+          />
+        ) : null}
 
         {isOwnProfile ? (
           <ProfileHubChrome profile={profile} userProfile={userProfile} />

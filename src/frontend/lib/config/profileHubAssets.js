@@ -5,6 +5,9 @@ const BASE = "/images/profile-hub";
 /** Profile hub UI — ad slots, insight icons, stadium backgrounds */
 export const PROFILE_HUB_ASSET_KEYS = {
   adBannerStadium: "ad-banner-stadium.svg",
+  adSlotLoopScene: "ad-slot-loop-scene.svg",
+  adSlotPromoStill: "ad-slot-promo-still.svg",
+  avatarJockey: "avatar-jockey.svg",
   iconInsightHot: "icon-insight-hot.svg",
   iconInsightRanking: "icon-insight-ranking.svg",
   iconInsightAchievement: "icon-insight-achievement.svg",

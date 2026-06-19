@@ -78,6 +78,43 @@ const ASSETS = {
     `<rect x="4" y="5" width="16" height="14" rx="2" stroke="#22d3ee" stroke-width="1.5"/>
      <path d="M8 3v4M16 3v4M4 10h16" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round"/>`,
   ),
+  "ad-slot-promo-still.svg": wrap(
+    `<defs>
+      <linearGradient id="promoBg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#422006"/>
+        <stop offset="55%" stop-color="#7c2d12"/>
+        <stop offset="100%" stop-color="#581c87"/>
+      </linearGradient>
+      <linearGradient id="promoGold" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fde68a"/>
+        <stop offset="100%" stop-color="#f59e0b"/>
+      </linearGradient>
+    </defs>
+    <rect width="960" height="280" fill="url(#promoBg)"/>
+    <circle cx="760" cy="140" r="92" fill="#f59e0b" opacity="0.12"/>
+    <path d="M720 92h80l-8 72H728l-8-72z" fill="url(#promoGold)"/>
+    <path d="M760 68v24M748 80h24" stroke="#fef3c7" stroke-width="4" stroke-linecap="round"/>
+    <rect x="96" y="72" width="420" height="136" rx="18" fill="rgba(0,0,0,0.35)" stroke="#fbbf24" stroke-width="2"/>
+    <text x="128" y="118" fill="#fef3c7" font-family="Arial,sans-serif" font-size="34" font-weight="700">ESPACIO PUBLICITARIO</text>
+    <text x="128" y="158" fill="#fcd34d" font-family="Arial,sans-serif" font-size="22" font-weight="700">IMAGEN · TORNEO / MARCA</text>
+    <text x="128" y="192" fill="#fde68a" font-family="Arial,sans-serif" font-size="16" opacity="0.85">Reemplazar por banner del anunciante</text>`,
+    "0 0 960 280",
+  ),
+  "avatar-jockey.svg": wrap(
+    `<defs>
+      <linearGradient id="jkBg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#dbeafe"/>
+        <stop offset="100%" stop-color="#bfdbfe"/>
+      </linearGradient>
+    </defs>
+    <circle cx="60" cy="60" r="58" fill="url(#jkBg)" stroke="#93c5fd" stroke-width="2"/>
+    <ellipse cx="60" cy="78" rx="22" ry="18" fill="#fde68a"/>
+    <path d="M38 52c4-10 12-16 22-16s18 6 22 16" fill="#451a03"/>
+    <rect x="44" y="88" width="32" height="26" rx="6" fill="#2563eb"/>
+    <text x="60" y="106" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="18" font-weight="900">4</text>
+    <path d="M36 96h8l4-10 8 4 6-8 8 14" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`,
+    "0 0 120 120",
+  ),
 };
 
 const outDir = path.join(process.cwd(), "public", "images", "profile-hub");

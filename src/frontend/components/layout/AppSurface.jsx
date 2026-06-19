@@ -8,13 +8,18 @@ function isWorkflowTracksPath(pathname) {
   return /^\/modalidades\/(guest|free|paid|special)\/?$/.test(pathname || "");
 }
 
+function isProfilePath(pathname) {
+  return pathname === "/profile" || /^\/profile\/[^/]+/.test(pathname || "");
+}
+
 /**
  * Shared page shell matching the /statistics (MIS TICKETS) visual system.
  */
 export default function AppSurface({ children, className = "" }) {
   const pathname = usePathname() || "";
   const { isAuthenticated } = useAuth();
-  const showFreePlayNotice = isAuthenticated && !isWorkflowTracksPath(pathname);
+  const showFreePlayNotice =
+    isAuthenticated && !isWorkflowTracksPath(pathname) && !isProfilePath(pathname);
 
   return (
     <div className={`app-surface${className ? ` ${className}` : ""}`}>

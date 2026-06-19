@@ -74,11 +74,26 @@
   top: 30%;
   bottom: 16%;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
   border-radius: 0.28rem 0 0 0.28rem;
   overflow: hidden;
+  background: var(--modality-ticket, var(--brand-purple-ticket, #7b2dbe));
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28));
+}
+
+.mw-torneo-banner--paid .mw-torneo-banner__ticket {
+  background: var(--brand-purple-ticket, #7b2dbe);
+}
+
+.mw-torneo-banner--free .mw-torneo-banner__ticket {
+  background: var(--brand-cyan-ticket, #00c4dc);
+}
+
+.mw-torneo-banner--special .mw-torneo-banner__ticket {
+  background: var(--brand-gold-ticket, #f5a824);
+}
+
+.mw-torneo-banner--guest .mw-torneo-banner__ticket {
+  background: var(--brand-guest-ticket, #f0eef5);
 }
 
 .mw-torneo-banner__ticket::after {
@@ -92,22 +107,6 @@
     radial-gradient(circle at 0 50%, var(--modality-matte-bg, #0a0a0f) 4px, transparent 4.5px)
     center / 10px 13px repeat-y;
   pointer-events: none;
-}
-
-.mw-torneo-banner__ticket-stripe {
-  flex: 1;
-}
-
-.mw-torneo-banner__ticket-stripe--paid {
-  background: var(--brand-purple-ticket, #7b2dbe);
-}
-
-.mw-torneo-banner__ticket-stripe--free {
-  background: var(--brand-cyan-ticket, #00c4dc);
-}
-
-.mw-torneo-banner__ticket-stripe--special {
-  background: var(--brand-gold-ticket, #f5a824);
 }
 
 .mw-torneo-banner__logo {

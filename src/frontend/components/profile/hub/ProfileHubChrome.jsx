@@ -1,9 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 import { useLanguage } from "@/frontend/lib/i18n/LanguageContext";
 import { useAuth } from "@/frontend/contexts/AuthContext";
-import { defaultModalityForUser, applyModalityToDocument, clearModalityFromDocument, persistModality } from "@/frontend/lib/gameModalities";
+import {
+  defaultModalityForUser,
+  applyModalityToDocument,
+  clearModalityFromDocument,
+  persistModality,
+} from "@/frontend/lib/gameModalities";
 import { useLiveTournamentsPoll } from "@/frontend/lib/hooks/useLiveTournamentsPoll";
 import { buildTracksFromTournaments } from "@/frontend/components/modalities/ModalityTracksList";
 import ModalityNavRail from "@/frontend/components/modality-workspace/ModalityNavRail";
@@ -15,6 +23,7 @@ import ProfileTicketHistoryPanel from "@/frontend/components/profile/hub/Profile
 import ProfileHubFooter from "@/frontend/components/profile/hub/ProfileHubFooter";
 
 export default function ProfileHubChrome({ profile, userProfile }) {
+  const router = useRouter();
   const { language, t } = useLanguage();
   const isEn = language === "en";
   const { user: authUser } = useAuth();
@@ -81,73 +90,78 @@ export default function ProfileHubChrome({ profile, userProfile }) {
 
   return (
     <div className="profile-hub-page" data-modality={modalityId}>
+      <div className="profile-hub-page__stripe" aria-hidden />
+
       <ModalityNavRail
         activeModalityId={modalityId}
         stayOnPage
         onModalityChange={handleProfileModalityChange}
       />
 
-      <ProfileHubHeader
-        t={t}
-        isEn={isEn}
-        username={userProfile.username}
-        playerNumber={playerNumber}
-        modalityId={modalityId}
-        profile={profile}
-        userProfile={userProfile}
-      />
+      <div className="profile-hub-page__shell">
+        <div className="profile-hub-page__toolbar">
+          <Link href="/inicio" className="profile-hub-page__back">
+            ← {t("floatingMenu.profile")}
+          </Link>
+          <button
+            type="button"
+            className="profile-hub-page__close"
+            onClick={() => router.back()}
+            aria-label={t("common.close")}
+          >
+            <X strokeWidth={2.5} aria-hidden />
+          </button>
+        </div>
 
-      <div className="profile-hub-page__ads">
-        <ProfileAdTorneoSlot
+        <ProfileHubHeader
+          t={t}
+          isEn={isEn}
+          username={userProfile.username}
+          playerNumber={playerNumber}
+          modalityId={modalityId}
+          profile={profile}
+          userProfile={userProfile}
+        />
+
+        <div className="profile-hub-page__ads">
+          <ProfileAdTorneoSlot slotLabel="a" />
+          <ProfileAdTorneoSlot slotLabel="b" />
+        </div>
+
+        <FreeTicketsOverviewBar
+          modalityId={modalityId}
+          tracks={tracks}
+          loading={tracksLoading}
+          activeTrackSlug={activeTrackSlug}
+          activeTicketNum={activeTicketNum}
+          usageVersion={usageVersion}
+          onSelectTrack={handleSelectTrack}
+          onSelectTicket={handleSelectTicket}
+          titleKey="profile.hub.ticketsSectionTitle"
+          inProfileShell
+        />
+
+        <TournamentActionBar
           t={t}
           modalityId={modalityId}
-          variant="system"
-          newsTitleKey="profile.hub.newsProfile"
-          newsIconKey="iconNewsProfile"
-        >
-          <p>{t("profile.hub.newsProfileBody")}</p>
-        </ProfileAdTorneoSlot>
+          tracks={tracks}
+          activeTrackSlug={activeTrackSlug}
+          activeTicketNum={activeTicketNum}
+          usageVersion={usageVersion}
+          onTicketSelect={handleTicketSelect}
+          layout="profile"
+          isEn={isEn}
+        />
 
-        <ProfileAdTorneoSlot
+        <ProfileTicketHistoryPanel
           t={t}
-          modalityId={modalityId}
-          variant="advertiser"
-          newsTitleKey="profile.hub.newsTournament"
-          newsIconKey="iconNewsTournament"
-        >
-          <p>{t("profile.hub.newsTournamentBody")}</p>
-        </ProfileAdTorneoSlot>
+          profile={profile}
+          isRegistered={!authUser?.isGuest}
+          liveTracks={tracks}
+        />
+
+        <ProfileHubFooter t={t} userProfile={userProfile} isRegistered={!authUser?.isGuest} />
       </div>
-
-      <FreeTicketsOverviewBar
-        modalityId={modalityId}
-        tracks={tracks}
-        loading={tracksLoading}
-        activeTrackSlug={activeTrackSlug}
-        activeTicketNum={activeTicketNum}
-        usageVersion={usageVersion}
-        onSelectTrack={handleSelectTrack}
-        onSelectTicket={handleSelectTicket}
-      />
-
-      <TournamentActionBar
-        t={t}
-        modalityId={modalityId}
-        tracks={tracks}
-        activeTrackSlug={activeTrackSlug}
-        activeTicketNum={activeTicketNum}
-        usageVersion={usageVersion}
-        onTicketSelect={handleTicketSelect}
-      />
-
-      <ProfileTicketHistoryPanel
-        t={t}
-        profile={profile}
-        isRegistered={!authUser?.isGuest}
-        liveTracks={tracks}
-      />
-
-      <ProfileHubFooter t={t} userProfile={userProfile} isRegistered={!authUser?.isGuest} />
     </div>
   );
 }

@@ -1,31 +1,93 @@
 /* Profile hub — mockup layout (MI PERFIL) */
 
+.profile-hub-surface {
+  color: #18181b;
+}
+
+.app-main--profile-hub {
+  background: #0a0a0f;
+}
+
+.app-main--profile-hub .app-surface {
+  background: #0a0a0f !important;
+  color: #f4f4f5;
+}
+
 .profile-hub-page {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  margin-bottom: 2rem;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  max-width: 52rem;
+  margin-inline: auto;
 }
 
 .profile-hub-page[data-modality] {
   --profile-hub-accent: var(--modality-accent, #7c3aed);
 }
 
+.profile-hub-page__stripe {
+  height: 0.28rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #2563eb 0%,
+    #22c55e 28%,
+    #eab308 52%,
+    #ec4899 78%,
+    #2563eb 100%
+  );
+}
+
 .profile-hub-page .mw-nav-rail {
   margin-bottom: 0.15rem;
 }
 
-/* Identity row: player number + 3 insight cards */
-.profile-hub-page__identity {
-  display: grid;
-  gap: 0.85rem;
+.profile-hub-page__shell {
+  padding: clamp(0.85rem, 2.5vw, 1.15rem);
+  border-radius: 1rem;
+  background: #fafafa;
+  color: #18181b;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 16px 40px rgba(0, 0, 0, 0.35);
 }
 
-@media (min-width: 900px) {
-  .profile-hub-page__identity {
-    grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
-    align-items: stretch;
-  }
+.profile-hub-page__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.profile-hub-page__back {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #18181b;
+  text-decoration: none;
+}
+
+.profile-hub-page__close {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 0.45rem;
+  background: transparent;
+  color: #52525b;
+  cursor: pointer;
+}
+
+/* Identity row */
+.profile-hub-page__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
 }
 
 .profile-hub-page__player {
@@ -34,24 +96,22 @@
   gap: 0.85rem;
 }
 
-.profile-hub-page__number {
+.profile-hub-page__avatar {
   flex-shrink: 0;
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 4.75rem;
+  height: 4.75rem;
   border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #dbeafe;
+  background: #eff6ff;
   display: grid;
   place-items: center;
-  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.12), transparent 55%),
-    linear-gradient(145deg, color-mix(in srgb, var(--player-accent, #7c3aed) 35%, #0a0a12), #0a0a12);
-  border: 2px solid color-mix(in srgb, var(--player-accent, #7c3aed) 65%, white);
-  box-shadow: 0 0 24px color-mix(in srgb, var(--player-accent, #7c3aed) 35%, transparent);
 }
 
-.profile-hub-page__number span {
-  font-size: 2rem;
-  font-weight: 900;
-  line-height: 1;
-  color: #fff;
+.profile-hub-page__avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .profile-hub-page__name {
@@ -59,6 +119,7 @@
   font-size: 1.35rem;
   font-weight: 800;
   line-height: 1.15;
+  color: #18181b;
 }
 
 .profile-hub-page__modality {
@@ -66,7 +127,9 @@
   margin-top: 0.35rem;
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  background: #f5f3ff;
+  color: #6d28d9;
   font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -87,10 +150,10 @@
 
 .profile-hub-page__insight {
   padding: 0.65rem 0.75rem;
-  border-radius: 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.35));
-  min-height: 5.5rem;
+  border-radius: 0.65rem;
+  border: 1px solid #e4e4e7;
+  background: #fff;
+  min-height: 5.25rem;
 }
 
 .profile-hub-page__insight-head {
@@ -112,21 +175,21 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #a1a1aa;
+  color: #71717a;
 }
 
 .profile-hub-page__insight-line1 {
   margin: 0;
   font-size: 0.82rem;
   font-weight: 800;
-  color: #fff;
+  color: #18181b;
   line-height: 1.25;
 }
 
 .profile-hub-page__insight-line2 {
   margin: 0.2rem 0 0;
   font-size: 0.68rem;
-  color: #d4d4d8;
+  color: #52525b;
   line-height: 1.3;
 }
 
@@ -134,101 +197,222 @@
   display: inline-block;
   margin-top: 0.25rem;
   font-size: 0.58rem;
-  color: #a78bfa;
+  color: #7c3aed;
   text-decoration: underline;
 }
 
-/* Ad slots — TORNEO banner + collapsible news */
+/* Ad slots — placeholders a / b (wireframe) */
 .profile-hub-page__ads {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: clamp(1rem, 2.5vw, 1.35rem);
 }
 
-.profile-hub-ad__banner-wrap {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: stretch;
-  gap: 0.35rem;
-}
-
-.profile-hub-ad__menu {
-  width: 1.1rem;
-  height: auto;
-  align-self: center;
-  opacity: 0.55;
-}
-
-.profile-hub-ad__banner {
-  position: relative;
-  border-radius: 0.85rem;
-  overflow: hidden;
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.25)),
-    var(--profile-ad-bg, none) center / cover no-repeat;
-}
-
-.profile-hub-ad__torneo.mw-torneo-banner {
-  border: 2px solid rgba(255, 255, 255, 0.92);
-  border-radius: 0.75rem;
-  background: color-mix(in srgb, var(--modality-matte-bg, #0a0a0f) 82%, transparent);
-}
-
-.profile-hub-ad__torneo .mw-torneo-banner__ticket {
-  min-height: 3.2rem;
-}
-
-.profile-hub-ad__torneo .mw-torneo-banner__ticket-stripe {
-  flex: 1 1 0;
-  min-height: 0.95rem;
-}
-
-.profile-hub-ad__news-toggle {
+.profile-hub-ad {
   width: 100%;
+}
+
+.profile-hub-ad__placeholder {
+  width: 100%;
+  min-height: clamp(10rem, 26vw, 13.5rem);
+  display: grid;
+  place-items: center;
+  border: 2px solid #3b82f6;
+  border-radius: 0.65rem;
+  background: #2563eb;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: clamp(3.25rem, 11vw, 5rem);
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* MIS TICKETS — light cards inside profile shell */
+.profile-hub-page__shell .free-tickets-overview--profile-shell {
+  margin: 0.5rem 0 0.75rem;
+  padding: 0.65rem 0 0.85rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.profile-hub-page__shell .free-tickets-overview--profile-shell .free-tickets-overview__title {
+  color: #312e81;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.profile-hub-page__shell .free-tickets-overview--profile-shell .free-tickets-overview__track {
+  background: #fff;
+  border: 1px solid #e4e4e7;
+  border-radius: 0.55rem;
+  padding: 0.45rem 0.35rem 0.55rem;
+}
+
+.profile-hub-page__shell .free-tickets-overview--profile-shell .free-tickets-overview__track--active {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.35);
+}
+
+.profile-hub-page__shell .free-tickets-overview--profile-shell .free-tickets-overview__track-name {
+  color: #18181b;
+  font-size: 0.58rem;
+}
+
+.profile-hub-page__shell .free-tickets-overview--profile-shell .free-tickets-overview__slot--open {
+  background: #d4d4d8;
+  border-color: #a1a1aa;
+}
+
+.profile-hub-page__shell .free-tickets-overview--profile-shell .free-tickets-overview__slot--used {
+  background: #fbbf24;
+  border-color: #f59e0b;
+}
+
+/* Tournament block — profile mockup */
+.tournament-action-bar--profile {
+  margin: 0.35rem 0 0.65rem;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+.tournament-action-bar--profile .tournament-action-bar__profile-cta,
+.tournament-action-bar--profile .tournament-action-bar__profile-cta--link {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  margin-top: 0.35rem;
-  padding: 0.55rem 0.75rem;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-bottom: 0.65rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid #7c3aed;
   border-radius: 0.65rem;
-  border: 1px solid rgba(124, 58, 237, 0.35);
-  background: rgba(0, 0, 0, 0.45);
-  color: #e4e4e7;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  background: #fff;
+  color: #18181b;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  cursor: pointer;
+  text-decoration: none;
 }
 
-.profile-hub-ad__news-icon {
-  width: 1rem;
-  height: 1rem;
+.tournament-action-bar--profile .tournament-action-bar__profile-cta--partial {
+  border-color: #ca8a04;
+  background: #fefce8;
 }
 
-.profile-hub-ad__chevron {
-  width: 1rem;
-  height: 1rem;
-  margin-left: auto;
-  transition: transform 0.2s ease;
+.tournament-action-bar--profile .tournament-action-bar__profile-cta--complete {
+  border-color: #16a34a;
+  background: #f0fdf4;
 }
 
-.profile-hub-ad__chevron--open {
-  transform: rotate(180deg);
+.tournament-action-bar--profile .tournament-action-bar__profile-panel {
+  padding: 0.85rem 0.85rem 0.75rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, #111827 0%, #030712 100%);
+  color: #f4f4f5;
 }
 
-.profile-hub-ad__news-body {
-  padding: 0.65rem 0.85rem;
-  border-radius: 0.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.35);
+.tournament-action-bar--profile .tournament-action-bar__profile-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.35rem;
+}
+
+.tournament-action-bar--profile .tournament-action-bar__profile-title {
+  margin: 0;
   font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tournament-action-bar--profile .tournament-action-bar__profile-head-right {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+
+.tournament-action-bar--profile .tournament-action-bar__profile-logo {
+  width: 2.35rem;
+  height: auto;
+  object-fit: contain;
+}
+
+.tournament-action-bar--profile .tournament-action-bar__profile-meta {
+  margin: 0 0 0.2rem;
+  font-size: 0.72rem;
   color: #d4d4d8;
 }
 
-.profile-hub-ad__news-placeholder {
-  margin: 0;
+.tournament-action-bar--profile .tournament-action-bar__profile-meta--time {
+  margin-bottom: 0.65rem;
+  color: #a1a1aa;
+}
+
+.tournament-action-bar--profile .tournament-action-bar__profile-footnote {
+  margin: 0.65rem 0 0;
+  font-size: 0.62rem;
+  line-height: 1.45;
+  color: #a1a1aa;
+}
+
+.tournament-action-bar--profile .track-tickets-panel--inline {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.tournament-action-bar--profile .track-tickets-tab {
+  background: #fff;
+  color: #18181b;
+  border-color: #e4e4e7;
+}
+
+.tournament-action-bar--profile .track-tickets-tab--active {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.35);
+}
+
+.tournament-action-bar--profile .track-tickets-tab__status {
+  color: #2563eb;
+  font-weight: 800;
+}
+
+.tournament-action-bar--profile .tournament-action-bar__legend {
+  margin-top: 0.65rem;
+  color: #52525b;
+}
+
+.tournament-action-bar--profile .tournament-action-bar__legend-item--active {
+  color: #18181b;
+}
+
+.profile-hub-page__shell .profile-hub-history,
+.profile-hub-page__shell .profile-hub-footer {
+  margin-top: 0.85rem;
+}
+
+.profile-hub-page__shell .profile-hub-footer__stat {
+  background: #fff;
+  border-color: #e4e4e7;
+  color: #18181b;
+}
+
+.profile-hub-page__shell .profile-hub-footer__stat-label {
   color: #71717a;
+}
+
+.profile-hub-page__shell .profile-hub-footer__stat-value {
+  color: #18181b;
 }
 
 /* Tournament action bar — purple / yellow / green (all modalities) */

@@ -20,6 +20,8 @@ export function buildTracksFromTournaments(tournaments) {
         name: track,
         slug,
         location: tourn.location || "",
+        eventDate: tourn.date || null,
+        startTime: tourn.startTime || tourn.nextRace || null,
         imageUrl:
           tourn.imageUrl ||
           getTournamentImageUrl({ track, slug: tourn.slug, imageUrl: tourn.imageUrl }) ||
@@ -35,6 +37,9 @@ export function buildTracksFromTournaments(tournaments) {
     if (isLive) entry.live = true;
     if (isLive || !entry.tournamentSlug) {
       entry.tournamentSlug = tourn.slug;
+      entry.location = tourn.location || entry.location;
+      entry.eventDate = tourn.date || entry.eventDate;
+      entry.startTime = tourn.startTime || tourn.nextRace || entry.startTime;
     }
   }
   return [...map.values()].sort((a, b) => a.name.localeCompare(b.name, "es"));

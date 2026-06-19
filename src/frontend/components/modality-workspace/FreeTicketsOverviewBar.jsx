@@ -20,6 +20,8 @@ export default function FreeTicketsOverviewBar({
   usageVersion = 0,
   onSelectTrack,
   onSelectTicket,
+  titleKey = "gameModalities.freeTicketsBarTitle",
+  inProfileShell = false,
 }) {
   const { t } = useLanguage();
   const [tick, setTick] = useState(usageVersion);
@@ -50,14 +52,16 @@ export default function FreeTicketsOverviewBar({
   return (
     <section
       id="tickets"
-      className={`tracks-workflow-tickets-bridge free-tickets-overview free-tickets-overview--bridge free-tickets-overview--${modalityId}`}
-      aria-label={t("gameModalities.freeTicketsBarTitle")}
+      className={`tracks-workflow-tickets-bridge free-tickets-overview free-tickets-overview--bridge free-tickets-overview--${modalityId}${
+        inProfileShell ? " free-tickets-overview--profile-shell" : ""
+      }`}
+      aria-label={t(titleKey)}
     >
       <div className="free-tickets-overview__head">
         {headIcon ? (
           <img src={headIcon} alt="" className="free-tickets-overview__head-icon" aria-hidden />
         ) : null}
-        <h3 className="free-tickets-overview__title">{t("gameModalities.freeTicketsBarTitle")}</h3>
+        <h3 className="free-tickets-overview__title">{t(titleKey)}</h3>
       </div>
 
       <div className="free-tickets-overview__scroll">

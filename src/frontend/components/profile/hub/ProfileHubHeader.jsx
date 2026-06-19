@@ -19,6 +19,7 @@ export default function ProfileHubHeader({
 }) {
   const mod = getModality(modalityId);
   const badge = getModalityBadgeClasses(mod.gameMode, modalityId === "guest");
+  const avatarSrc = profileHubAsset("avatarJockey");
   const hot = getHotTicketInsight(profile?.allTickets ?? [], profile?.tournamentSummaries ?? []);
   const ranking = getRankingRiseInsight(
     profile?.performanceHistory ?? [],
@@ -61,12 +62,12 @@ export default function ProfileHubHeader({
   return (
     <header className="profile-hub-page__identity">
       <div className="profile-hub-page__player">
-        <div
-          className="profile-hub-page__number"
-          style={{ "--player-accent": mod.accent }}
-          aria-hidden
-        >
-          <span>{playerNumber}</span>
+        <div className="profile-hub-page__avatar" aria-hidden>
+          {avatarSrc ? (
+            <img src={avatarSrc} alt="" className="profile-hub-page__avatar-img" />
+          ) : (
+            <span>{playerNumber}</span>
+          )}
         </div>
         <div className="profile-hub-page__player-meta">
           <h2 className="profile-hub-page__name">{username}</h2>

@@ -27,6 +27,10 @@ function isWorkflowTracksPath(pathname) {
   return /^\/modalidades\/(guest|free|paid|special)\/?$/.test(pathname);
 }
 
+function isProfilePath(pathname) {
+  return pathname === "/profile" || /^\/profile\/[^/]+/.test(pathname || "");
+}
+
 function isGuiaTorneoPath(pathname) {
   return pathname === "/guia-torneo";
 }
@@ -69,6 +73,7 @@ export default function ConditionalShell({ children }) {
   const onWorkflowTracks = isWorkflowTracksPath(pathname);
   const onHowToPlay = isHowToPlayPath(pathname);
   const onGuiaTorneo = isGuiaTorneoPath(pathname);
+  const onProfile = isProfilePath(pathname);
   const hideChrome = isChromelessPath(pathname);
   const skipSurface = hideChrome || onAuth || onComenzar || onHowToPlay || onGuiaTorneo || onInicio;
 
@@ -95,6 +100,8 @@ export default function ConditionalShell({ children }) {
       return "app-main app-main--with-menu app-main--immersive app-main--how-to-play min-h-screen";
     if (onGuiaTorneo)
       return "app-main app-main--with-menu app-main--immersive app-main--tournament-guide min-h-screen";
+    if (onProfile)
+      return "app-main app-main--with-menu app-main--immersive app-main--profile-hub min-h-screen";
     return "app-main app-main--with-menu app-main--immersive min-h-screen";
   })();
 

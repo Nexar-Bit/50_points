@@ -26,11 +26,7 @@ export default function ModalityTorneoBar({ t, modalityId = "free", className = 
         </div>
 
         <div className="mw-torneo-banner__emblem">
-          <div className="mw-torneo-banner__ticket" aria-hidden>
-            <span className="mw-torneo-banner__ticket-stripe mw-torneo-banner__ticket-stripe--paid" />
-            <span className="mw-torneo-banner__ticket-stripe mw-torneo-banner__ticket-stripe--free" />
-            <span className="mw-torneo-banner__ticket-stripe mw-torneo-banner__ticket-stripe--special" />
-          </div>
+          <div className="mw-torneo-banner__ticket" aria-hidden />
           {logo ? <img src={logo} alt="" className="mw-torneo-banner__logo" /> : null}
         </div>
 
