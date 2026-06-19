@@ -10,6 +10,7 @@ import TournamentGuideSteps, {
 } from "@/frontend/components/tournament-guide/TournamentGuideSteps";
 import TournamentGuideQuickSummary from "@/frontend/components/tournament-guide/TournamentGuideQuickSummary";
 import TournamentGuideRules from "@/frontend/components/tournament-guide/TournamentGuideRules";
+import TournamentGuideModality4 from "@/frontend/components/tournament-guide/TournamentGuideModality4";
 
 export default function TournamentGuidePageClient() {
   const { t } = useLanguage();
@@ -85,6 +86,10 @@ export default function TournamentGuidePageClient() {
         <section className="tg-page__section">
           <h2 className="tg-page__section-title">{t("tournamentGuide.part2Title")}</h2>
           <TournamentGuideRules t={t} />
+        </section>
+
+        <section className="tg-page__section tg-page__section--mod4">
+          <TournamentGuideModality4 t={t} />
         </section>
 
         <footer className="tg-page__cta">

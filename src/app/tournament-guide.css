@@ -743,6 +743,87 @@
   color: #71717a;
 }
 
+.tg-page__section--mod4 {
+  margin-top: 0.5rem;
+}
+
+.tg-mod4 {
+  padding: clamp(1rem, 2.5vw, 1.35rem);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: clamp(0.75rem, 1.5vw, 1rem);
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.08) 0%, rgba(5, 5, 8, 0.95) 100%);
+}
+
+.tg-mod4__part {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a855f7;
+}
+
+.tg-mod4__title {
+  margin: 0 0 1rem;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: #f4f4f5;
+}
+
+.tg-mod4__intro,
+.tg-mod4__text,
+.tg-mod4__closing {
+  margin: 0 0 0.85rem;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: #d4d4d8;
+}
+
+.tg-mod4__closing {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(168, 85, 247, 0.2);
+  font-weight: 600;
+  color: #e4e4e7;
+}
+
+.tg-mod4__section {
+  margin-bottom: 1.25rem;
+}
+
+.tg-mod4__section:last-of-type {
+  margin-bottom: 0.5rem;
+}
+
+.tg-mod4__section-title {
+  margin: 0 0 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c084fc;
+}
+
+.tg-mod4__list {
+  margin: 0 0 0.85rem;
+  padding-left: 1.25rem;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: #d4d4d8;
+}
+
+.tg-mod4__list li {
+  margin-bottom: 0.35rem;
+}
+
+.tg-mod4__list li::marker {
+  color: #a855f7;
+}
+
 .app-main--tournament-guide {
   background: #050508;
 }

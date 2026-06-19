@@ -390,15 +390,96 @@ export const translations = {
         },
         {
           title: "MODALIDAD 4",
-          name: "TORNEO GRATIS (SIN REGISTRO)",
+          name: "JUEGA SIN REGISTRARTE Y DESCUBRE NUEVAS OPORTUNIDADES",
           items: [
-            "3 tickets gratuitos por torneo.",
-            "No requiere crear cuenta.",
-            "Los tickets no se almacenan permanentemente.",
-            "Sin historial ni estadísticas personales.",
+            "Modalidad gratuita y temporal — acceso con alias.",
+            "3 tickets gratuitos por torneo para explorar estrategias.",
+            "Transferencia a cuenta registrada o descarte al salir.",
+            "Autoría y origen del ticket conservados tras reclamar.",
           ],
         },
       ],
+      modality4Guide: {
+        partTitle: "PARTE 3 – MODALIDAD 4",
+        title: "MODALIDAD 4 – JUEGA SIN REGISTRARTE Y DESCUBRE NUEVAS OPORTUNIDADES",
+        intro:
+          "La Modalidad 4 es una modalidad gratuita y temporal que permite participar en torneos sin necesidad de disponer de una cuenta registrada. Su objetivo es ofrecer una puerta de entrada al ecosistema MY 50 POINTS y permitir a cualquier jugador probar el sistema antes de registrarse. Para acceder a esta modalidad solo es necesario elegir un alias. Ese alias identificará al jugador y quedará asociado permanentemente a todos los tickets creados dentro de esta modalidad.",
+        sections: [
+          {
+            title: "TRES TICKETS GRATUITOS EN CADA TORNEO",
+            paragraphs: [
+              "La Modalidad 4 ofrece tres tickets gratuitos por torneo. Estos tickets pueden utilizarse para experimentar con distintas estrategias, estudiar carreras o buscar oportunidades interesantes antes de utilizarlas en otras modalidades.",
+              "Muchos jugadores utilizarán esta modalidad como una zona de exploración para descubrir estrategias y construir tickets antes de decidir si desean conservarlos dentro de una cuenta registrada.",
+            ],
+          },
+          {
+            title: "CAMBIO A OTRAS MODALIDADES",
+            paragraphs: [
+              "Los jugadores que ya tengan una cuenta registrada podrán acceder a la Modalidad 4, crear sus tickets y posteriormente transferirlos a cualquiera de sus cuentas.",
+              "Los jugadores que todavía no dispongan de una cuenta podrán crear una directamente desde la Modalidad 4 y conservar los tickets generados durante la sesión.",
+              "Al abandonar la Modalidad 4, el sistema mostrará dos opciones principales:",
+            ],
+            bullets: [
+              "Iniciar sesión en una cuenta existente y transferir automáticamente a esa cuenta los tickets creados durante la sesión.",
+              "Salir y descartar los tickets creados durante la sesión.",
+            ],
+          },
+          {
+            title: "CIERRE DE SESIÓN Y PROTECCIÓN DE TICKETS",
+            paragraphs: [
+              "Cuando el jugador intente cerrar la sesión temporal de la Modalidad 4, el sistema mostrará un aviso indicando que los tickets creados durante esa sesión podrían perderse.",
+              "El sistema ofrecerá dos botones:",
+              "Si el jugador selecciona la primera opción, podrá iniciar sesión en una cuenta existente y los tickets serán transferidos automáticamente.",
+            ],
+            bullets: [
+              "«Iniciar sesión y transferir tickets».",
+              "«Salir y descartar tickets».",
+            ],
+          },
+          {
+            title: "IDENTIDAD PERMANENTE DEL TICKET",
+            paragraphs: [
+              "Aunque un ticket sea transferido posteriormente a otra cuenta, el sistema conservará siempre la información original del ticket.",
+              "Cada ticket mantendrá:",
+            ],
+            bullets: [
+              "Alias original del creador.",
+              "Modalidad original de creación.",
+              "Fecha de creación.",
+              "Torneo de origen.",
+            ],
+            paragraphsAfter: [
+              "Por esta razón, los tickets creados en la Modalidad 4 seguirán siendo reconocidos por el sistema como tickets de Modalidad 4 incluso después de haber sido transferidos.",
+            ],
+          },
+          {
+            title: "RANKINGS Y RESULTADOS",
+            paragraphs: [
+              "Durante los torneos, todos los tickets seguirán compitiendo bajo el alias con el que fueron creados originalmente.",
+              "Las clasificaciones, resultados y estadísticas históricas reflejarán siempre que esos tickets fueron creados dentro de la Modalidad 4.",
+            ],
+          },
+          {
+            title: "RECLAMACIÓN DE TICKETS FINALIZADOS",
+            paragraphs: [
+              "Una vez terminado el torneo, el sistema notificará al jugador que posee tickets creados en la Modalidad 4 y le ofrecerá la posibilidad de reclamarlos para incorporarlos a su historial personal.",
+              "Para mantener el valor y la exclusividad del historial, cada jugador podrá conservar únicamente sus cinco mejores tickets históricos.",
+              "Si desea incorporar un nuevo ticket procedente de la Modalidad 4, deberá sustituir uno de esos cinco tickets.",
+              "El sistema mostrará los cinco tickets actuales y permitirá elegir cuál desea reemplazar.",
+              "No importa si el nuevo ticket tiene una puntuación superior o inferior. La decisión será siempre del jugador.",
+            ],
+          },
+          {
+            title: "ACTUALIZACIÓN DEL HISTORIAL",
+            paragraphs: [
+              "Una vez reclamado, el ticket será incorporado al historial personal del jugador y ocupará automáticamente la posición que le corresponda según su puntuación final.",
+              "El sistema reorganizará el ranking interno del historial para reflejar correctamente la nueva clasificación.",
+            ],
+          },
+        ],
+        closing:
+          "La Modalidad 4 permite explorar, aprender, experimentar y descubrir nuevas oportunidades dentro de MY 50 POINTS sin necesidad de registrarse, conservando al mismo tiempo la autoría y el origen real de cada ticket creado.",
+      },
       reminderTitle: "RECORDATORIO",
       reminderP1:
         "MY 50 POINTS es un sistema basado en estrategia, toma de decisiones y acumulación de puntos carrera tras carrera.",
@@ -1817,15 +1898,96 @@ export const translations = {
         },
         {
           title: "MODE 4",
-          name: "FREE TOURNAMENT (NO REGISTRATION)",
+          name: "PLAY WITHOUT SIGNING UP AND DISCOVER NEW OPPORTUNITIES",
           items: [
-            "3 free tickets per tournament.",
-            "No account required.",
-            "Tickets are not stored permanently.",
-            "No personal history or statistics.",
+            "Free temporary mode — access with an alias.",
+            "3 free tickets per tournament to explore strategies.",
+            "Transfer to a registered account or discard on exit.",
+            "Ticket authorship and origin preserved after claiming.",
           ],
         },
       ],
+      modality4Guide: {
+        partTitle: "PART 3 – MODE 4",
+        title: "MODE 4 – PLAY WITHOUT SIGNING UP AND DISCOVER NEW OPPORTUNITIES",
+        intro:
+          "Mode 4 is a free, temporary mode that lets you take part in tournaments without a registered account. Its goal is to offer an entry point into the MY 50 POINTS ecosystem and let any player try the system before signing up. To access this mode you only need to choose an alias. That alias identifies the player and remains permanently linked to every ticket created in this mode.",
+        sections: [
+          {
+            title: "THREE FREE TICKETS IN EACH TOURNAMENT",
+            paragraphs: [
+              "Mode 4 offers three free tickets per tournament. These tickets can be used to experiment with different strategies, study races, or look for interesting opportunities before using them in other modes.",
+              "Many players will use this mode as an exploration zone to discover strategies and build tickets before deciding whether to keep them in a registered account.",
+            ],
+          },
+          {
+            title: "SWITCHING TO OTHER MODES",
+            paragraphs: [
+              "Players who already have a registered account can access Mode 4, create their tickets, and later transfer them to any of their accounts.",
+              "Players who do not yet have an account can create one directly from Mode 4 and keep the tickets generated during the session.",
+              "When leaving Mode 4, the system will show two main options:",
+            ],
+            bullets: [
+              "Sign in to an existing account and automatically transfer the tickets created during the session to that account.",
+              "Exit and discard the tickets created during the session.",
+            ],
+          },
+          {
+            title: "SESSION CLOSE AND TICKET PROTECTION",
+            paragraphs: [
+              "When the player tries to close the temporary Mode 4 session, the system will show a warning that tickets created during that session may be lost.",
+              "The system will offer two buttons:",
+              "If the player selects the first option, they can sign in to an existing account and the tickets will be transferred automatically.",
+            ],
+            bullets: [
+              "«Sign in and transfer tickets».",
+              "«Exit and discard tickets».",
+            ],
+          },
+          {
+            title: "PERMANENT TICKET IDENTITY",
+            paragraphs: [
+              "Even if a ticket is later transferred to another account, the system will always keep the ticket's original information.",
+              "Each ticket will retain:",
+            ],
+            bullets: [
+              "Original creator alias.",
+              "Original creation mode.",
+              "Creation date.",
+              "Source tournament.",
+            ],
+            paragraphsAfter: [
+              "For this reason, tickets created in Mode 4 will still be recognized by the system as Mode 4 tickets even after being transferred.",
+            ],
+          },
+          {
+            title: "RANKINGS AND RESULTS",
+            paragraphs: [
+              "During tournaments, all tickets will continue to compete under the alias with which they were originally created.",
+              "Standings, results, and historical statistics will always reflect that those tickets were created within Mode 4.",
+            ],
+          },
+          {
+            title: "CLAIMING FINISHED TICKETS",
+            paragraphs: [
+              "Once the tournament ends, the system will notify the player who holds tickets created in Mode 4 and offer the option to claim them for their personal history.",
+              "To preserve the value and exclusivity of the history, each player may keep only their five best historical tickets.",
+              "If they want to add a new ticket from Mode 4, they must replace one of those five tickets.",
+              "The system will show the five current tickets and let them choose which one to replace.",
+              "It does not matter whether the new ticket has a higher or lower score. The decision is always the player's.",
+            ],
+          },
+          {
+            title: "HISTORY UPDATE",
+            paragraphs: [
+              "Once claimed, the ticket will be added to the player's personal history and will automatically take the position that corresponds to its final score.",
+              "The system will reorganize the internal history ranking to reflect the new classification correctly.",
+            ],
+          },
+        ],
+        closing:
+          "Mode 4 lets you explore, learn, experiment, and discover new opportunities within MY 50 POINTS without signing up, while preserving the authorship and true origin of every ticket created.",
+      },
       reminderTitle: "REMINDER",
       reminderP1:
         "MY 50 POINTS is a system built on strategy, decision-making, and point accumulation race by race.",
